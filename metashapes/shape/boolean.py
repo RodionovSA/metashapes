@@ -4,21 +4,30 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import torch
 
 from .base import Shape
+from .registry import register_shape
 
 
+@register_shape("Union")
 @dataclass(slots=True)
-class BinaryShapeOp(Shape):
-    left: Shape
-    right: Shape
-
-
-@dataclass(slots=True)
-class Union(BinaryShapeOp):
+class Union(Shape):
     """
     Symbolic union of two shapes.
     """
+    left: Shape
+    right: Shape
+    smooth: bool = False
+    k: float | torch.Tensor = 1.0
+    
+    def sdf(self, x, y):
+        d1 = self.left.sdf(x, y)
+        d2 = self.right.sdf(x, y)
+        if not self.smooth:
+            return torch.minimum(d1, d2)
+        return smooth_min_poly(d1, d2, self.k)
+    
     def to_parametric(self) -> dict:
         return {
             "type": "Union",
@@ -34,11 +43,24 @@ class Union(BinaryShapeOp):
         )
 
 
+@register_shape("Intersection")
 @dataclass(slots=True)
-class Intersection(BinaryShapeOp):
+class Intersection(Shape):
     """
     Symbolic intersection of two shapes.
     """
+    left: Shape
+    right: Shape
+    smooth: bool = False
+    k: float | torch.Tensor = 1.0
+    
+    def sdf(self, x, y):
+        d1 = self.left.sdf(x, y)
+        d2 = self.right.sdf(x, y)
+        if not self.smooth:
+            return torch.maximum(d1, d2)
+        return smooth_max_poly(d1, d2, self.k)
+    
     def to_parametric(self) -> dict:
         return {
             "type": "Intersection",
@@ -54,11 +76,24 @@ class Intersection(BinaryShapeOp):
         )
 
 
+@register_shape("Difference")
 @dataclass(slots=True)
-class Difference(BinaryShapeOp):
+class Difference(Shape):
     """
     Symbolic difference of two shapes: left - right.
     """
+    left: Shape
+    right: Shape
+    smooth: bool = False
+    k: float | torch.Tensor = 1.0
+    
+    def sdf(self, x, y):
+        d1 = self.left.sdf(x, y)
+        d2 = self.right.sdf(x, y)
+        if not self.smooth:
+            return torch.maximum(d1, -d2)
+        return smooth_max_poly(d1, -d2, self.k)
+    
     def to_parametric(self) -> dict:
         return {
             "type": "Difference",
@@ -72,3 +107,14 @@ class Difference(BinaryShapeOp):
             left=Shape.from_parametric(data["left"]),
             right=Shape.from_parametric(data["right"]),
         )
+        
+""" Helper functions for smooth boolean operations. 
+These are based on polynomial smooth min/max functions."""
+
+def smooth_min_poly(a: torch.Tensor, b: torch.Tensor, k: float | torch.Tensor) -> torch.Tensor:
+    k = torch.as_tensor(k, dtype=a.dtype, device=a.device)
+    h = torch.clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0)
+    return torch.lerp(b, a, h) - k * h * (1.0 - h)
+
+def smooth_max_poly(a: torch.Tensor, b: torch.Tensor, k: float | torch.Tensor) -> torch.Tensor:
+    return -smooth_min_poly(-a, -b, k)

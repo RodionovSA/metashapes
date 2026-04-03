@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 import numpy as np
+import torch
 
 
 RoundMode = Literal["round", "floor", "ceil"]
@@ -35,6 +36,21 @@ class Canvas:
 
         if 2 * self.spacing >= self.Lx or 2 * self.spacing >= self.Ly:
             raise ValueError("spacing is too large for the given canvas size")
+        
+    def grid(self, *, dtype=torch.float32, device="cpu") -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Return torch grids of pixel-center coordinates.
+
+        Returns:
+            x, y: tensors of shape (H, W), where
+                x varies along columns,
+                y varies along rows.
+        """
+        x = torch.from_numpy(self.x_centers).to(dtype=dtype, device=device)
+        y = torch.from_numpy(self.y_centers).to(dtype=dtype, device=device)
+    
+        y, x = torch.meshgrid(y, x, indexing="ij")
+        return x, y
 
     @property
     def dx(self) -> float:
@@ -88,9 +104,9 @@ class Canvas:
         """
         Y coordinates of pixel centers, shape (H,).
 
-        Ordered from top row to bottom row, consistent with image indexing.
+        Ordered from bottom to top, consistent with Cartesian coordinates.
         """
-        return self.y1 - (np.arange(self.H) + 0.5) * self.dy
+        return self.y0 + (np.arange(self.H) + 0.5) * self.dy
 
     @property
     def inner_bounds(self) -> tuple[float, float, float, float]:

@@ -12,6 +12,7 @@ import torch
 
 from shapely.geometry.base import BaseGeometry
 from metashapes.canvas import Canvas
+from .registry import SHAPE_REGISTRY
 
 
 class Shape(ABC):
@@ -21,7 +22,17 @@ class Shape(ABC):
     A Shape stores a geometric recipe, not resolved polygon data.
     It can later be evaluated by different backends.
     """
+    
+    @abstractmethod
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        """
+        Signed distance evaluated on torch tensors.
+        x, y can be broadcastable tensors.
+        Returns tensor of same broadcasted shape.
+        """
+        raise NotImplementedError
 
+    # Boolean operators for easy shape composition
     def __or__(self, other: "Shape") -> "Shape":
         from .boolean import Union
         return Union(self, other)
@@ -34,18 +45,22 @@ class Shape(ABC):
         from .boolean import Difference
         return Difference(self, other)
     
-    def union(self, other: "Shape") -> "Shape":
+    def union(self, other: "Shape", 
+              *, smooth: bool = False, k: float | torch.Tensor = 1.0) -> "Shape":
         from .boolean import Union
-        return Union(self, other)
+        return Union(self, other, smooth=smooth, k=k)
     
-    def intersection(self, other: "Shape") -> "Shape":
+    def intersection(self, other: "Shape", 
+                     *, smooth: bool = False, k: float | torch.Tensor = 1.0) -> "Shape":
         from .boolean import Intersection
-        return Intersection(self, other)
+        return Intersection(self, other, smooth=smooth, k=k)
     
-    def difference(self, other: "Shape") -> "Shape":
+    def difference(self, other: "Shape", 
+                   *, smooth: bool = False, k: float | torch.Tensor = 1.0) -> "Shape":
         from .boolean import Difference
-        return Difference(self, other)
-
+        return Difference(self, other, smooth=smooth, k=k)
+    
+    # Transformations for shape manipulation
     def translate(self, dx: Any = 0.0, dy: Any = 0.0) -> "Shape":
         from .transforms import Translate
         return Translate(self, dx=dx, dy=dy)
@@ -60,15 +75,13 @@ class Shape(ABC):
 
     def scale(
         self,
-        sx: Any,
-        sy: Any | None = None,
+        s: Any,
         origin: tuple[Any, Any] = (0.0, 0.0),
     ) -> "Shape":
         from .transforms import Scale
-        if sy is None:
-            sy = sx
-        return Scale(self, sx=sx, sy=sy, origin=origin)
+        return Scale(self, s=s, origin=origin)
 
+    # Serialization 
     @abstractmethod
     def to_parametric(self) -> dict:
         """
@@ -85,83 +98,21 @@ class Shape(ABC):
         if shape_type is None:
             raise ValueError("Missing 'type' in shape parametric data")
         
-        from .primitives import (
-            Rectangle,
-            Ellipse,
-            RegularPolygon,
-            Cross,
-            Ring,
-            Moon,
-            RoundedRectangle,
-            RoundedRegularPolygon,
-            RoundedCross,
-            RoundedMoon,
-        )
-        from .boolean import Union, Intersection, Difference
-        from .transforms import Translate, Rotate, Scale
-
-        REGISTRY = {
-                "Rectangle": Rectangle,
-                "Ellipse": Ellipse,
-                "RegularPolygon": RegularPolygon,
-                "Cross": Cross,
-                "Ring": Ring,
-                "Moon": Moon,
-                "RoundedRectangle": RoundedRectangle,
-                "RoundedRegularPolygon": RoundedRegularPolygon,
-                "RoundedCross": RoundedCross,
-                "RoundedMoon": RoundedMoon,
-                "Union": Union,
-                "Intersection": Intersection,
-                "Difference": Difference,
-                "Translate": Translate,
-                "Rotate": Rotate,
-                "Scale": Scale,
-                }
-
         try:
-            shape_cls = REGISTRY[shape_type]
+            shape_cls = SHAPE_REGISTRY[shape_type]
         except KeyError as e:
             raise ValueError(f"Unknown shape type: {shape_type}") from e
 
         return shape_cls.from_parametric(data)
     
-    def to_shapely(self) -> BaseGeometry:
-        """
-        Convert this Shape into a Shapely geometry.
-        """
-        from metashapes.adapters import shape_to_shapely
-        shape_plain = Shape.from_parametric(self.to_parametric())
-        return shape_to_shapely(shape_plain)
-    
-    def to_numpy(self, 
-                 canvas: Canvas, 
-                 *, 
-                 dtype=bool, 
-                 soft: bool = False, 
-                 soft_mode: str = "sigmoid", 
-                 softness: float | None = None) -> np.ndarray:
-        """
-        Rasterize this Shape into a NumPy array of the given canvas size.
-
-        Parameters:
-            canvas: The canvas to rasterize onto.
-            dtype: The desired data type of the output array.
-            soft: If True, return a soft mask instead of a hard binary mask.
-            soft_mode: The mode to use for softening the mask ("sigmoid" or "fourier").
-            softness: The scale of the softness in world units. If None, defaults to one pixel.
-        """
-        from metashapes.adapters import shape_to_numpy
-        return shape_to_numpy(self, canvas, dtype=dtype, soft=soft, soft_mode=soft_mode, softness=softness)
-    
-    def to_torch(
+    # Adapters to other representations
+    def mask(
         self,
         canvas: Canvas,
         *,
         dtype: torch.dtype = torch.float32,
         device: str | torch.device = "cpu",
-        soft: bool = True,
-        soft_mode: str = "sigmoid",
+        soft: bool = False,
         softness: float | torch.Tensor | None = None,
     ) -> torch.Tensor:
         """
@@ -172,35 +123,58 @@ class Shape(ABC):
             dtype: Torch dtype of the output mask.
             device: Torch device.
             soft: If True, return a soft mask instead of a hard binary mask.
-            soft_mode: "sigmoid" (support differentiable optimization) or "fourier" (support anti-aliasing). 
             softness: Edge smoothing scale in world units. If None, defaults to one pixel.
         
         Returns:
             Tensor of shape (H, W).
         
-        Notes:
-            soft_mode behavior:
-                - "sigmoid": Signed-distance sigmoid smoothing. Intended for
-                differentiable optimization and preserves gradient flow from
-                shape parameters to the mask. Smaller `softness` makes the mask
-                sharper but can lead to vanishing gradients, while larger
-                `softness` gives smoother gradients but blurs geometry more.
-                - "fourier": Gaussian low-pass filtering of a hard mask in Fourier
-                space. Useful for anti-aliasing and smooth visual filtering, but
-                generally not suitable for gradient-based optimization because
-                hard thresholding largely destroys gradients before filtering.
         """
-        from metashapes.adapters import shape_to_torch
-        return shape_to_torch(
-            self,
+        x, y = canvas.grid(dtype=dtype, device=device)
+        d = self.sdf(x, y)
+
+        if not soft:
+            return (d <= 0).to(dtype)
+
+        if softness is None:
+            softness = min(canvas.dx, canvas.dy)
+
+        softness = torch.as_tensor(softness, dtype=d.dtype, device=d.device)
+        return torch.sigmoid(-d / softness)
+    
+    def mask_numpy(self, 
+                   canvas: Canvas, 
+                   *, 
+                   dtype=np.float32, 
+                   soft: bool = False, 
+                   softness: float | None = None) -> np.ndarray:
+        """
+        Rasterize this Shape into a NumPy array of the given canvas size.
+
+        Parameters:
+            canvas: The canvas to rasterize onto.
+            dtype: The desired data type of the output array.
+            soft: If True, return a soft mask instead of a hard binary mask.
+            softness: The scale of the softness in world units. If None, defaults to one pixel.
+        """
+        mask = self.mask(
             canvas,
-            dtype=dtype,
-            device=device,
+            dtype=torch.float32,
+            device="cpu",
             soft=soft,
-            soft_mode=soft_mode,
             softness=softness,
         )
+        return mask.detach().cpu().numpy().astype(dtype, copy=False)
+        
+    def to_shapely(self) -> BaseGeometry:
+        """
+        Convert this Shape into a Shapely geometry.
+        """
+        from metashapes.adapters import shape_to_shapely
+        shape_plain = Shape.from_parametric(self.to_parametric())
+        return shape_to_shapely(shape_plain)
     
+
+""" Helper functions for data conversion and serialization. """
 def to_plain_data(x: Any):
     """
     Convert values to plain Python-serializable data.
@@ -249,14 +223,9 @@ def to_plain_scalar(x: Any):
     """
     x = to_plain_data(x)
 
-    if isinstance(x, tuple):
+    while isinstance(x, (list, tuple)):
         if len(x) != 1:
-            raise ValueError(f"Expected scalar-like value, got tuple {x}")
-        return x[0]
-
-    if isinstance(x, list):
-        if len(x) != 1:
-            raise ValueError(f"Expected scalar-like value, got list {x}")
-        return x[0]
+            raise ValueError(f"Expected scalar-like value, got {x}")
+        x = x[0]
 
     return x

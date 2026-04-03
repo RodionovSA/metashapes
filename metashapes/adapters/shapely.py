@@ -13,18 +13,7 @@ from shapely.geometry.base import BaseGeometry
 import numpy as np
 
 from metashapes.shape.base import Shape
-from metashapes.shape.primitives import (
-    Rectangle,
-    Ellipse,
-    RegularPolygon,
-    Cross,
-    Ring,
-    Moon,
-    RoundedRectangle,
-    RoundedRegularPolygon,
-    RoundedCross,
-    RoundedMoon,
-)
+import metashapes.shape.primitives as prim
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale
 
@@ -33,34 +22,31 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
     """
     Convert a symbolic Shape into a Shapely geometry.
     """
-    if isinstance(shape, Rectangle):
+    if isinstance(shape, prim.Rectangle):
         return _rectangle_to_shapely(shape)
 
-    if isinstance(shape, Ellipse):
+    if isinstance(shape, prim.Ellipse):
         return _ellipse_to_shapely(shape)
 
-    if isinstance(shape, RegularPolygon):
+    if isinstance(shape, prim.RegularPolygon):
         return _regular_polygon_to_shapely(shape)
 
-    if isinstance(shape, Cross):
+    if isinstance(shape, prim.Cross):
         return _cross_to_shapely(shape)
 
-    if isinstance(shape, Ring):
+    if isinstance(shape, prim.Ring):
         return _ring_to_shapely(shape)
 
-    if isinstance(shape, Moon):
+    if isinstance(shape, prim.Moon):
         return _moon_to_shapely(shape)
 
-    if isinstance(shape, RoundedRectangle):
-        return _rounded_rectangle_to_shapely(shape)
-
-    if isinstance(shape, RoundedRegularPolygon):
+    if isinstance(shape, prim.RoundedRegularPolygon):
         return _rounded_regular_polygon_to_shapely(shape)
 
-    if isinstance(shape, RoundedCross):
+    if isinstance(shape, prim.RoundedCross):
         return _rounded_cross_to_shapely(shape)
 
-    if isinstance(shape, RoundedMoon):
+    if isinstance(shape, prim.RoundedMoon):
         return _rounded_moon_to_shapely(shape)
 
     if isinstance(shape, Union):
@@ -82,33 +68,50 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
 
     if isinstance(shape, Scale):
         geom = shape_to_shapely(shape.shape)
-        return shp_scale(geom, xfact=shape.sx, yfact=shape.sy, origin=shape.origin)
+        return shp_scale(geom, xfact=shape.s, yfact=shape.s, origin=shape.origin)
 
     raise TypeError(f"Unsupported shape type: {type(shape).__name__}")
 
-
-def _rectangle_to_shapely(shape: Rectangle) -> BaseGeometry:
+def _rectangle_to_shapely(shape: prim.Rectangle):
     cx, cy = shape.center
     w, h = shape.size
+    r = shape.corner_radius
 
-    geom = box(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+    if w <= 0 or h <= 0:
+        raise ValueError("Rectangle size components must be positive")
+    if r < 0:
+        raise ValueError("corner_radius must be non-negative")
+
+    r = min(r, 0.5 * min(w, h))
+
+    if r == 0:
+        geom = box(cx - w / 2, cy - h / 2, cx + w / 2, cy + h / 2)
+    else:
+        geom = box(
+            cx - (w / 2 - r),
+            cy - (h / 2 - r),
+            cx + (w / 2 - r),
+            cy + (h / 2 - r),
+        ).buffer(r)
+
     if shape.angle != 0:
         geom = shp_rotate(geom, shape.angle, origin=shape.center)
+
     return geom
 
 
-def _ellipse_to_shapely(shape: Ellipse) -> BaseGeometry:
+def _ellipse_to_shapely(shape: prim.Ellipse) -> BaseGeometry:
     cx, cy = shape.center
     a, b = shape.axes
 
-    geom = Point(0.0, 0.0).buffer(1.0, quad_segs=shape.resolution // 4)
-    geom = shp_scale(geom, xfact=a, yfact=b, origin=(0.0, 0.0))
+    geom = Point(0.0, 0.0).buffer(1.0, quad_segs=64 // 4)
+    geom = shp_scale(geom, xfact=a*0.5, yfact=b*0.5, origin=(0.0, 0.0))
     geom = shp_rotate(geom, shape.angle, origin=(0.0, 0.0))
     geom = shp_translate(geom, xoff=cx, yoff=cy)
     return geom
 
 
-def _regular_polygon_to_shapely(shape: RegularPolygon) -> BaseGeometry:
+def _regular_polygon_to_shapely(shape: prim.RegularPolygon) -> BaseGeometry:
     cx, cy = shape.center
     n = shape.n
     s = shape.side_length
@@ -127,22 +130,25 @@ def _regular_polygon_to_shapely(shape: RegularPolygon) -> BaseGeometry:
     geom = Polygon(points)
     if shape.angle != 0:
         geom = shp_rotate(geom, shape.angle, origin=shape.center)
-    return geom
+        
+    if shape.corner_radius == 0:
+        return geom
+    return round_corners(geom, radius=shape.corner_radius, mode="inner")
 
 
-def _cross_to_shapely(shape: Cross) -> BaseGeometry:
+def _cross_to_shapely(shape: prim.Cross) -> BaseGeometry:
     cx, cy = shape.center
-    vertical = _rectangle_to_shapely(Rectangle(center=(cx, cy), size=(shape.width, shape.size)))
-    horizontal = _rectangle_to_shapely(Rectangle(center=(cx, cy), size=(shape.size, shape.width)))
+    vertical = _rectangle_to_shapely(prim.Rectangle(center=(cx, cy), size=(shape.width, shape.size)))
+    horizontal = _rectangle_to_shapely(prim.Rectangle(center=(cx, cy), size=(shape.size, shape.width)))
     geom = vertical.union(horizontal)
     if shape.angle != 0:
         geom = shp_rotate(geom, shape.angle, origin=shape.center)
     return geom
 
 
-def _ring_to_shapely(shape: Ring) -> BaseGeometry:
+def _ring_to_shapely(shape: prim.Ring) -> BaseGeometry:
     outer = _ellipse_to_shapely(
-        Ellipse(
+        prim.Ellipse(
             center=shape.center,
             axes=shape.outer_axes,
             angle=shape.angle,
@@ -150,7 +156,7 @@ def _ring_to_shapely(shape: Ring) -> BaseGeometry:
         )
     )
     inner = _ellipse_to_shapely(
-        Ellipse(
+        prim.Ellipse(
             center=shape.center,
             axes=shape.inner_axes,
             angle=shape.angle,
@@ -160,13 +166,13 @@ def _ring_to_shapely(shape: Ring) -> BaseGeometry:
     return outer.difference(inner)
 
 
-def _moon_to_shapely(shape: Moon) -> BaseGeometry:
+def _moon_to_shapely(shape: prim.Moon) -> BaseGeometry:
     cx, cy = shape.center
     main = _ellipse_to_shapely(
-        Ellipse(center=shape.center, axes=(shape.radius, shape.radius), resolution=shape.resolution)
+        prim.Ellipse(center=shape.center, axes=(shape.radius, shape.radius), resolution=shape.resolution)
     )
     cut = _ellipse_to_shapely(
-        Ellipse(
+        prim.Ellipse(
             center=(cx + 2.0 * shape.radius * (1.0 - shape.cut_ratio), cy),
             axes=(shape.radius, shape.radius),
             resolution=shape.resolution,
@@ -178,35 +184,9 @@ def _moon_to_shapely(shape: Moon) -> BaseGeometry:
     return geom
 
 
-def _rounded_rectangle_to_shapely(shape: RoundedRectangle):
-    cx, cy = shape.center
-    w, h = shape.size
-    r = shape.radius
-
-    if r == 0:
-        return _rectangle_to_shapely(
-            Rectangle(center=shape.center, size=shape.size, angle=shape.angle)
-        )
-
-    if r > min(w, h) / 2:
-        raise ValueError("RoundedRectangle radius is too large")
-
-    inner = box(
-        cx - (w / 2 - r),
-        cy - (h / 2 - r),
-        cx + (w / 2 - r),
-        cy + (h / 2 - r),
-    ).buffer(r)
-
-    if shape.angle != 0:
-        inner = shp_rotate(inner, shape.angle, origin=shape.center)
-
-    return inner
-
-
-def _rounded_regular_polygon_to_shapely(shape: RoundedRegularPolygon) -> BaseGeometry:
+def _rounded_regular_polygon_to_shapely(shape: prim.RoundedRegularPolygon) -> BaseGeometry:
     base = _regular_polygon_to_shapely(
-        RegularPolygon(
+        prim.RegularPolygon(
             center=shape.center,
             n=shape.n,
             side_length=shape.side_length,
@@ -218,18 +198,18 @@ def _rounded_regular_polygon_to_shapely(shape: RoundedRegularPolygon) -> BaseGeo
     return round_corners(base, radius=shape.radius, mode="inner")
 
 
-def _rounded_cross_to_shapely(shape: RoundedCross) -> BaseGeometry:
+def _rounded_cross_to_shapely(shape: prim.RoundedCross) -> BaseGeometry:
     base = _cross_to_shapely(
-        Cross(center=shape.center, size=shape.size, width=shape.width, angle=shape.angle)
+        prim.Cross(center=shape.center, size=shape.size, width=shape.width, angle=shape.angle)
     )
     if shape.radius == 0:
         return base
     return round_corners(base, radius=shape.radius, mode="both")
 
 
-def _rounded_moon_to_shapely(shape: RoundedMoon) -> BaseGeometry:
+def _rounded_moon_to_shapely(shape: prim.RoundedMoon) -> BaseGeometry:
     base = _moon_to_shapely(
-        Moon(
+        prim.Moon(
             center=shape.center,
             radius=shape.radius,
             cut_ratio=shape.cut_ratio,

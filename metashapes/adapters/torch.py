@@ -1,4 +1,5 @@
 # metashapes/adapters/torch.py
+# OBSOLETE: This adapter is no longer used internally. Will be removed. 
 
 from __future__ import annotations
 
