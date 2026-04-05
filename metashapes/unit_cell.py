@@ -82,7 +82,8 @@ class UnitCell:
         return xp, yp
 
     def sdf(self, x, y):
-        xp, yp = self._wrap_xy(x, y)
+        #xp, yp = self._wrap_xy(x, y)
+        xp, yp = x, y
 
         x0, y0, x1, y1 = self.canvas.inner_bounds
         Lx = x1 - x0

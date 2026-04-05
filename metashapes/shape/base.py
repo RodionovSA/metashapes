@@ -4,7 +4,8 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, ClassVar
+from dataclasses import is_dataclass, fields
 
 import numbers
 import numpy as np
@@ -18,11 +19,11 @@ from .registry import SHAPE_REGISTRY
 class Shape(ABC):
     """
     Base class for all symbolic 2D shapes.
-
-    A Shape stores a geometric recipe, not resolved polygon data.
-    It can later be evaluated by different backends.
     """
-    
+    _tuple_fields: ClassVar[tuple[str, ...]] = ('center', 'size', 'axes')
+    _scalar_fields: ClassVar[tuple[str, ...]] = ('angle', 'corner_radius', 'side_length', 'length', 'width', 
+                                                'outer_corner_radius', 'inner_corner_radius')
+
     @abstractmethod
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """
@@ -31,6 +32,27 @@ class Shape(ABC):
         Returns tensor of same broadcasted shape.
         """
         raise NotImplementedError
+    
+    @property
+    def min_feature_size(self) -> float:
+        return None
+    
+    @property
+    def allowed_self_periodic_shifts(self) -> set[tuple[int, int]]:
+        """
+        Periodic shifts with which this shape is allowed to connect
+        continuously to itself. 
+
+        Each tuple (ix, iy) represents a shift by:
+            ix * canvas.Lx, iy * canvas.Ly
+
+        Examples:
+            set()                  -> no self-periodic joins allowed
+            {(-1, 0), (1, 0)}      -> allowed to join across left/right boundaries
+            {(0, -1), (0, 1)}      -> allowed to join across bottom/top boundaries
+            {(-1, -1), (1, 1)}     -> allowed to join along a diagonal periodic chain
+        """
+        return set()
 
     # Boolean operators for easy shape composition
     def __or__(self, other: "Shape") -> "Shape":
@@ -82,12 +104,30 @@ class Shape(ABC):
         return Scale(self, s=s, origin=origin)
 
     # Serialization 
-    @abstractmethod
     def to_parametric(self) -> dict:
-        """
-        Serialize the symbolic shape into a dictionary.
-        """
-        raise NotImplementedError
+        if not is_dataclass(self):
+            raise TypeError(f"{type(self).__name__} must be a dataclass")
+
+        data = {"type": type(self).__name__}
+        for f in fields(self):
+            value = getattr(self, f.name)
+            if f.name in self._scalar_fields:
+                data[f.name] = to_plain_scalar(value)
+            else:
+                data[f.name] = to_plain_data(value)
+        return data
+    
+    @classmethod
+    def _from_own_parametric(cls, data: dict):
+        kwargs = {}
+        for f in fields(cls):
+            if f.name not in data:
+                continue
+            v = data[f.name]
+            if f.name in cls._tuple_fields and v is not None:
+                v = tuple(v)
+            kwargs[f.name] = v
+        return cls(**kwargs)
     
     @classmethod
     def from_parametric(cls, data: dict) -> "Shape":
@@ -97,7 +137,10 @@ class Shape(ABC):
         shape_type = data.get("type")
         if shape_type is None:
             raise ValueError("Missing 'type' in shape parametric data")
-        
+
+        if cls is not Shape:
+            return cls._from_own_parametric(data)
+
         try:
             shape_cls = SHAPE_REGISTRY[shape_type]
         except KeyError as e:
