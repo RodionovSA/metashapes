@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metashapes"
-version = "0.1.0"
+version = "0.5.0"
 description = "2D shape library for metasurface design: SDF-based primitives, boolean operations, random generation, and GDS/Shapely/NumPy export"
 readme = "README.md"
 requires-python = ">=3.9"

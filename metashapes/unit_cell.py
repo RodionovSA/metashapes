@@ -104,17 +104,18 @@ class UnitCell:
         periodic_x = any(ix != 0 for ix, iy in self.periodic_shifts)
         periodic_y = any(iy != 0 for ix, iy in self.periodic_shifts)
 
+        # Skip if periodic in both directions
         if periodic_x and periodic_y:
             return None
 
         x0, y0, x1, y1 = self.canvas.inner_bounds
         xc, yc = (x0 + x1) / 2, (y0 + y1) / 2
-        LARGE = max(self.canvas.Lx, self.canvas.Ly) * 1000
+        LARGE = max(self.canvas.Lx, self.canvas.Ly) * 1000 # Supports any big number (default=x1000)
 
         if periodic_x:
-            return Rectangle(center=(xc, yc), size=(LARGE, y1 - y0))
+            return Rectangle(center=(xc, yc), size=(LARGE, y1 - y0)) # extends along x
         else:
-            return Rectangle(center=(xc, yc), size=(x1 - x0, LARGE))
+            return Rectangle(center=(xc, yc), size=(x1 - x0, LARGE)) # extends along y
 
     def _periodic_sdf(self, region: Shape, x, y):
         Lx, Ly = self.canvas.Lx, self.canvas.Ly
@@ -126,6 +127,7 @@ class UnitCell:
         ox = torch.where(x - (xc + ix * Lx) >= 0, 1.0, -1.0).detach()
         oy = torch.where(y - (yc + iy * Ly) >= 0, 1.0, -1.0).detach()
 
+        # Takes 4 cells - (0,0), (0, 1), (1, 0), (1, 1)
         ds = []
         for j in (0, 1):
             for i in (0, 1):
@@ -140,7 +142,7 @@ class UnitCell:
     @property
     def filled_region(self) -> Shape:
         """Symbolic material region (periodic directions not clipped)."""
-        clip = self._make_clip_region()
+        clip = self._make_clip_region() # handles 1D periodic cases
         if clip is None:
             return self.shape
         return (clip - self.shape) if self.inverted else (clip & self.shape)
@@ -148,7 +150,7 @@ class UnitCell:
     @property
     def void_region(self) -> Shape:
         """Symbolic void region (periodic directions not clipped)."""
-        clip = self._make_clip_region()
+        clip = self._make_clip_region() # handles 1D periodic cases
         if clip is None:
             return self.shape
         return (clip & self.shape) if self.inverted else (clip - self.shape)

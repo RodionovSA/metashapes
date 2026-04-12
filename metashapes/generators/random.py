@@ -138,15 +138,14 @@ class RandomUnitCellGenerator(UnitCellGenerator):
         )
 
     def _sample_shape_name(self) -> str:
-        if not self.config.allowed_shapes:
-            raise ValueError("allowed_shapes must not be empty")
+        allowed = list(self.config.allowed_shapes) or list(SHAPE_SAMPLER_REGISTRY.keys())
 
         weights_cfg = self.config.shape_weights
 
         if not weights_cfg:
-            return self._rng.choice(self.config.allowed_shapes)
+            return self._rng.choice(allowed)
 
-        names = list(self.config.allowed_shapes)
+        names = allowed
         weights = [weights_cfg.get(name, 1.0) for name in names]
 
         if all(w == 0 for w in weights):

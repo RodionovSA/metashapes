@@ -3,16 +3,39 @@
 
 from __future__ import annotations
 
+from typing import List, Dict
+import inspect
+
+def inspect_class_params(class_obj) -> List:
+    params = list(inspect.signature(class_obj.__init__).parameters.keys())
+    params.remove('self')
+    return params
 
 def get_fixed_param(config, shape_name: str, param_name: str, default=None):
     shape_params = config.fixed_shape_params.get(shape_name, {})
     return shape_params.get(param_name, default)
 
-
 def get_param_range(config, shape_name: str, param_name: str, default=None):
     shape_params = config.shape_param_ranges.get(shape_name, {})
     return shape_params.get(param_name, default)
 
+def get_all_fixed_param(config, class_obj, default=None) -> Dict:
+    params = inspect_class_params(class_obj=class_obj)
+    
+    fixed_parameters = []
+    for param in params:
+        fixed_parameters.append(get_fixed_param(config, class_obj.__name__, param))
+        
+    return {param: fixed_parameter for param, fixed_parameter in zip(params, fixed_parameters)}
+
+def get_all_param_range(config, class_obj, default=None):
+    params = inspect_class_params(class_obj=class_obj)
+    
+    fixed_parameters = []
+    for param in params:
+        fixed_parameters.append(get_param_range(config, class_obj.__name__, param))
+        
+    return {param: fixed_parameter for param, fixed_parameter in zip(params, fixed_parameters)}
 
 def sample_param(rng, config, shape_name: str, param_name: str, default_range=None, default_value=None):
     fixed = get_fixed_param(config, shape_name, param_name, None)

@@ -4,13 +4,14 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from typing import ClassVar
 
 from metashapes.canvas import Canvas
 from metashapes.shape.base import Shape
 
 
 class ShapeSampler(ABC):
-    shape_name: str
+    shape_class: ClassVar[type[Shape]]
 
     @abstractmethod
     def sample(self, rng, canvas: Canvas, config) -> Shape:
