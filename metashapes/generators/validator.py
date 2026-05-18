@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from metashapes.unit_cell import UnitCell
+from metashapes.lattice.unit_cell import UnitCell
 
 
 class UnitCellValidator(ABC):

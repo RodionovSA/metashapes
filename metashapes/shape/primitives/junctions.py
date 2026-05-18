@@ -3,14 +3,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, ClassVar
+import math
 import torch
-import numpy as np
 
-from metashapes.shape.base import Shape, to_plain_data, to_plain_scalar
+from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _to_local_coords
+from metashapes.shape.utils import _to_local_coords, register
 
 __all__ = [
     "Cross",
@@ -18,7 +16,6 @@ __all__ = [
 ]
 
 @register_shape("Cross")
-@dataclass(slots=True)
 class Cross(Shape):
     """
     Symbolic symmetric cross.
@@ -33,44 +30,46 @@ class Cross(Shape):
         inner_corner_radius:
             rounding radius for the 4 inner concave corners
     """
-    center: tuple[Any, Any]
-    length: Any
-    width: Any
-    angle: Any = 0.0
-    outer_corner_radius: Any = 0.0
-    inner_corner_radius: Any = 0.0
+    def __init__(self,
+                 center: torch.Tensor,
+                 length: torch.Tensor,
+                 width: torch.Tensor,
+                 angle: torch.Tensor = 0.0,
+                 outer_corner_radius: torch.Tensor = 0.0,
+                 inner_corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "length", length)
+        register(self, "width", width)
+        register(self, "angle", angle)
+        register(self, "outer_corner_radius", outer_corner_radius)
+        register(self, "inner_corner_radius", inner_corner_radius)
 
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
+        if torch.any(self.length <= 0):
+            raise ValueError("length must be positive")
+        if torch.any(self.width <= 0):
+            raise ValueError("width must be positive")
+        if torch.any(self.width > self.length):
+            raise ValueError("width must be less than or equal to length")
+        if torch.any(self.outer_corner_radius < 0):
+            raise ValueError("outer_corner_radius must be non-negative")
+        if torch.any(self.inner_corner_radius < 0):
+            raise ValueError("inner_corner_radius must be non-negative")
+        if torch.any(self.outer_corner_radius >= 0.5 * self.width):
+            raise ValueError("outer_corner_radius is too large")
+        if torch.any(self.inner_corner_radius > (0.5 * self.length - 0.5 * self.width - self.outer_corner_radius)):
+            raise ValueError("inner_corner_radius is too large")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        length = torch.as_tensor(self.length, dtype=x.dtype, device=x.device)
-        width = torch.as_tensor(self.width, dtype=x.dtype, device=x.device)
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-        ro = torch.as_tensor(self.outer_corner_radius, dtype=x.dtype, device=x.device)
-        ri = torch.as_tensor(self.inner_corner_radius, dtype=x.dtype, device=x.device)
-
-        if torch.any(length <= 0):
-            raise ValueError("length must be positive")
-        if torch.any(width <= 0):
-            raise ValueError("width must be positive")
-        if torch.any(width > length):
-            raise ValueError("width must be less than or equal to length")
-        if torch.any(ro < 0):
-            raise ValueError("outer_corner_radius must be non-negative")
-        if torch.any(ri < 0):
-            raise ValueError("inner_corner_radius must be non-negative")
+        cx, cy = self.center[0], self.center[1]
+        length = self.length
+        width  = self.width
+        angle  = self.angle
+        ro     = self.outer_corner_radius
+        ri     = self.inner_corner_radius
 
         bx = 0.5 * length
         by = 0.5 * width
-
-        if torch.any(ro >= by):
-            raise ValueError("outer_corner_radius is too large")
-        if torch.any(ri > (bx - by - ro)):
-            raise ValueError("inner_corner_radius is too large")
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
@@ -122,12 +121,24 @@ class Cross(Shape):
         # add patch to the base cross
         return torch.minimum(d_base, d_patch)
 
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        length = self.length.detach().item()
+        angle = self.angle.detach().item()
+
+        # unrotated AABB is length x length, centred at (cx, cy)
+        theta = math.radians(angle)
+        c, s = abs(math.cos(theta)), abs(math.sin(theta))
+        hw = 0.5 * length * (c + s)
+        hh = 0.5 * length * (s + c)
+        return (cx - hw, cy - hh), (cx + hw, cy + hh)
+
     @property
     def min_feature_size(self) -> float:
-        return to_plain_scalar(self.width)
+        return self.width.detach().item()
+
 
 @register_shape("TShape")
-@dataclass(slots=True)
 class TShape(Shape):
     """
     Symbolic T-shape.
@@ -140,44 +151,46 @@ class TShape(Shape):
         outer_corner_radius: rounding radius for convex outer corners
         inner_corner_radius: rounding radius for concave inner corners
     """
-    center: tuple[Any, Any]
-    length: Any
-    width: Any
-    angle: Any = 0.0
-    outer_corner_radius: Any = 0.0
-    inner_corner_radius: Any = 0.0
+    def __init__(self,
+                 center: torch.Tensor,
+                 length: torch.Tensor,
+                 width: torch.Tensor,
+                 angle: torch.Tensor = 0.0,
+                 outer_corner_radius: torch.Tensor = 0.0,
+                 inner_corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "length", length)
+        register(self, "width", width)
+        register(self, "angle", angle)
+        register(self, "outer_corner_radius", outer_corner_radius)
+        register(self, "inner_corner_radius", inner_corner_radius)
 
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
+        if torch.any(self.length <= 0):
+            raise ValueError("length must be positive")
+        if torch.any(self.width <= 0):
+            raise ValueError("width must be positive")
+        if torch.any(self.width > self.length):
+            raise ValueError("width must be less than or equal to length")
+        if torch.any(self.outer_corner_radius < 0):
+            raise ValueError("outer_corner_radius must be non-negative")
+        if torch.any(self.inner_corner_radius < 0):
+            raise ValueError("inner_corner_radius must be non-negative")
+        if torch.any(self.outer_corner_radius >= 0.5 * self.width):
+            raise ValueError("outer_corner_radius is too large")
+        if torch.any(self.inner_corner_radius > (0.5 * self.length - 0.5 * self.width - self.outer_corner_radius)):
+            raise ValueError("inner_corner_radius is too large")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        length = torch.as_tensor(self.length, dtype=x.dtype, device=x.device)
-        width = torch.as_tensor(self.width, dtype=x.dtype, device=x.device)
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-        ro = torch.as_tensor(self.outer_corner_radius, dtype=x.dtype, device=x.device)
-        ri = torch.as_tensor(self.inner_corner_radius, dtype=x.dtype, device=x.device)
-
-        if torch.any(length <= 0):
-            raise ValueError("length must be positive")
-        if torch.any(width <= 0):
-            raise ValueError("width must be positive")
-        if torch.any(width > length):
-            raise ValueError("width must be less than or equal to length")
-        if torch.any(ro < 0):
-            raise ValueError("outer_corner_radius must be non-negative")
-        if torch.any(ri < 0):
-            raise ValueError("inner_corner_radius must be non-negative")
+        cx, cy = self.center[0], self.center[1]
+        length = self.length
+        width  = self.width
+        angle  = self.angle
+        ro     = self.outer_corner_radius
+        ri     = self.inner_corner_radius
 
         bx = 0.5 * length
         by = 0.5 * width
-
-        if torch.any(ro >= by):
-            raise ValueError("outer_corner_radius is too large")
-        if torch.any(ri > (bx - by - ro)):
-            raise ValueError("inner_corner_radius is too large")
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
@@ -219,7 +232,18 @@ class TShape(Shape):
 
         return torch.minimum(d_base, d_patch)
 
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        length = self.length.detach().item()
+        angle = self.angle.detach().item()
+
+        # unrotated AABB is length x length, centred at (cx, cy)
+        theta = math.radians(angle)
+        c, s = abs(math.cos(theta)), abs(math.sin(theta))
+        hw = 0.5 * length * (c + s)
+        hh = 0.5 * length * (s + c)
+        return (cx - hw, cy - hh), (cx + hw, cy + hh)
+
     @property
     def min_feature_size(self) -> float:
-        return to_plain_scalar(self.width)
-        
+        return self.width.detach().item()

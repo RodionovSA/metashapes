@@ -11,8 +11,8 @@ import random
 from metashapes.generators.config import GeneratorConfig
 from metashapes.generators.report import GenerationBatchResult, GenerationReport
 from metashapes.generators.validator import UnitCellValidator
-from metashapes.unit_cell import UnitCell
-from metashapes.canvas import Canvas
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.lattice.canvas import Canvas
 
 
 class UnitCellGenerator(ABC):

@@ -9,7 +9,7 @@ from turtle import shape
 import torch
 import torch.nn.functional as F
 
-from metashapes.canvas import Canvas
+from metashapes.lattice.canvas import Canvas
 from metashapes.shape.base import Shape
 from metashapes.shape.primitives import (
     Rectangle,

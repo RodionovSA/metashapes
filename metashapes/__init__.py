@@ -1,4 +1,3 @@
-from .canvas import Canvas
 from .shape import Shape
-from .unit_cell import UnitCell, UniformCell
+from .lattice.unit_cell import UnitCell
 from .analysis import UnitCellAnalyzer, CellMetrics

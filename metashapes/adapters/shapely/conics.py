@@ -12,11 +12,12 @@ from shapely.geometry.base import BaseGeometry
 import metashapes.shape.primitives as prim
 
 def ellipse_to_shapely(shape: prim.Ellipse) -> BaseGeometry:
-    cx, cy = shape.center
-    a, b = shape.axes
+    cx, cy = shape.center.tolist()
+    a, b = shape.axes.tolist()
+    angle = shape.angle.item()
 
     geom = Point(0.0, 0.0).buffer(1.0, quad_segs=64 // 4)
     geom = shp_scale(geom, xfact=a*0.5, yfact=b*0.5, origin=(0.0, 0.0))
-    geom = shp_rotate(geom, shape.angle, origin=(0.0, 0.0))
+    geom = shp_rotate(geom, angle, origin=(0.0, 0.0))
     geom = shp_translate(geom, xoff=cx, yoff=cy)
     return geom

@@ -13,13 +13,13 @@ import metashapes.shape.primitives as prim
 from .helpers import round_corners
 
 def convex_quad_to_shapely(shape: prim.ConvexQuad) -> BaseGeometry:
-    cx, cy = shape.center
-    ux0, uy0 = shape.u
-    vx0, vy0 = shape.v
-    alpha = shape.alpha
-    beta = shape.beta
-    angle = shape.angle
-    rr = shape.corner_radius
+    cx, cy = shape.center.tolist()
+    ux0, uy0 = shape.u.tolist()
+    vx0, vy0 = shape.v.tolist()
+    alpha = shape.alpha.item()
+    beta = shape.beta.item()
+    angle = shape.angle.item()
+    rr = shape.corner_radius.item()
 
     if rr < 0:
         raise ValueError("corner_radius must be non-negative")
@@ -59,9 +59,10 @@ def convex_quad_to_shapely(shape: prim.ConvexQuad) -> BaseGeometry:
     return round_corners(geom, radius=rr, mode="inner")
 
 def rectangle_to_shapely(shape: prim.Rectangle):
-    cx, cy = shape.center
-    w, h = shape.size
-    r = shape.corner_radius
+    cx, cy = shape.center.tolist()
+    w, h = shape.size.tolist()
+    r = shape.corner_radius.item()
+    angle = shape.angle.item()
 
     if w <= 0 or h <= 0:
         raise ValueError("Rectangle size components must be positive")
@@ -80,36 +81,38 @@ def rectangle_to_shapely(shape: prim.Rectangle):
             cy + (h / 2 - r),
         ).buffer(r)
 
-    if shape.angle != 0:
-        geom = shp_rotate(geom, shape.angle, origin=shape.center)
+    if angle != 0:
+        geom = shp_rotate(geom, angle, origin=(cx, cy))
 
     return geom
 
 
 def isosceles_trapezoid_to_shapely(shape: prim.IsoscelesTrapezoid) -> BaseGeometry:
-    cx, cy = shape.center
-    wb = shape.bottom_width
-    wt = shape.top_width
-    h = shape.height
+    cx, cy = shape.center.tolist()
+    wb = shape.bottom_width.item()
+    wt = shape.top_width.item()
+    h = shape.height.item()
+    angle = shape.angle.item()
+    rr = shape.corner_radius.item()
 
     r1 = 0.5 * wb
     r2 = 0.5 * wt
     he = 0.5 * h
 
     points = [
-        (cx - r1, cy - he),  # bottom left
-        (cx + r1, cy - he),  # bottom right
-        (cx + r2, cy + he),  # top right
-        (cx - r2, cy + he),  # top left
+        (cx - r1, cy - he),
+        (cx + r1, cy - he),
+        (cx + r2, cy + he),
+        (cx - r2, cy + he),
     ]
 
     geom = Polygon(points)
 
-    if shape.angle != 0:
-        geom = shp_rotate(geom, shape.angle, origin=shape.center)
+    if angle != 0:
+        geom = shp_rotate(geom, angle, origin=(cx, cy))
 
-    if shape.corner_radius == 0:
+    if rr == 0:
         return geom
 
-    return round_corners(geom, radius=shape.corner_radius, mode="inner")
+    return round_corners(geom, radius=rr, mode="inner")
 

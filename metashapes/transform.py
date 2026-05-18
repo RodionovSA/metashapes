@@ -15,7 +15,7 @@ from shapely.geometry import Polygon, MultiPolygon, LinearRing
 from shapely.geometry.base import BaseGeometry
 
 from typing import TYPE_CHECKING, List
-from .canvas import Canvas  
+from .lattice.canvas import Canvas  
 
 def shapely_to_numpy(geom: 'BaseGeometry', canvas: 'Canvas') -> np.ndarray:
     if geom.is_empty:

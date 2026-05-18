@@ -3,14 +3,12 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, ClassVar
+import math
 import torch
-import numpy as np
 
-from metashapes.shape.base import Shape, to_plain_data, to_plain_scalar
+from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _to_local_coords
+from metashapes.shape.utils import _to_local_coords, register
 
 __all__ = [
     "Rectangle",
@@ -19,7 +17,6 @@ __all__ = [
 ]
 
 @register_shape("Rectangle")
-@dataclass(slots=True)
 class Rectangle(Shape):
     """
     Symbolic rectangle.
@@ -30,29 +27,27 @@ class Rectangle(Shape):
         angle: counter-clockwise rotation angle in degrees
         corner_radius: radius for soft corners (ignored if soft_corners=False)
     """
-    center: tuple[Any, Any]
-    size: tuple[Any, Any]
-    angle: Any = 0.0
-    corner_radius: Any = 0.0
-
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
-        if len(self.size) != 2:
-            raise ValueError("size must have length 2")
+    def __init__(self, 
+                 center: torch.tensor, 
+                 size: torch.Tensor,
+                 angle: torch.Tensor = 0.0,
+                 corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "size", size)
+        register(self, "angle", angle)
+        register(self, "corner_radius", corner_radius)
+        
+        if torch.any(self.size <= 0):
+            raise ValueError("Rectangle size components must be positive")
+        if torch.any(self.corner_radius < 0):
+            raise ValueError("corner_radius must be non-negative")
         
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        w = torch.as_tensor(self.size[0], dtype=x.dtype, device=x.device)
-        h = torch.as_tensor(self.size[1], dtype=y.dtype, device=y.device)
-        a = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-        r = torch.as_tensor(self.corner_radius, dtype=x.dtype, device=x.device)
-
-        if torch.any(w <= 0) or torch.any(h <= 0):
-            raise ValueError("Rectangle size components must be positive")
-        if torch.any(r < 0):
-            raise ValueError("corner_radius must be non-negative")
+        cx, cy = self.center[0], self.center[1]
+        w, h = self.size[0], self.size[1]
+        a = self.angle
+        r = self.corner_radius
 
         r = torch.minimum(r, 0.5 * torch.minimum(w, h))
 
@@ -70,40 +65,76 @@ class Rectangle(Shape):
 
         return outside + inside - r
     
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        w, h = self.size.detach().tolist()
+        angle = self.angle.detach().item()
+
+        theta = math.radians(angle)
+        c, s = abs(math.cos(theta)), abs(math.sin(theta))
+        hw = 0.5 * (c * w + s * h)
+        hh = 0.5 * (s * w + c * h)
+        return (cx - hw, cy - hh), (cx + hw, cy + hh)
+
     @property
     def min_feature_size(self) -> float:
-        return min(to_plain_scalar(v) for v in self.size)
+        return self.size.detach().min().item()
 
 @register_shape("ConvexQuad")
-@dataclass(slots=True)
 class ConvexQuad(Shape):
-    center: tuple[Any, Any]
-    u: tuple[Any, Any]
-    v: tuple[Any, Any]
-    alpha: Any = 0.0
-    beta: Any = 0.0
-    angle: Any = 0.0
-    corner_radius: Any = 0.0
+    """
+    Symbolic convex quadrilateral with optional rounded corners.
 
-    _tuple_fields = ("center", "u", "v")
-    _scalar_fields = Shape._scalar_fields + ("alpha", "beta")
+    The quad is built from a center point and two frame vectors `u`, `v`.
+    Vertices are placed at combinations of ±u and ±v; `alpha` and `beta`
+    stretch one corner along the u- and v-directions respectively, so the
+    shape ranges from a parallelogram (alpha = beta = 0) to a general
+    convex quad. `angle` rotates the whole frame about `center`.
 
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-
-        u0x = torch.as_tensor(self.u[0], dtype=x.dtype, device=x.device)
-        u0y = torch.as_tensor(self.u[1], dtype=y.dtype, device=y.device)
-        v0x = torch.as_tensor(self.v[0], dtype=x.dtype, device=x.device)
-        v0y = torch.as_tensor(self.v[1], dtype=y.dtype, device=y.device)
-
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-        alpha = torch.as_tensor(self.alpha, dtype=x.dtype, device=x.device)
-        beta = torch.as_tensor(self.beta, dtype=x.dtype, device=x.device)
-        rr = torch.as_tensor(self.corner_radius, dtype=x.dtype, device=x.device)
-
-        if torch.any(rr < 0):
+    Parameters:
+        center:        (cx, cy) center of the base parallelogram.
+        u:             first frame vector (half-diagonal direction).
+        v:             second frame vector (half-diagonal direction);
+                       must not be collinear with u.
+        alpha:         stretch of the far corner along u (default 0).
+        beta:          stretch of the far corner along v (default 0).
+        angle:         counter-clockwise rotation in degrees (default 0).
+        corner_radius: radius for rounded corners; 0 = sharp corners.
+                       Must be non-negative and small enough that the
+                       inset polygon stays non-degenerate.
+    """
+    def __init__(self, 
+                 center: torch.tensor, 
+                 u: torch.Tensor,
+                 v: torch.Tensor,
+                 alpha: torch.Tensor = 0.0,
+                 beta: torch.Tensor = 0.0,
+                 angle: torch.Tensor = 0.0,
+                 corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "u", u)
+        register(self, "v", v)
+        register(self, "alpha", alpha)
+        register(self, "beta", beta)
+        register(self, "angle", angle)
+        register(self, "corner_radius", corner_radius)
+        
+        if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
+        
+        uv_cross = self.u[0] * self.v[1] - self.u[1] * self.v[0]
+        if uv_cross.abs().item() <= 1e-12:
+            raise ValueError("u and v must not be collinear")
+        
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        cx, cy = self.center[0], self.center[1]
+        u0x, u0y = self.u[0], self.u[1]
+        v0x, v0y = self.v[0], self.v[1]
+        angle = self.angle
+        alpha = self.alpha
+        beta  = self.beta
+        rr    = self.corner_radius
 
         theta = angle * (torch.pi / 180.0)
         ct = torch.cos(theta)
@@ -114,10 +145,6 @@ class ConvexQuad(Shape):
         uy = st * u0x + ct * u0y
         vx = ct * v0x - st * v0y
         vy = st * v0x + ct * v0y
-
-        uv_cross = ux * vy - uy * vx
-        if abs(to_plain_scalar(uv_cross)) <= 1e-12:
-            raise ValueError("u and v must not be collinear")
 
         v0 = (cx - ux - vx, cy - uy - vy)
         v1 = (cx + ux - vx, cy + uy - vy)
@@ -138,15 +165,15 @@ class ConvexQuad(Shape):
             return s
 
         area2 = _signed_area2(verts)
-        if abs(to_plain_scalar(area2)) <= 1e-12:
+        if area2.abs().item() <= 1e-12:
             raise ValueError("Degenerate quadrilateral")
 
-        if to_plain_scalar(area2) < 0:
+        if area2.item() < 0:
             verts = [verts[0], verts[3], verts[2], verts[1]]
 
         def _line_intersection(px, py, rx, ry, qx, qy, sx, sy):
             det = rx * sy - ry * sx
-            if abs(to_plain_scalar(det)) <= 1e-12:
+            if det.abs().item() <= 1e-12:
                 raise ValueError("Degenerate inset polygon")
             t = ((qx - px) * sy - (qy - py) * sx) / det
             return px + t * rx, py + t * ry
@@ -163,7 +190,7 @@ class ConvexQuad(Shape):
                 ey = by - ay
                 elen = torch.sqrt(ex * ex + ey * ey)
 
-                if abs(to_plain_scalar(elen)) <= 1e-12:
+                if elen.abs().item() <= 1e-12:
                     raise ValueError("Degenerate polygon edge")
 
                 nx = -ey / elen
@@ -178,12 +205,12 @@ class ConvexQuad(Shape):
                 out.append((ix, iy))
 
             area2_in = _signed_area2(out)
-            if abs(to_plain_scalar(area2_in)) <= 1e-12 or to_plain_scalar(area2_in) <= 0:
+            if area2_in.abs().item() <= 1e-12 or area2_in.item() <= 0:
                 raise ValueError("corner_radius is too large")
 
             return out
 
-        if to_plain_scalar(rr) > 0:
+        if rr.item() > 0:
             verts = _inset_convex_polygon(verts, rr)
 
         min_d2 = None
@@ -216,13 +243,40 @@ class ConvexQuad(Shape):
 
         return d - rr
     
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        u0x, u0y = self.u.detach().tolist()
+        v0x, v0y = self.v.detach().tolist()
+        alpha = self.alpha.detach().item()
+        beta  = self.beta.detach().item()
+        angle = self.angle.detach().item()
+
+        theta = math.radians(angle)
+        ct, st = math.cos(theta), math.sin(theta)
+        ux = ct * u0x - st * u0y
+        uy = st * u0x + ct * u0y
+        vx = ct * v0x - st * v0y
+        vy = st * v0x + ct * v0y
+
+        verts = [
+            (cx - ux - vx,                       cy - uy - vy),
+            (cx + ux - vx,                       cy + uy - vy),
+            (cx + (1.0 + alpha) * ux + (1.0 + beta) * vx,
+             cy + (1.0 + alpha) * uy + (1.0 + beta) * vy),
+            (cx - (1.0 + alpha) * ux + (1.0 + beta) * vx,
+             cy - (1.0 + alpha) * uy + (1.0 + beta) * vy),
+        ]
+        xs = [v[0] for v in verts]
+        ys = [v[1] for v in verts]
+        return (min(xs), min(ys)), (max(xs), max(ys))
+
     @property
     def min_feature_size(self) -> float:
-        cx, cy = (to_plain_scalar(v) for v in self.center)
-        ux, uy = (to_plain_scalar(v) for v in self.u)
-        vx, vy = (to_plain_scalar(v) for v in self.v)
-        a = to_plain_scalar(self.alpha)
-        b = to_plain_scalar(self.beta)
+        cx, cy = self.center.detach().tolist()
+        ux, uy = self.u.detach().tolist()
+        vx, vy = self.v.detach().tolist()
+        a = self.alpha.item()
+        b = self.beta.item()
 
         verts = [
             (cx - ux - vx, cy - uy - vy),
@@ -237,7 +291,6 @@ class ConvexQuad(Shape):
         return min(seg_len(verts[i], verts[(i + 1) % 4]) for i in range(4))
 
 @register_shape("IsoscelesTrapezoid")
-@dataclass(slots=True)
 class IsoscelesTrapezoid(Shape):
     """
     Symbolic isosceles trapezoid.
@@ -250,36 +303,37 @@ class IsoscelesTrapezoid(Shape):
         angle: counter-clockwise rotation angle in degrees
         corner_radius: rounding radius
     """
-    center: tuple[Any, Any]
-    bottom_width: Any
-    top_width: Any
-    height: Any
-    angle: Any = 0.0
-    corner_radius: Any = 0.0
-    
-    _scalar_fields: ClassVar[tuple[str, ...]] = Shape._scalar_fields + ('bottom_width', 'top_width', 'height')
+    def __init__(self,
+                 center: torch.Tensor,
+                 bottom_width: torch.Tensor,
+                 top_width: torch.Tensor,
+                 height: torch.Tensor,
+                 angle: torch.Tensor = 0.0,
+                 corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "bottom_width", bottom_width)
+        register(self, "top_width", top_width)
+        register(self, "height", height)
+        register(self, "angle", angle)
+        register(self, "corner_radius", corner_radius)
 
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
+        if torch.any(self.bottom_width <= 0):
+            raise ValueError("bottom_width must be positive")
+        if torch.any(self.top_width <= 0):
+            raise ValueError("top_width must be positive")
+        if torch.any(self.height <= 0):
+            raise ValueError("height must be positive")
+        if torch.any(self.corner_radius < 0):
+            raise ValueError("corner_radius must be non-negative")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        wb = torch.as_tensor(self.bottom_width, dtype=x.dtype, device=x.device)
-        wt = torch.as_tensor(self.top_width, dtype=x.dtype, device=x.device)
-        h = torch.as_tensor(self.height, dtype=x.dtype, device=x.device)
-        rr = torch.as_tensor(self.corner_radius, dtype=x.dtype, device=x.device)
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-
-        if torch.any(wb <= 0):
-            raise ValueError("bottom_width must be positive")
-        if torch.any(wt <= 0):
-            raise ValueError("top_width must be positive")
-        if torch.any(h <= 0):
-            raise ValueError("height must be positive")
-        if torch.any(rr < 0):
-            raise ValueError("corner_radius must be non-negative")
+        cx, cy = self.center[0], self.center[1]
+        wb    = self.bottom_width
+        wt    = self.top_width
+        h     = self.height
+        rr    = self.corner_radius
+        angle = self.angle
 
         r1 = 0.5 * wb
         r2 = 0.5 * wt
@@ -326,11 +380,26 @@ class IsoscelesTrapezoid(Shape):
 
         return d - rr
 
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        wb = self.bottom_width.detach().item()
+        wt = self.top_width.detach().item()
+        h  = self.height.detach().item()
+        angle = self.angle.detach().item()
+
+        theta = math.radians(angle)
+        ct, st = math.cos(theta), math.sin(theta)
+        corners = [(-wb / 2, -h / 2), (wb / 2, -h / 2),
+                   (wt / 2,  h / 2), (-wt / 2,  h / 2)]
+        xs = [cx + ct * lx - st * ly for lx, ly in corners]
+        ys = [cy + st * lx + ct * ly for lx, ly in corners]
+        return (min(xs), min(ys)), (max(xs), max(ys))
+
     @property
     def min_feature_size(self) -> float:
         return min(
-            to_plain_scalar(self.bottom_width),
-            to_plain_scalar(self.top_width),
-            to_plain_scalar(self.height),
+            self.bottom_width.detach().item(),
+            self.top_width.detach().item(),
+            self.height.detach().item(),
         )
         

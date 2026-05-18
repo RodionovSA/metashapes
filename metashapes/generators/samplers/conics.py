@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from metashapes.canvas import Canvas
+from metashapes.lattice.canvas import Canvas
 from metashapes.generators.registry import register_shape_sampler
 from metashapes.generators.samplers.base import ShapeSampler
 from metashapes.generators.samplers.utils import (

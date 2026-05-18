@@ -3,12 +3,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, ClassVar
 import torch
 
-from metashapes.shape.base import Shape, to_plain_scalar
+from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
+from metashapes.shape.utils import register
 
 __all__ = [
     "Stripe",
@@ -16,7 +15,6 @@ __all__ = [
 
 
 @register_shape("Stripe")
-@dataclass(slots=True)
 class Stripe(Shape):
     """
     An infinite stripe spanning the full unit cell along one axis.
@@ -38,44 +36,50 @@ class Stripe(Shape):
         # Vertical stripe of width 0.2 shifted to x = 0.1
         s = Stripe(offset=0.1, width=0.2, axis='y')
 
-    Notes:
-        ``allowed_self_periodic_shifts`` is set automatically so the
-        generator and ``UnitCell`` know this shape spans the cell boundary
-        and must not be clipped or gap-checked in the periodic direction.
     """
 
-    offset: Any
-    width: Any
-    axis: str = 'x'
-
-    _scalar_fields: ClassVar[tuple[str, ...]] = Shape._scalar_fields + ('offset', 'width')
-
-    def __post_init__(self) -> None:
-        if self.axis not in ('x', 'y'):
+    def __init__(self,
+                 offset: torch.Tensor,
+                 width: torch.Tensor,
+                 axis: str = 'x'):
+        super().__init__()
+        if axis not in ('x', 'y'):
             raise ValueError("axis must be 'x' or 'y'")
+        self.axis = axis
+        register(self, "offset", offset)
+        register(self, "width", width)
+
+        if torch.any(self.width <= 0):
+            raise ValueError("Stripe width must be positive")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        w = torch.as_tensor(self.width, dtype=x.dtype, device=x.device)
-        off = torch.as_tensor(self.offset, dtype=x.dtype, device=x.device)
-
-        if torch.any(w <= 0):
-            raise ValueError("Stripe width must be positive")
+        w   = self.width
+        off = self.offset
 
         # SDF of a 1-D band along the perpendicular coordinate t:
         #   d = |t - offset| - width/2
         t = y if self.axis == 'x' else x
         return torch.abs(t - off) - 0.5 * w
 
-    @property
-    def min_feature_size(self) -> float:
-        return to_plain_scalar(self.width)
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        off = self.offset.detach().item()
+        w = self.width.detach().item()
+        inf = float('inf')
+        if self.axis == 'x':
+            return (-inf, off - w / 2.0), (inf, off + w / 2.0)
+        return (off - w / 2.0, -inf), (off + w / 2.0, inf)
 
     @property
-    def allowed_self_periodic_shifts(self) -> set[tuple[int, int]]:
-        """
-        The stripe reaches both boundaries of the unit cell along its axis,
-        so its periodic images are allowed to be in contact with it.
-        """
-        if self.axis == 'x':
-            return {(-1, 0), (1, 0)}   # periodic in x
-        return {(0, -1), (0, 1)}        # periodic in y
+    def min_feature_size(self) -> float:
+        return self.width.detach().item()
+    
+    def rotate(
+        self,
+        angle: float | torch.Tensor,
+        origin: tuple[float | torch.Tensor, float | torch.Tensor] = (0.0, 0.0),
+    ) -> "Shape":
+        raise NotImplementedError(
+        "Stripe cannot be rotated: a stripe only tiles when its axis "
+        "is a lattice direction. Define the stripe in the desired "
+        "orientation instead."
+    )

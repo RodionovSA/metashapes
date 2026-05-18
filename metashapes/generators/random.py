@@ -15,8 +15,8 @@ from metashapes.generators.registry import SHAPE_SAMPLER_REGISTRY
 import metashapes.generators.samplers  
 
 
-from metashapes.unit_cell import UnitCell
-from metashapes.canvas import Canvas
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.lattice.canvas import Canvas
 from metashapes.shape.primitives import Rectangle
 from metashapes import Shape
 from metashapes.adapters.shapely import remove_holes

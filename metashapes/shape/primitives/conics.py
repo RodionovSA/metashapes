@@ -3,21 +3,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, ClassVar
+import math
 import torch
-import numpy as np
 
-from metashapes.shape.base import Shape, to_plain_data, to_plain_scalar
+from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _to_local_coords
+from metashapes.shape.utils import _to_local_coords, register
 
 __all__ = [
     "Ellipse",
 ]
 
 @register_shape("Ellipse")
-@dataclass(slots=True)
 class Ellipse(Shape):
     """
     Symbolic ellipse.
@@ -26,27 +23,23 @@ class Ellipse(Shape):
         center: (cx, cy)
         axes: full size axes (a, b)
         angle: counter-clockwise rotation angle in degrees
-        resolution: optional hint for evaluators that approximate the ellipse
     """
-    center: tuple[Any, Any]
-    axes: tuple[Any, Any]
-    angle: Any = 0.0
+    def __init__(self,
+                 center: torch.Tensor,
+                 axes: torch.Tensor,
+                 angle: torch.Tensor = 0.0):
+        super().__init__()
+        register(self, "center", center)
+        register(self, "axes", axes)
+        register(self, "angle", angle)
 
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
-        if len(self.axes) != 2:
-            raise ValueError("axes must have length 2")
-        
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        a = torch.as_tensor(self.axes[0], dtype=x.dtype, device=x.device)
-        b = torch.as_tensor(self.axes[1], dtype=y.dtype, device=y.device)
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-
-        if torch.any(a <= 0) or torch.any(b <= 0):
+        if torch.any(self.axes <= 0):
             raise ValueError("Ellipse axes must be positive")
+
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        cx, cy = self.center[0], self.center[1]
+        a, b = self.axes[0], self.axes[1]
+        angle = self.angle
 
         # assuming self.axes are full diameters, like in your previous code
         a2 = a * 0.5
@@ -144,9 +137,22 @@ class Ellipse(Shape):
         ellipse_dist = dist * sign
 
         return torch.where(circle_mask, circle_dist, ellipse_dist)
-    
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        a_full, b_full = self.axes.detach().tolist()
+        angle = self.angle.detach().item()
+
+        a = a_full / 2.0
+        b = b_full / 2.0
+        theta = math.radians(angle)
+        c, s = math.cos(theta), math.sin(theta)
+
+        # tight AABB of a rotated ellipse
+        hw = math.sqrt((a * c) ** 2 + (b * s) ** 2)
+        hh = math.sqrt((a * s) ** 2 + (b * c) ** 2)
+        return (cx - hw, cy - hh), (cx + hw, cy + hh)
+
     @property
     def min_feature_size(self) -> float:
-        return min(to_plain_scalar(v) for v in self.axes)
-
-        
+        return self.axes.detach().min().item()

@@ -3,28 +3,18 @@
 
 from __future__ import annotations
 
-from abc import ABC, abstractmethod
-from typing import Any, ClassVar
-from dataclasses import is_dataclass, fields
-
-import numbers
-import numpy as np
 import torch
+import torch.nn as nn
 
 from shapely.geometry.base import BaseGeometry
-from metashapes.canvas import Canvas
 from .registry import SHAPE_REGISTRY
 
 
-class Shape(ABC):
+class Shape(nn.Module):
     """
     Base class for all symbolic 2D shapes.
     """
-    _tuple_fields: ClassVar[tuple[str, ...]] = ('center', 'size', 'axes')
-    _scalar_fields: ClassVar[tuple[str, ...]] = ('angle', 'corner_radius', 'side_length', 'length', 'width', 
-                                                'outer_corner_radius', 'inner_corner_radius')
 
-    @abstractmethod
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """
         Signed distance evaluated on torch tensors.
@@ -33,26 +23,23 @@ class Shape(ABC):
         """
         raise NotImplementedError
     
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        """Axis-aligned bounding box of the shape, in world coordinates.
+
+        Returns ((xmin, ymin), (xmax, ymax)).
+
+        Shapes that are infinite along a direction return -inf / +inf
+        for that coordinate (e.g. a horizontal stripe is infinite in x).
+        UnitCell uses this only to size the periodic-copy search, so an
+        infinite extent simply means "one copy is enough in that
+        direction" — the copies there are identical.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement bounds()")
+    
     @property
     def min_feature_size(self) -> float:
         return None
-    
-    @property
-    def allowed_self_periodic_shifts(self) -> set[tuple[int, int]]:
-        """
-        Periodic shifts with which this shape is allowed to connect
-        continuously to itself. 
-
-        Each tuple (ix, iy) represents a shift by:
-            ix * canvas.Lx, iy * canvas.Ly
-
-        Examples:
-            set()                  -> no self-periodic joins allowed
-            {(-1, 0), (1, 0)}      -> allowed to join across left/right boundaries
-            {(0, -1), (0, 1)}      -> allowed to join across bottom/top boundaries
-            {(-1, -1), (1, 1)}     -> allowed to join along a diagonal periodic chain
-        """
-        return set()
 
     # Boolean operators for easy shape composition
     def __or__(self, other: "Shape") -> "Shape":
@@ -83,58 +70,39 @@ class Shape(ABC):
         return Difference(self, other, smooth=smooth, k=k)
     
     # Transformations for shape manipulation
-    def translate(self, dx: Any = 0.0, dy: Any = 0.0) -> "Shape":
+    def translate(self, 
+                  dx: float | torch.Tensor = 0.0, 
+                  dy: float | torch.Tensor = 0.0) -> "Shape":
         from .transforms import Translate
         return Translate(self, dx=dx, dy=dy)
 
     def rotate(
         self,
-        angle: Any,
-        origin: tuple[Any, Any] = (0.0, 0.0),
+        angle: float | torch.Tensor,
+        origin: tuple[float | torch.Tensor, float | torch.Tensor] = (0.0, 0.0),
     ) -> "Shape":
-        allowed = self.allowed_self_periodic_shifts
-        if allowed:
-            raise ValueError(
-                f"{type(self).__name__} has periodic directions "
-                f"{allowed} and cannot be rotated — rotation would break "
-                f"the axis-aligned periodicity."
-            )
         from .transforms import Rotate
         return Rotate(self, angle=angle, origin=origin)
 
     def scale(
         self,
-        s: Any,
-        origin: tuple[Any, Any] = (0.0, 0.0),
+        s: float | torch.Tensor,
+        origin: tuple[float | torch.Tensor, float | torch.Tensor] = (0.0, 0.0),
     ) -> "Shape":
         from .transforms import Scale
         return Scale(self, s=s, origin=origin)
 
-    # Serialization 
+    # Serialization
     def to_parametric(self) -> dict:
-        if not is_dataclass(self):
-            raise TypeError(f"{type(self).__name__} must be a dataclass")
-
         data = {"type": type(self).__name__}
-        for f in fields(self):
-            value = getattr(self, f.name)
-            if f.name in self._scalar_fields:
-                data[f.name] = to_plain_scalar(value)
-            else:
-                data[f.name] = to_plain_data(value)
+        # registered tensors (params + buffers)
+        for name, t in (*self.named_parameters(recurse=False),
+                    *self.named_buffers(recurse=False)):
+            data[name] = to_plain_data(t)
+        # child shapes
+        for name, child in self.named_children():
+            data[name] = child.to_parametric()
         return data
-    
-    @classmethod
-    def _from_own_parametric(cls, data: dict):
-        kwargs = {}
-        for f in fields(cls):
-            if f.name not in data:
-                continue
-            v = data[f.name]
-            if f.name in cls._tuple_fields and v is not None:
-                v = tuple(v)
-            kwargs[f.name] = v
-        return cls(**kwargs)
     
     @classmethod
     def from_parametric(cls, data: dict) -> "Shape":
@@ -146,7 +114,7 @@ class Shape(ABC):
             raise ValueError("Missing 'type' in shape parametric data")
 
         if cls is not Shape:
-            return cls._from_own_parametric(data)
+            raise NotImplementedError(f"{cls.__name__} must define from_parametric")
 
         try:
             shape_cls = SHAPE_REGISTRY[shape_type]
@@ -156,65 +124,6 @@ class Shape(ABC):
         return shape_cls.from_parametric(data)
     
     # Adapters to other representations
-    def mask(
-        self,
-        canvas: Canvas,
-        *,
-        dtype: torch.dtype = torch.float32,
-        device: str | torch.device = "cpu",
-        soft: bool = False,
-        softness: float | torch.Tensor | None = None,
-    ) -> torch.Tensor:
-        """
-        Rasterize this Shape into a torch mask on the given canvas.
-
-        Parameters:
-            canvas: The canvas to rasterize onto.
-            dtype: Torch dtype of the output mask.
-            device: Torch device.
-            soft: If True, return a soft mask instead of a hard binary mask.
-            softness: Edge smoothing scale in world units. If None, defaults to one pixel.
-        
-        Returns:
-            Tensor of shape (H, W).
-        
-        """
-        x, y = canvas.grid(dtype=dtype, device=device)
-        d = self.sdf(x, y)
-
-        if not soft:
-            return (d <= 0).to(dtype)
-
-        if softness is None:
-            softness = min(canvas.dx, canvas.dy)
-
-        softness = torch.as_tensor(softness, dtype=d.dtype, device=d.device)
-        return torch.sigmoid(-d / softness)
-    
-    def mask_numpy(self, 
-                   canvas: Canvas, 
-                   *, 
-                   dtype=np.float32, 
-                   soft: bool = False, 
-                   softness: float | None = None) -> np.ndarray:
-        """
-        Rasterize this Shape into a NumPy array of the given canvas size.
-
-        Parameters:
-            canvas: The canvas to rasterize onto.
-            dtype: The desired data type of the output array.
-            soft: If True, return a soft mask instead of a hard binary mask.
-            softness: The scale of the softness in world units. If None, defaults to one pixel.
-        """
-        mask = self.mask(
-            canvas,
-            dtype=torch.float32,
-            device="cpu",
-            soft=soft,
-            softness=softness,
-        )
-        return mask.detach().cpu().numpy().astype(dtype, copy=False)
-        
     def to_shapely(self) -> BaseGeometry:
         """
         Convert this Shape into a Shapely geometry.
@@ -225,60 +134,8 @@ class Shape(ABC):
     
 
 """ Helper functions for data conversion and serialization. """
-def to_plain_data(x: Any):
-    """
-    Convert values to plain Python-serializable data.
-
-    Rules:
-        - Python scalars stay unchanged
-        - torch scalar tensors -> Python scalar
-        - torch vectors/matrices -> nested Python lists
-        - NumPy scalars -> Python scalar
-        - NumPy arrays -> nested Python lists
-        - tuples/lists -> recursively converted, preserving container type
-    """
-    if isinstance(x, np.generic):
-        return x.item()
-    
-    if isinstance(x, numbers.Number):
-        return x
-
-    if isinstance(x, torch.Tensor):
-        x = x.detach().cpu()
-        if x.ndim == 0:
-            return x.item()
-        return x.tolist()
-
-    if isinstance(x, np.ndarray):
-        if x.ndim == 0:
-            return x.item()
-        return x.tolist()
-
-    if isinstance(x, tuple):
-        return tuple(to_plain_data(v) for v in x)
-
-    if isinstance(x, list):
-        return [to_plain_data(v) for v in x]
-
-    if isinstance(x, dict):
-        return {k: to_plain_data(v) for k, v in x.items()}
-
-    return x
-
-def to_plain_scalar(x: Any):
-    """
-    Convert scalar-like values to a plain Python scalar.
-
-    Accepts:
-        - Python/NumPy scalars
-        - 0D torch tensors
-        - 1-element tensors / arrays / lists / tuples
-    """
-    x = to_plain_data(x)
-
-    while isinstance(x, (list, tuple)):
-        if len(x) != 1:
-            raise ValueError(f"Expected scalar-like value, got {x}")
-        x = x[0]
-
-    return x
+def to_plain_data(x: torch.Tensor):
+    """Tensor -> JSON/YAML-serializable Python value.
+    Scalar tensor -> Python scalar; vector/matrix -> nested lists."""
+    x = x.detach().cpu()
+    return x.item() if x.ndim == 0 else x.tolist()

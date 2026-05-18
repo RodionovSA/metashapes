@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from metashapes.unit_cell import UnitCell, UniformCell
+from metashapes.lattice.unit_cell import UnitCell, UniformCell
 
 
 class _Dumper(yaml.Dumper):

@@ -12,9 +12,11 @@ import metashapes.shape.primitives as prim
 from .helpers import round_corners
 
 def regular_polygon_to_shapely(shape: prim.RegularPolygon) -> BaseGeometry:
-    cx, cy = shape.center
+    cx, cy = shape.center.tolist()
     n = shape.n
-    s = shape.side_length
+    s = shape.side_length.item()
+    angle = shape.angle.item()
+    rr = shape.corner_radius.item()
 
     R = s / (2.0 * np.sin(np.pi / n))
     phi = np.pi / 2.0
@@ -28,9 +30,9 @@ def regular_polygon_to_shapely(shape: prim.RegularPolygon) -> BaseGeometry:
     ]
 
     geom = Polygon(points)
-    if shape.angle != 0:
-        geom = shp_rotate(geom, shape.angle, origin=shape.center)
-        
-    if shape.corner_radius == 0:
+    if angle != 0:
+        geom = shp_rotate(geom, angle, origin=(cx, cy))
+
+    if rr == 0:
         return geom
-    return round_corners(geom, radius=shape.corner_radius, mode="inner")
+    return round_corners(geom, radius=rr, mode="inner")

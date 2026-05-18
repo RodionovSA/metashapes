@@ -3,21 +3,18 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, ClassVar
 import torch
 import numpy as np
 
-from metashapes.shape.base import Shape, to_plain_data, to_plain_scalar
+from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _to_local_coords
+from metashapes.shape.utils import _to_local_coords, register
 
 __all__ = [
     "RegularPolygon",
 ]
-        
-@register_shape("RegularPolygon")    
-@dataclass(slots=True)
+
+@register_shape("RegularPolygon")
 class RegularPolygon(Shape):
     """
     Symbolic regular polygon.
@@ -27,42 +24,47 @@ class RegularPolygon(Shape):
         n: Number of sides.
         side_length: Length of each side.
         angle: Counter-clockwise rotation angle in degrees.
+        corner_radius: rounding radius for corners.
     """
-    center: tuple[Any, Any]
-    n: int
-    side_length: Any
-    angle: Any = 0.0
-    corner_radius: Any = 0.0
-
-    def __post_init__(self) -> None:
-        if len(self.center) != 2:
-            raise ValueError("center must have length 2")
-        if self.n < 3:
+    def __init__(self,
+                 center: torch.Tensor,
+                 n: int,
+                 side_length: torch.Tensor,
+                 angle: torch.Tensor = 0.0,
+                 corner_radius: torch.Tensor = 0.0):
+        super().__init__()
+        if n < 3:
             raise ValueError("n must be at least 3")
-        
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx = torch.as_tensor(self.center[0], dtype=x.dtype, device=x.device)
-        cy = torch.as_tensor(self.center[1], dtype=y.dtype, device=y.device)
-        s = torch.as_tensor(self.side_length, dtype=x.dtype, device=x.device)
-        rr = torch.as_tensor(self.corner_radius, dtype=x.dtype, device=x.device)
-        n = int(self.n)
+        self.n = n
+        register(self, "center", center)
+        register(self, "side_length", side_length)
+        register(self, "angle", angle)
+        register(self, "corner_radius", corner_radius)
 
-        if torch.any(s <= 0):
+        if torch.any(self.side_length <= 0):
             raise ValueError("side_length must be positive")
-        if torch.any(rr < 0):
+        if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
 
+        an = torch.tensor(np.pi / n)
+        rho = self.side_length / (2.0 * torch.tan(an))
+        if torch.any(self.corner_radius >= rho):
+            raise ValueError("corner_radius is too large")
+
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        cx, cy = self.center[0], self.center[1]
+        s  = self.side_length
+        rr = self.corner_radius
+        n  = self.n
+
         pi = torch.as_tensor(np.pi, dtype=x.dtype, device=x.device)
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)  # degrees if _to_local_coords expects degrees
+        angle = self.angle
 
         # original polygon radii
         n_t = torch.as_tensor(float(n), dtype=x.dtype, device=x.device)
         an = pi / n_t
         R = s / (2.0 * torch.sin(an))     # circumradius
         rho = R * torch.cos(an)           # apothem
-
-        if torch.any(rr >= rho):
-            raise ValueError("corner_radius is too large")
 
         # inset polygon: preserve outer support lines after rounding
         rho_in = rho - rr
@@ -108,15 +110,28 @@ class RegularPolygon(Shape):
         d_in = torch.where(inside, -d_in, d_in)
 
         return d_in - rr
-    
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        s = self.side_length.detach().item()
+        angle = self.angle.detach().item()
+        n = self.n
+
+        an = np.pi / n
+        R = s / (2.0 * np.sin(an))
+        phi0 = np.pi / 2.0 + np.radians(angle)
+        angles = [2.0 * np.pi * k / n + phi0 for k in range(n)]
+        xs = [cx + R * np.cos(a) for a in angles]
+        ys = [cy + R * np.sin(a) for a in angles]
+        return (float(min(xs)), float(min(ys))), (float(max(xs)), float(max(ys)))
+
     @property
     def min_feature_size(self) -> float:
         pi = np.pi
-        R = to_plain_scalar(self.side_length) / (2.0 * np.sin(pi / self.n))
+        R = self.side_length.detach().item() / (2.0 * np.sin(pi / self.n))
         a = R * np.cos(pi / self.n)
 
         if self.n % 2 == 0:
             return 2.0 * a
 
         return a * (1.0 + np.cos(pi / self.n))
-        

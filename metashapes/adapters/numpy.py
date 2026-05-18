@@ -6,7 +6,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.ndimage import distance_transform_edt, gaussian_filter
 
-from metashapes.canvas import Canvas
+from metashapes.lattice.canvas import Canvas
 from metashapes.patterned_layer import PatternedLayer
 from metashapes.shape.base import Shape
 from metashapes.shape.primitives import (

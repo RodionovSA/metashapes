@@ -3,35 +3,44 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any
+import math
+from typing import Any, Tuple
 import torch
 
-from .base import Shape
+from .base import Shape, to_plain_data
 from .registry import register_shape
+from .utils import register
 
 
 @register_shape("Translate")
-@dataclass(slots=True)
 class Translate(Shape):
     """
     Symbolic translation of a shape.
     """
-    shape: Shape
-    dx: Any = 0.0
-    dy: Any = 0.0
+    def __init__(self, 
+                 shape: Shape, 
+                 dx: float | torch.Tensor = 0.0,
+                 dy: float | torch.Tensor = 0.0):
+        super().__init__()
+        self.shape = shape
+        register(self, "dx", dx)
+        register(self, "dy", dy)
     
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        dx = torch.as_tensor(self.dx, dtype=x.dtype, device=x.device)
-        dy = torch.as_tensor(self.dy, dtype=y.dtype, device=y.device)
-        return self.shape.sdf(x - dx, y - dy)
+        return self.shape.sdf(x - self.dx, y - self.dy)
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        dx = self.dx.detach().item()
+        dy = self.dy.detach().item()
+        (x0, y0), (x1, y1) = self.shape.bounds()
+        return (x0 + dx, y0 + dy), (x1 + dx, y1 + dy)
 
     def to_parametric(self) -> dict:
         return {
             "type": "Translate",
             "shape": self.shape.to_parametric(),
-            "dx": self.dx,
-            "dy": self.dy,
+            "dx": to_plain_data(self.dx),
+            "dy": to_plain_data(self.dy),
         }
         
     @classmethod
@@ -43,47 +52,51 @@ class Translate(Shape):
         )
 
 @register_shape("Rotate")
-@dataclass(slots=True)
 class Rotate(Shape):
     """
     Symbolic rotation of a shape.
     """
-    shape: Shape
-    angle: Any
-    origin: tuple[Any, Any] = (0.0, 0.0)
+    def __init__(self, 
+                 shape: Shape, 
+                 angle: float | torch.Tensor,
+                 origin: Tuple[float | torch.Tensor,
+                               float | torch.Tensor]  = (0.0, 0.0)):
+        super().__init__()
+        self.shape = shape
+        register(self, "angle", angle)
+        register(self, "origin", origin)
 
-    def __post_init__(self) -> None:
-        allowed = self.shape.allowed_self_periodic_shifts
-        if allowed:
-            raise ValueError(
-                f"{type(self.shape).__name__} has periodic directions "
-                f"{allowed} and cannot be rotated — rotation would break "
-                f"the axis-aligned periodicity."
-            )
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        (x0, y0), (x1, y1) = self.shape.bounds()
+        angle = self.angle.detach().item()
+        ox, oy = self.origin.detach().tolist()
+
+        theta = math.radians(angle)
+        c, s = math.cos(theta), math.sin(theta)
+        corners = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
+        xs = [ox + c * (x - ox) - s * (y - oy) for x, y in corners]
+        ys = [oy + s * (x - ox) + c * (y - oy) for x, y in corners]
+        return (min(xs), min(ys)), (max(xs), max(ys))
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        angle = torch.as_tensor(self.angle, dtype=x.dtype, device=x.device)
-        ox = torch.as_tensor(self.origin[0], dtype=x.dtype, device=x.device)
-        oy = torch.as_tensor(self.origin[1], dtype=y.dtype, device=y.device)
+        xr = x - self.origin[0]
+        yr = y - self.origin[1]
 
-        xr = x - ox
-        yr = y - oy
-
-        angle_rad = torch.deg2rad(angle)
+        angle_rad = torch.deg2rad(self.angle)
         c = torch.cos(angle_rad)
         s = torch.sin(angle_rad)
 
         # inverse rotation
-        x_local =  c * xr + s * yr + ox
-        y_local = -s * xr + c * yr + oy
+        x_local =  c * xr + s * yr + self.origin[0]
+        y_local = -s * xr + c * yr + self.origin[1]
         return self.shape.sdf(x_local, y_local)
 
     def to_parametric(self) -> dict:
         return {
             "type": "Rotate",
             "shape": self.shape.to_parametric(),
-            "angle": self.angle,
-            "origin": self.origin,
+            "angle": to_plain_data(self.angle),
+            "origin": to_plain_data(self.origin),
         }
         
     @classmethod
@@ -95,30 +108,43 @@ class Rotate(Shape):
         )
 
 @register_shape("Scale")
-@dataclass(slots=True)
 class Scale(Shape):
     """
     Symbolic scaling of a shape.
     """
-    shape: Shape
-    s: Any
-    origin: tuple[Any, Any] = (0.0, 0.0)
+    def __init__(self, 
+                 shape: Shape, 
+                 s: float | torch.Tensor,
+                 origin: Tuple[float | torch.Tensor,
+                               float | torch.Tensor]  = (0.0, 0.0)):
+        super().__init__()
+        self.shape = shape
+        register(self, "s", s)
+        register(self, "origin", origin)
+        
+        if torch.any(self.s <= 0):
+            raise ValueError("scale factor s must be positive")
+            
     
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        ox = torch.as_tensor(self.origin[0], dtype=x.dtype, device=x.device)
-        oy = torch.as_tensor(self.origin[1], dtype=y.dtype, device=y.device)
-        s = torch.as_tensor(self.s, dtype=x.dtype, device=x.device)
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        s = self.s.detach().item()
+        ox, oy = self.origin.detach().tolist()
+        (x0, y0), (x1, y1) = self.shape.bounds()
+        xs = [ox + s * (x0 - ox), ox + s * (x1 - ox)]
+        ys = [oy + s * (y0 - oy), oy + s * (y1 - oy)]
+        return (min(xs), min(ys)), (max(xs), max(ys))
 
-        x_local = (x - ox) / s + ox
-        y_local = (y - oy) / s + oy
-        return s * self.shape.sdf(x_local, y_local)
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        x_local = (x - self.origin[0]) / self.s + self.origin[0]
+        y_local = (y - self.origin[1]) / self.s + self.origin[1]
+        return self.s * self.shape.sdf(x_local, y_local)
 
     def to_parametric(self) -> dict:
         return {
             "type": "Scale",
             "shape": self.shape.to_parametric(),
-            "s": self.s,
-            "origin": self.origin,
+            "s": to_plain_data(self.s),
+            "origin": to_plain_data(self.origin),
         }
         
     @classmethod

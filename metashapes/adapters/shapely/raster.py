@@ -7,7 +7,7 @@ import numpy as np
 import shapely
 from shapely.geometry.base import BaseGeometry
 
-from metashapes.canvas import Canvas
+from metashapes.lattice.canvas import Canvas
 
 def shapely_to_numpy(geom: 'BaseGeometry', canvas: 'Canvas') -> np.ndarray:
     if geom.is_empty:

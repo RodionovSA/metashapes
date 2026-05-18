@@ -6,7 +6,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import ClassVar
 
-from metashapes.canvas import Canvas
+from metashapes.lattice.canvas import Canvas
 from metashapes.shape.base import Shape
 
 

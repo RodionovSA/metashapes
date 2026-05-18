@@ -3,23 +3,28 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import torch
 
-from .base import Shape
+from .base import Shape, to_plain_data
 from .registry import register_shape
+from .utils import register
 
 
 @register_shape("Union")
-@dataclass(slots=True)
 class Union(Shape):
     """
     Symbolic union of two shapes.
     """
-    left: Shape
-    right: Shape
-    smooth: bool = False
-    k: float | torch.Tensor = 1.0
+    def __init__(self, 
+                 left: Shape, 
+                 right: Shape, 
+                 smooth: bool = False, 
+                 k: float | torch.Tensor = 1.0):
+        super().__init__()
+        self.left = left
+        self.right = right
+        self.smooth = smooth
+        register(self, "k", k)
     
     def sdf(self, x, y):
         d1 = self.left.sdf(x, y)
@@ -27,12 +32,19 @@ class Union(Shape):
         if not self.smooth:
             return torch.minimum(d1, d2)
         return smooth_min_poly(d1, d2, self.k)
-    
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        (x0, y0), (x1, y1) = self.left.bounds()
+        (x2, y2), (x3, y3) = self.right.bounds()
+        return (min(x0, x2), min(y0, y2)), (max(x1, x3), max(y1, y3))
+
     def to_parametric(self) -> dict:
         return {
             "type": "Union",
             "left": self.left.to_parametric(),
             "right": self.right.to_parametric(),
+            "smooth": self.smooth,
+            "k":      to_plain_data(self.k),
         }
         
     @classmethod
@@ -40,19 +52,26 @@ class Union(Shape):
         return cls(
             left=Shape.from_parametric(data["left"]),
             right=Shape.from_parametric(data["right"]),
+            smooth=data.get("smooth", False),
+            k=data.get("k", 1.0),
         )
 
 
 @register_shape("Intersection")
-@dataclass(slots=True)
 class Intersection(Shape):
     """
     Symbolic intersection of two shapes.
     """
-    left: Shape
-    right: Shape
-    smooth: bool = False
-    k: float | torch.Tensor = 1.0
+    def __init__(self, 
+                 left: Shape, 
+                 right: Shape, 
+                 smooth: bool = False, 
+                 k: float | torch.Tensor = 1.0):
+        super().__init__()
+        self.left = left
+        self.right = right
+        self.smooth = smooth
+        register(self, "k", k)
     
     def sdf(self, x, y):
         d1 = self.left.sdf(x, y)
@@ -60,12 +79,19 @@ class Intersection(Shape):
         if not self.smooth:
             return torch.maximum(d1, d2)
         return smooth_max_poly(d1, d2, self.k)
-    
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        (x0, y0), (x1, y1) = self.left.bounds()
+        (x2, y2), (x3, y3) = self.right.bounds()
+        return (max(x0, x2), max(y0, y2)), (min(x1, x3), min(y1, y3))
+
     def to_parametric(self) -> dict:
         return {
             "type": "Intersection",
             "left": self.left.to_parametric(),
             "right": self.right.to_parametric(),
+            "smooth": self.smooth,
+            "k":      to_plain_data(self.k),
         }
         
     @classmethod
@@ -73,19 +99,26 @@ class Intersection(Shape):
         return cls(
             left=Shape.from_parametric(data["left"]),
             right=Shape.from_parametric(data["right"]),
+            smooth=data.get("smooth", False),
+            k=data.get("k", 1.0),
         )
 
 
 @register_shape("Difference")
-@dataclass(slots=True)
 class Difference(Shape):
     """
     Symbolic difference of two shapes: left - right.
     """
-    left: Shape
-    right: Shape
-    smooth: bool = False
-    k: float | torch.Tensor = 1.0
+    def __init__(self, 
+                 left: Shape, 
+                 right: Shape, 
+                 smooth: bool = False, 
+                 k: float | torch.Tensor = 1.0):
+        super().__init__()
+        self.left = left
+        self.right = right
+        self.smooth = smooth
+        register(self, "k", k)
     
     def sdf(self, x, y):
         d1 = self.left.sdf(x, y)
@@ -93,12 +126,17 @@ class Difference(Shape):
         if not self.smooth:
             return torch.maximum(d1, -d2)
         return smooth_max_poly(d1, -d2, self.k)
-    
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        return self.left.bounds()
+
     def to_parametric(self) -> dict:
         return {
             "type": "Difference",
             "left": self.left.to_parametric(),
             "right": self.right.to_parametric(),
+            "smooth": self.smooth,
+            "k":      to_plain_data(self.k),
         }
         
     @classmethod
@@ -106,6 +144,8 @@ class Difference(Shape):
         return cls(
             left=Shape.from_parametric(data["left"]),
             right=Shape.from_parametric(data["right"]),
+            smooth=data.get("smooth", False),
+            k=data.get("k", 1.0),
         )
         
 """ Helper functions for smooth boolean operations. 

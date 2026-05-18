@@ -12,7 +12,7 @@ import numpy as np
 from shapely.affinity import translate
 from shapely.geometry.base import BaseGeometry
 
-from metashapes.unit_cell import UnitCell
+from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.base import Shape
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale

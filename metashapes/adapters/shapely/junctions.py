@@ -17,11 +17,11 @@ def _rounded_box(hx: float, hy: float, rr: float) -> BaseGeometry:
         return box(-(hx - rr), -(hy - rr), hx - rr, hy - rr).buffer(rr, join_style=1)
 
 def cross_to_shapely(shape: prim.Cross) -> BaseGeometry:
-    cx, cy = shape.center
-    length = shape.length
-    width = shape.width
-    ro = shape.outer_corner_radius
-    ri = shape.inner_corner_radius
+    cx, cy = shape.center.tolist()
+    length = shape.length.item()
+    width = shape.width.item()
+    ro = shape.outer_corner_radius.item()
+    ri = shape.inner_corner_radius.item()
 
     if length <= 0:
         raise ValueError("length must be positive")
@@ -73,18 +73,18 @@ def cross_to_shapely(shape: prim.Cross) -> BaseGeometry:
 
         geom = unary_union([geom, *patches])
 
-    if shape.angle != 0:
-        geom = shp_rotate(geom, shape.angle, origin=(0.0, 0.0))
+    if shape.angle.item() != 0:
+        geom = shp_rotate(geom, shape.angle.item(), origin=(0.0, 0.0))
 
     geom = shp_translate(geom, xoff=cx, yoff=cy)
     return geom
 
 def tshape_to_shapely(shape: prim.TShape) -> BaseGeometry:
-    cx, cy = shape.center
-    length = shape.length
-    width = shape.width
-    ro = shape.outer_corner_radius
-    ri = shape.inner_corner_radius
+    cx, cy = shape.center.tolist()
+    length = shape.length.item()
+    width = shape.width.item()
+    ro = shape.outer_corner_radius.item()
+    ri = shape.inner_corner_radius.item()
 
     if length <= 0:
         raise ValueError("length must be positive")
@@ -127,8 +127,8 @@ def tshape_to_shapely(shape: prim.TShape) -> BaseGeometry:
         ]
         geom = unary_union([geom, *patches])
 
-    if shape.angle != 0:
-        geom = shp_rotate(geom, shape.angle, origin=(0.0, 0.0))
+    if shape.angle.item() != 0:
+        geom = shp_rotate(geom, shape.angle.item(), origin=(0.0, 0.0))
 
     geom = shp_translate(geom, xoff=cx, yoff=cy)
     return geom
