@@ -3,7 +3,7 @@
 import math
 import pytest
 import torch
-from metashapes.shape.primitives.polygons import RegularPolygon, Triangle
+from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
 from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
 
 
@@ -183,3 +183,154 @@ class TestTriangle:
     def test_round_trip_with_corner_radius(self):
         t = Triangle(center=[0.0, 0.0], base=1.5, alpha=60.0, beta=60.0, corner_radius=0.05)
         assert_round_trip(t)
+
+
+class TestStar:
+    # --- basic inside / outside ---
+
+    def test_center_inside(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        assert_inside(s, [(0.0, 0.0)])
+
+    def test_far_outside(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        assert_outside(s, [(1.0, 0.0), (0.0, -1.0), (-1.0, 1.0)])
+
+    def test_tip_boundary(self):
+        # First tip of an unrotated star is at (0, outer_radius)
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        d = sdf_at(s, 0.0, 0.5)
+        assert abs(d) < 1e-4
+
+    def test_valley_boundary(self):
+        # First valley is at (inner_radius*sin(π/n), inner_radius*cos(π/n))
+        n = 5
+        r = 0.2
+        an = math.pi / n
+        vx = r * math.sin(an)
+        vy = r * math.cos(an)
+        s = Star(center=[0.0, 0.0], n=n, outer_radius=0.5, inner_radius=r)
+        d = sdf_at(s, vx, vy)
+        assert abs(d) < 1e-4
+
+    # --- classic 5-pointed star ---
+
+    def test_five_pointed_arm_inside(self):
+        # Point along tip axis (y > 0) but within outer_radius
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        assert_inside(s, [(0.0, 0.3)])
+
+    def test_five_pointed_gap_outside(self):
+        # Between arms: midway between two tips in polar space, at inner_radius+epsilon → outside
+        n = 5
+        an = math.pi / n
+        r_inner = 0.2
+        # The re-entrant notch: at angle π/n from tip, just beyond inner_radius
+        gx = (r_inner + 0.05) * math.sin(an)
+        gy = (r_inner + 0.05) * math.cos(an)
+        s = Star(center=[0.0, 0.0], n=n, outer_radius=0.5, inner_radius=r_inner)
+        assert_outside(s, [(gx, gy)])
+
+    # --- n variation ---
+
+    def test_three_pointed(self):
+        s = Star(center=[0.0, 0.0], n=3, outer_radius=0.5, inner_radius=0.15)
+        assert_inside(s, [(0.0, 0.0)])
+        assert_outside(s, [(0.0, 0.6)])
+
+    def test_eight_pointed(self):
+        s = Star(center=[0.0, 0.0], n=8, outer_radius=0.4, inner_radius=0.2)
+        assert_inside(s, [(0.0, 0.0)])
+        assert_outside(s, [(0.0, 0.5)])
+
+    # --- outer corner radius ---
+
+    def test_outer_corner_radius_center_inside(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                 outer_corner_radius=0.05)
+        assert_inside(s, [(0.0, 0.0)])
+
+    def test_outer_corner_radius_too_large(self):
+        with pytest.raises(ValueError):
+            Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                 outer_corner_radius=0.35)  # >= 0.5 - 0.2 = 0.3
+
+    # --- inner corner radius ---
+
+    def test_inner_corner_radius_center_inside(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                 inner_corner_radius=0.03)
+        assert_inside(s, [(0.0, 0.0)])
+
+    def test_inner_corner_radius_too_large(self):
+        n = 5
+        R = 0.5
+        r = 0.2
+        # New bound: icr_max = L * tan(beta), where
+        #   L = sqrt(R^2 + r^2 - 2*R*r*cos(pi/n))
+        #   sin(beta) = R * sin(pi/n) / L
+        # For these parameters icr_max ≈ 0.514, so 0.6 exceeds it.
+        with pytest.raises(ValueError):
+            Star(center=[0.0, 0.0], n=n, outer_radius=R, inner_radius=r,
+                inner_corner_radius=0.6)
+
+    # --- both corner radii together ---
+
+    def test_both_corner_radii(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                 outer_corner_radius=0.04, inner_corner_radius=0.03)
+        assert_inside(s, [(0.0, 0.0)])
+
+    # --- rotation ---
+
+    def test_rotation(self):
+        # Rotating by π/n maps a tip to where a valley was
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        # Tip at (0, 0.5) before rotation; after rotating by 36° the star tip is elsewhere
+        s_rot = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                     angle=180.0 / 5)
+        assert_inside(s_rot, [(0.0, 0.0)])
+
+    # --- offset center ---
+
+    def test_offset_center(self):
+        s = Star(center=[1.0, -1.0], n=5, outer_radius=0.3, inner_radius=0.12)
+        assert_inside(s, [(1.0, -1.0)])
+        assert_outside(s, [(0.0, 0.0)])
+
+    # --- validation ---
+
+    def test_n_too_small(self):
+        with pytest.raises(ValueError):
+            Star(center=[0.0, 0.0], n=2, outer_radius=0.5, inner_radius=0.2)
+
+    def test_inner_radius_zero(self):
+        with pytest.raises(ValueError):
+            Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.0)
+
+    def test_inner_radius_exceeds_outer(self):
+        with pytest.raises(ValueError):
+            Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.6)
+
+    # --- bounds ---
+
+    def test_bounds_contain_center(self):
+        s = Star(center=[0.1, -0.2], n=5, outer_radius=0.4, inner_radius=0.15, angle=12.0)
+        assert_bounds_contain(s, [(0.1, -0.2)])
+
+    # --- serialization ---
+
+    def test_round_trip(self):
+        s = Star(center=[0.1, 0.2], n=5, outer_radius=0.5, inner_radius=0.2, angle=10.0)
+        assert_round_trip(s)
+
+    def test_round_trip_preserves_n(self):
+        from metashapes.shape import Shape
+        s = Star(center=[0.0, 0.0], n=6, outer_radius=0.4, inner_radius=0.2)
+        restored = Shape.from_parametric(s.to_parametric())
+        assert restored.n == 6
+
+    def test_round_trip_with_corner_radii(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                 outer_corner_radius=0.04, inner_corner_radius=0.03)
+        assert_round_trip(s)

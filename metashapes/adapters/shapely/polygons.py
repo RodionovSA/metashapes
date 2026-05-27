@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import math
 import numpy as np
 from shapely.affinity import rotate as shp_rotate
 from shapely.geometry import Polygon
@@ -30,6 +31,31 @@ def triangle_to_shapely(shape: prim.Triangle) -> BaseGeometry:
     geom = Polygon(pts)
     if rr > 0:
         return round_corners(geom, radius=rr, mode="inner")
+    return geom
+
+
+def star_to_shapely(shape: prim.Star) -> BaseGeometry:
+    cx, cy = shape.center.tolist()
+    R = shape.outer_radius.item()
+    r = shape.inner_radius.item()
+    angle_deg = shape.angle.item()
+    ocr = shape.outer_corner_radius.item()
+    icr = shape.inner_corner_radius.item()
+    n = shape.n
+    an = math.pi / n
+
+    pts = []
+    for k in range(n):
+        tip_ang = math.radians(angle_deg) + math.pi / 2 + 2 * math.pi * k / n
+        pts.append((cx + R * math.cos(tip_ang), cy + R * math.sin(tip_ang)))
+        val_ang = tip_ang + an
+        pts.append((cx + r * math.cos(val_ang), cy + r * math.sin(val_ang)))
+
+    geom = Polygon(pts)
+    if ocr > 0:
+        geom = round_corners(geom, radius=ocr, mode="inner")   # opening: rounds convex tips
+    if icr > 0:
+        geom = round_corners(geom, radius=icr, mode="outer")   # closing: rounds concave valleys
     return geom
 
 

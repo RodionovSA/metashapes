@@ -14,6 +14,7 @@ from metashapes.shape.utils import _to_local_coords, register
 __all__ = [
     "RegularPolygon",
     "Triangle",
+    "Star",
 ]
 
 @register_shape("RegularPolygon")
@@ -290,3 +291,209 @@ class Triangle(Shape):
     @property
     def min_feature_size(self) -> float:
         return 2.0 * self._inradius().item()
+
+
+@register_shape("Star")
+class Star(Shape):
+    """
+    Regular n-pointed star.
+
+    Parameters:
+        center: (cx, cy)
+        n: number of points (≥ 3)
+        outer_radius: distance from center to tips
+        inner_radius: distance from center to valleys; must be in (0, outer_radius)
+        angle: counter-clockwise rotation in degrees (default 0; first tip points up)
+        outer_corner_radius: rounds convex tips; must be < outer_radius − inner_radius
+        inner_corner_radius: rounds concave valleys; must be < inner_radius * sin(π/n)
+    """
+    def __init__(self,
+                 center,
+                 n: int,
+                 outer_radius,
+                 inner_radius,
+                 angle=0.0,
+                 outer_corner_radius=0.0,
+                 inner_corner_radius=0.0):
+        super().__init__()
+        if n < 3:
+            raise ValueError("n must be at least 3")
+        self.n = n
+        register(self, "center", center)
+        register(self, "outer_radius", outer_radius)
+        register(self, "inner_radius", inner_radius)
+        register(self, "angle", angle)
+        register(self, "outer_corner_radius", outer_corner_radius)
+        register(self, "inner_corner_radius", inner_corner_radius)
+
+        R = self.outer_radius.item()
+        r = self.inner_radius.item()
+        ocr = self.outer_corner_radius.item()
+        icr = self.inner_corner_radius.item()
+        an = math.pi / n
+
+        if R <= 0:
+            raise ValueError("outer_radius must be positive")
+        if r <= 0 or r >= R:
+            raise ValueError("inner_radius must be in (0, outer_radius)")
+        if ocr < 0:
+            raise ValueError("outer_corner_radius must be non-negative")
+        if icr < 0:
+            raise ValueError("inner_corner_radius must be non-negative")
+
+        # Geometric quantities for corner-radius bounds.
+        L = math.sqrt(R * R + r * r - 2.0 * R * r * math.cos(an))
+        sin_alpha = (r * math.sin(an)) / L         # half-angle at outer tip
+        sin_beta  = (R * math.sin(an)) / L         # half-angle at inner valley
+        tan_alpha = sin_alpha / math.sqrt(max(0.0, 1.0 - sin_alpha * sin_alpha))
+        tan_beta  = sin_beta  / math.sqrt(max(0.0, 1.0 - sin_beta  * sin_beta))
+        ocr_max = L * tan_alpha
+        icr_max = L * tan_beta
+
+        if ocr >= ocr_max:
+            raise ValueError(
+                f"outer_corner_radius must be < {ocr_max:.6g} for R={R}, r={r}, n={n}"
+            )
+        if icr >= icr_max:
+            raise ValueError(
+                f"inner_corner_radius must be < {icr_max:.6g} for R={R}, r={r}, n={n}"
+            )
+            
+        if ocr / tan_alpha + icr / tan_beta >= L:
+            raise ValueError(
+                "outer_corner_radius and inner_corner_radius together exceed edge length; "
+                "their tangent points would overlap"
+            )
+
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        cx, cy = self.center[0], self.center[1]
+        R = self.outer_radius
+        r = self.inner_radius
+        ocr = self.outer_corner_radius
+        icr = self.inner_corner_radius
+
+        pi = torch.as_tensor(math.pi, dtype=x.dtype, device=x.device)
+        n_t = torch.as_tensor(float(self.n), dtype=x.dtype, device=x.device)
+        an = pi / n_t  # half-sector angle at the origin
+
+        x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
+
+        # Fold into canonical half-sector with outer tip A on +x axis,
+        # valley vertex B at angle an. Reflect across the bisector so p_y >= 0.
+        r_point = torch.sqrt(x_local ** 2 + y_local ** 2).clamp(min=1e-9)
+        theta = torch.atan2(x_local, y_local)  # first tip at +y in local frame
+        bn = torch.remainder(theta + an, 2.0 * an) - an
+        p_x = r_point * torch.cos(bn)
+        p_y = r_point * torch.abs(torch.sin(bn))
+
+        Bx = r * torch.cos(an)
+        By = r * torch.sin(an)
+        L = torch.sqrt(R ** 2 + r ** 2 - 2.0 * R * r * torch.cos(an))
+
+        # ---- Outer tip rounding ----
+        denom_outer = (r * torch.sin(an)).clamp(min=1e-9)
+        shift_A = ocr * L / denom_outer
+        A_eff_x = R - shift_A
+        A_eff_y = torch.zeros_like(shift_A)
+
+        # B_eff: B shifted outward along the bisector through B by ocr/sin(beta).
+        sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
+        bis_x_B = torch.cos(an)
+        bis_y_B = torch.sin(an)
+        OB = torch.sqrt(Bx ** 2 + By ** 2)
+        OB_eff = OB - ocr / sin_beta
+        B_eff_x = OB_eff * bis_x_B
+        B_eff_y = OB_eff * bis_y_B
+
+        # Signed distance to segment A_eff -> B_eff in the half-sector.
+        ex = B_eff_x - A_eff_x
+        ey = B_eff_y - A_eff_y
+        wx = p_x - A_eff_x
+        wy = p_y - A_eff_y
+        ee = (ex * ex + ey * ey).clamp(min=1e-18)
+        t = torch.clamp((wx * ex + wy * ey) / ee, 0.0, 1.0)
+        nearest_x = A_eff_x + t * ex
+        nearest_y = A_eff_y + t * ey
+        dist_seg = torch.sqrt((p_x - nearest_x) ** 2 + (p_y - nearest_y) ** 2)
+        cross_z = ex * wy - ey * wx
+        d_sector = torch.where(cross_z >= 0, -dist_seg, dist_seg) - ocr
+
+        # ---- Inner valley rounding ----
+        edge_dx = Bx - A_eff_x   # NOTE: edge direction from A_eff to B
+        edge_dy = By - A_eff_y   # (matches ex, ey from d_sector computation)
+        edge_len = torch.sqrt(edge_dx ** 2 + edge_dy ** 2).clamp(min=1e-9)
+        edge_ux = edge_dx / edge_len
+        edge_uy = edge_dy / edge_len
+
+        sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
+        cos_beta = torch.sqrt(1.0 - sin_beta ** 2).clamp(min=1e-9)
+        tan_beta = sin_beta / cos_beta
+
+        # Clamp icr so tangent points stay on the edges.
+        icr_max = edge_len * tan_beta
+        icr_eff = torch.minimum(icr, icr_max)
+
+        # Disk center on outward bisector, past B.
+        bis_x = torch.cos(an)
+        bis_y = torch.sin(an)
+        OB = torch.sqrt(Bx ** 2 + By ** 2)
+        OC = OB + icr_eff / sin_beta
+        C_x = OC * bis_x
+        C_y = OC * bis_y
+
+        d_disk = torch.sqrt((p_x - C_x) ** 2 + (p_y - C_y) ** 2) - icr_eff
+
+        # Half-kite constraint 1: valley-exterior side of edge A_eff -> B.
+        # cross_z > 0 is polygon interior; we want cross_z < 0 (valley side) to
+        # be inside the half-kite, so the signed distance is -cross_z / edge_len.
+        wx = p_x - A_eff_x
+        wy = p_y - A_eff_y
+        cross_edge = edge_dx * wy - edge_dy * wx
+        d_half1 = cross_edge / edge_len
+
+        # Half-kite constraint 2: B side of the perpendicular through T1.
+        # T1 is on the edge at distance (edge_len - icr_eff/tan(beta)) from A_eff.
+        # Projection of (p - A_eff) onto edge direction: proj = w . edge_unit.
+        # B side is where proj > T1_proj, i.e. (T1_proj - proj) < 0 is inside.
+        proj = wx * edge_ux + wy * edge_uy
+        T1_proj = edge_len - icr_eff / tan_beta
+        d_half2 = T1_proj - proj
+
+        # Half-kite (in folded coords, the part of the kite with p_y >= 0).
+        d_half_kite = torch.maximum(d_half1, d_half2)
+
+        # Patch: half-kite minus disk.
+        d_patch = torch.maximum(d_half_kite, -d_disk)
+
+        # Union with sharp star.
+        return torch.minimum(d_sector, d_patch)
+
+    def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        cx, cy = self.center.detach().tolist()
+        R = self.outer_radius.item()
+        r = self.inner_radius.item()
+        angle_deg = self.angle.item()
+        n = self.n
+        an = math.pi / n
+
+        pts = []
+        for k in range(n):
+            # outer tip at angle (π/2 + angle + 2πk/n)
+            tip_ang = math.radians(angle_deg) + math.pi / 2 + 2 * math.pi * k / n
+            pts.append((R * math.cos(tip_ang), R * math.sin(tip_ang)))
+            # inner valley offset by π/n
+            val_ang = tip_ang + an
+            pts.append((r * math.cos(val_ang), r * math.sin(val_ang)))
+
+        xs = [cx + p[0] for p in pts]
+        ys = [cy + p[1] for p in pts]
+        return (min(xs), min(ys)), (max(xs), max(ys))
+
+    def to_parametric(self) -> dict:
+        d = super().to_parametric()
+        d["n"] = self.n
+        return d
+
+    @property
+    def min_feature_size(self) -> float:
+        return 2.0 * self.inner_radius.item()

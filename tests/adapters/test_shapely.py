@@ -7,7 +7,7 @@ import torch
 from metashapes.adapters.shapely.dispatch import shape_to_shapely
 from metashapes.shape.primitives.quads import Rectangle, ConvexQuad, IsoscelesTrapezoid
 from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
-from metashapes.shape.primitives.polygons import RegularPolygon, Triangle
+from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
 from metashapes.shape.primitives.junctions import Cross, TShape
 from metashapes.shape.primitives.periodic import Stripe
 from metashapes.shape.boolean import Union, Intersection, Difference
@@ -137,6 +137,27 @@ class TestPrimitivesToShapely:
         geom_plain = shape_to_shapely(shape_plain)
         geom_rounded = shape_to_shapely(shape_rounded)
         assert geom_rounded.area < geom_plain.area
+
+    def test_star_area_in_bounds(self):
+        shape = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        geom = shape_to_shapely(shape)
+        assert not geom.is_empty
+        import math as _math
+        assert geom.area > 0
+        assert geom.area < _math.pi * 0.5 ** 2  # strictly inside circumscribed circle
+
+    def test_star_centroid(self):
+        shape = Star(center=[1.0, -2.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        geom = shape_to_shapely(shape)
+        cx, cy = _centroid(geom)
+        assert cx == pytest.approx(1.0, abs=0.01)
+        assert cy == pytest.approx(-2.0, abs=0.01)
+
+    def test_star_outer_corner_radius_reduces_area(self):
+        plain = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        rounded = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
+                       outer_corner_radius=0.05)
+        assert shape_to_shapely(rounded).area < shape_to_shapely(plain).area
 
     def test_regular_polygon_square(self):
         shape = RegularPolygon(center=torch.zeros(2), n=4, side_length=torch.tensor(1.0))

@@ -110,6 +110,7 @@ class TestShapeTypes:
         "Egg",
         "Stadium",
         "Triangle",
+        "Star",
         "RegularPolygon",
         "ConvexQuad",
         "IsoscelesTrapezoid",

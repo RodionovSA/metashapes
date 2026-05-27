@@ -15,7 +15,7 @@ from .quads import (
     rectangle_to_shapely,
     isosceles_trapezoid_to_shapely,
 )
-from .polygons import regular_polygon_to_shapely, triangle_to_shapely
+from .polygons import regular_polygon_to_shapely, triangle_to_shapely, star_to_shapely
 from .conics import ellipse_to_shapely, egg_to_shapely, stadium_to_shapely
 from .junctions import cross_to_shapely, tshape_to_shapely
 from .periodic import stripe_to_shapely
@@ -48,6 +48,9 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
 
     if isinstance(shape, prim.Triangle):
         return triangle_to_shapely(shape)
+
+    if isinstance(shape, prim.Star):
+        return star_to_shapely(shape)
 
     if isinstance(shape, prim.RegularPolygon):
         return regular_polygon_to_shapely(shape)

@@ -16,7 +16,7 @@ from metashapes.generators.samplers.utils import (
     resolve_param,
     sample_center_in_bounds,
 )
-from metashapes.shape.primitives import RegularPolygon, Triangle
+from metashapes.shape.primitives import RegularPolygon, Triangle, Star
 
 
 @register_shape_sampler
@@ -204,3 +204,99 @@ class TriangleSampler(ShapeSampler):
             )
 
         raise RuntimeError("triangle_too_large_for_canvas")
+
+
+@register_shape_sampler
+class StarSampler(ShapeSampler):
+    shape_class = Star
+
+    def sample(self, rng, lattice: Lattice, config) -> Star:
+        min_size = config.min_shape_size or 0.1
+        min_feature = config.min_feature_size or 0.0
+
+        fixed = get_all_fixed_param(config, self.shape_class)
+        ranges = get_all_param_range(config, self.shape_class)
+
+        x0, y0, x1, y1 = lattice_inner_bounds(lattice)
+        iw, ih = x1 - x0, y1 - y0
+        max_R = min(iw, ih) / 2.0
+
+        for _ in range(config.max_tries_per_shape):
+            if fixed['n'] is not None:
+                n = int(fixed['n'])
+            elif ranges['n'] is not None:
+                n = rng.randint(int(ranges['n'][0]), int(ranges['n'][1]))
+            else:
+                n = rng.randint(3, 7)
+
+            an = math.pi / n
+
+            outer_radius = resolve_param(
+                rng,
+                fixed_value=fixed['outer_radius'],
+                user_range=ranges['outer_radius'],
+                default_range=(min_size / 2.0, max_R),
+            )
+
+            if outer_radius > max_R:
+                continue
+
+            r_min = max(min_feature, outer_radius * 0.1)
+            r_max = outer_radius * 0.85
+            if r_min >= r_max:
+                continue
+
+            inner_radius = resolve_param(
+                rng,
+                fixed_value=fixed['inner_radius'],
+                user_range=ranges['inner_radius'],
+                default_range=(r_min, r_max),
+            )
+
+            if inner_radius <= 0 or inner_radius >= outer_radius:
+                continue
+
+            angle = resolve_param(
+                rng,
+                fixed_value=fixed['angle'],
+                user_range=ranges['angle'],
+                default_range=(0.0, 360.0 / n),
+            )
+
+            ocr_max = (outer_radius - inner_radius) * 0.4
+            outer_corner_radius = resolve_param(
+                rng,
+                fixed_value=fixed['outer_corner_radius'],
+                user_range=ranges['outer_corner_radius'],
+                default_range=(0.0, ocr_max),
+            )
+            outer_corner_radius = min(outer_corner_radius, outer_radius - inner_radius - 1e-6)
+
+            icr_max = inner_radius * math.sin(an) * 0.8
+            inner_corner_radius = resolve_param(
+                rng,
+                fixed_value=fixed['inner_corner_radius'],
+                user_range=ranges['inner_corner_radius'],
+                default_range=(0.0, icr_max),
+            )
+            inner_corner_radius = min(inner_corner_radius, inner_radius * math.sin(an) - 1e-6)
+
+            cx, cy = sample_center_in_bounds(
+                rng,
+                fixed_center=fixed['center'],
+                center_range=ranges['center'],
+                x_bounds=(x0 + outer_radius, x1 - outer_radius),
+                y_bounds=(y0 + outer_radius, y1 - outer_radius),
+            )
+
+            return Star(
+                center=(cx, cy),
+                n=n,
+                outer_radius=outer_radius,
+                inner_radius=inner_radius,
+                angle=angle,
+                outer_corner_radius=outer_corner_radius,
+                inner_corner_radius=inner_corner_radius,
+            )
+
+        raise RuntimeError("star_too_large_for_canvas")
