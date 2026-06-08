@@ -9,11 +9,11 @@ from dataclasses import asdict
 from datetime import datetime
 import random
 
-from src.metashapes.generators.config import GeneratorConfig
-from src.metashapes.generators.report import GenerationBatchResult, GenerationReport
-from src.metashapes.generators.validator import UnitCellValidator
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.lattice.unit_cell import UnitCell
+from metashapes.generators.config import GeneratorConfig
+from metashapes.generators.report import GenerationBatchResult, GenerationReport
+from metashapes.generators.validator import UnitCellValidator
+from metashapes.lattice.basis import Lattice
+from metashapes.lattice.unit_cell import UnitCell
 
 
 class UnitCellGenerator(ABC):

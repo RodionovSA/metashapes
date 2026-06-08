@@ -3,15 +3,15 @@
 import pytest
 import torch
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.lattice.unit_cell import UnitCell
-from src.metashapes.generators.random import RandomUnitCellGenerator, RandomGeneratorConfig
-from src.metashapes.generators.report import GenerationBatchResult
-from src.metashapes.generators.validator import UnitCellValidator, DefaultUnitCellValidator
-from src.metashapes.shape.boolean import Union
-from src.metashapes.shape.primitives.quads import Rectangle
-from src.metashapes.adapters.shapely.dispatch import shape_to_shapely
-from src.metashapes.adapters.yaml import (
+from metashapes.lattice.basis import Lattice
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.generators.random import RandomUnitCellGenerator, RandomGeneratorConfig
+from metashapes.generators.report import GenerationBatchResult
+from metashapes.generators.validator import UnitCellValidator, DefaultUnitCellValidator
+from metashapes.shape.boolean import Union
+from metashapes.shape.primitives.quads import Rectangle
+from metashapes.adapters.shapely.dispatch import shape_to_shapely
+from metashapes.adapters.yaml import (
     save_batch_result,
     load_batch_result,
     save_unit_cells,

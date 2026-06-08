@@ -3,8 +3,8 @@
 import math
 import pytest
 import torch
-from src.metashapes.shape import Shape
-from src.metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
+from metashapes.shape import Shape
+from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
 from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
 
 

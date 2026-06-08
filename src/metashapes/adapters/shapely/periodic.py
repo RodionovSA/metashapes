@@ -6,7 +6,7 @@ from __future__ import annotations
 from shapely.geometry import box
 from shapely.geometry.base import BaseGeometry
 
-import src.metashapes.shape.primitives as prim
+import metashapes.shape.primitives as prim
 from .helpers import as_float
 
 # Large enough that distance calculations within any realistic unit cell

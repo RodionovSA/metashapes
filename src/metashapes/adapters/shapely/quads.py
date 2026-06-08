@@ -9,7 +9,7 @@ from shapely.geometry import Polygon, box
 from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
 
-import src.metashapes.shape.primitives as prim
+import metashapes.shape.primitives as prim
 from .helpers import as_float, as_list, round_corners
 
 def convex_quad_to_shapely(shape: prim.ConvexQuad) -> BaseGeometry:

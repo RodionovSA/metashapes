@@ -5,10 +5,10 @@ from __future__ import annotations
 
 from shapely.geometry.base import BaseGeometry
 
-import src.metashapes.shape.primitives as prim
-from src.metashapes.shape.base import Shape
-from src.metashapes.shape.boolean import Union, Intersection, Difference
-from src.metashapes.shape.transforms import Translate, Rotate, Scale
+import metashapes.shape.primitives as prim
+from metashapes.shape.base import Shape
+from metashapes.shape.boolean import Union, Intersection, Difference
+from metashapes.shape.transforms import Translate, Rotate, Scale
 
 from .quads import (
     convex_quad_to_shapely,

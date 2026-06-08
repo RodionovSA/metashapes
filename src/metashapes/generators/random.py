@@ -9,16 +9,16 @@ import random
 
 from shapely.affinity import translate
 
-from src.metashapes.generators.base import UnitCellGenerator
-from src.metashapes.generators.config import GeneratorConfig
-from src.metashapes.generators.validator import UnitCellValidator
-from src.metashapes.generators.registry import SHAPE_SAMPLER_REGISTRY
-import src.metashapes.generators.samplers
+from metashapes.generators.base import UnitCellGenerator
+from metashapes.generators.config import GeneratorConfig
+from metashapes.generators.validator import UnitCellValidator
+from metashapes.generators.registry import SHAPE_SAMPLER_REGISTRY
+import metashapes.generators.samplers
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.lattice.unit_cell import UnitCell
-from src.metashapes.shape.base import Shape
-from src.metashapes.adapters.shapely import shape_to_shapely, remove_holes
+from metashapes.lattice.basis import Lattice
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.shape.base import Shape
+from metashapes.adapters.shapely import shape_to_shapely, remove_holes
 
 
 def _has_infinite_bounds(shape: Shape) -> bool:

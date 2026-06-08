@@ -6,8 +6,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import ClassVar
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.shape.base import Shape
+from metashapes.lattice.basis import Lattice
+from metashapes.shape.base import Shape
 
 
 class ShapeSampler(ABC):

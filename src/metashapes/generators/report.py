@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from src.metashapes.lattice.unit_cell import UnitCell
+from metashapes.lattice.unit_cell import UnitCell
 
 
 @dataclass(slots=True)

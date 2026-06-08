@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from shapely.geometry.base import BaseGeometry
 
-from src.metashapes.shape.boolean import Union, Intersection, Difference
+from metashapes.shape.boolean import Union, Intersection, Difference
 
 def union_to_shapely(shape: Union, shape_to_shapely_fn) -> BaseGeometry:
     return shape_to_shapely_fn(shape.left).union(shape_to_shapely_fn(shape.right))

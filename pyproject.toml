@@ -36,10 +36,11 @@ gds = ["gdstk"]
 dev = ["pytest", "matplotlib", "jupyter"]
 
 [project.urls]
-Homepage = "https://github.com/RodionovSA/Metashapes"
-Repository = "https://github.com/RodionovSA/Metashapes"
+Homepage = "https://github.com/RodionovSA/metashapes"
+Repository = "https://github.com/RodionovSA/metashapes"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["metashapes*"]
 
 [tool.uv.sources]
@@ -48,3 +49,7 @@ torch = { index = "pytorch-cu128" }
 [[tool.uv.index]]
 name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/metashapes"]

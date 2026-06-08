@@ -9,7 +9,7 @@ from shapely.affinity import rotate as shp_rotate
 from shapely.geometry import Polygon
 from shapely.geometry.base import BaseGeometry
 
-import src.metashapes.shape.primitives as prim
+import metashapes.shape.primitives as prim
 from .helpers import as_float, as_list, round_corners
 
 

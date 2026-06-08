@@ -5,11 +5,11 @@ from __future__ import annotations
 
 import numpy as np
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.generators.samplers.base import ShapeSampler
-from src.metashapes.generators.registry import register_shape_sampler
-from src.metashapes.shape.primitives import Rectangle, ConvexQuad, IsoscelesTrapezoid
-from src.metashapes.generators.samplers.utils import (
+from metashapes.lattice.basis import Lattice
+from metashapes.generators.samplers.base import ShapeSampler
+from metashapes.generators.registry import register_shape_sampler
+from metashapes.shape.primitives import Rectangle, ConvexQuad, IsoscelesTrapezoid
+from metashapes.generators.samplers.utils import (
     get_all_fixed_param,
     get_all_param_range,
     intersect_ranges,

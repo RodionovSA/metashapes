@@ -9,7 +9,7 @@ from shapely.geometry import Point, box
 from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
-import src.metashapes.shape.primitives as prim
+import metashapes.shape.primitives as prim
 from .helpers import as_float, as_list
 
 def _rounded_box(hx: float, hy: float, rr: float) -> BaseGeometry:

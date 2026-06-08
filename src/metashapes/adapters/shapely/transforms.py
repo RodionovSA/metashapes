@@ -8,7 +8,7 @@ from shapely.affinity import scale as shp_scale
 from shapely.affinity import translate as shp_translate
 from shapely.geometry.base import BaseGeometry
 
-from src.metashapes.shape.transforms import Translate, Rotate, Scale
+from metashapes.shape.transforms import Translate, Rotate, Scale
 from .helpers import as_float, as_list
 
 def translate_to_shapely(shape: Translate, shape_to_shapely_fn) -> BaseGeometry:

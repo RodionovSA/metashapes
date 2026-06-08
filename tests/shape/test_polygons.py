@@ -3,7 +3,7 @@
 import math
 import pytest
 import torch
-from src.metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
+from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
 from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
 
 
@@ -90,7 +90,7 @@ class TestRegularPolygon:
         assert_round_trip(p)
 
     def test_round_trip_preserves_n(self):
-        from src.metashapes.shape import Shape
+        from metashapes.shape import Shape
         p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=0.5)
         restored = Shape.from_parametric(p.to_parametric())
         assert restored.n == 5
@@ -325,7 +325,7 @@ class TestStar:
         assert_round_trip(s)
 
     def test_round_trip_preserves_n(self):
-        from src.metashapes.shape import Shape
+        from metashapes.shape import Shape
         s = Star(center=[0.0, 0.0], n=6, outer_radius=0.4, inner_radius=0.2)
         restored = Shape.from_parametric(s.to_parametric())
         assert restored.n == 6

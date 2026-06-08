@@ -3,17 +3,17 @@
 
 from __future__ import annotations
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.generators.registry import register_shape_sampler
-from src.metashapes.generators.samplers.base import ShapeSampler
-from src.metashapes.generators.samplers.utils import (
+from metashapes.lattice.basis import Lattice
+from metashapes.generators.registry import register_shape_sampler
+from metashapes.generators.samplers.base import ShapeSampler
+from metashapes.generators.samplers.utils import (
     get_all_fixed_param,
     get_all_param_range,
     intersect_ranges,
     lattice_inner_bounds,
     resolve_param,
 )
-from src.metashapes.shape.primitives import Stripe
+from metashapes.shape.primitives import Stripe
 
 
 @register_shape_sampler

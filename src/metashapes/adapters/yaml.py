@@ -7,7 +7,7 @@ from pathlib import Path
 
 import yaml
 
-from src.metashapes.lattice.unit_cell import UnitCell
+from metashapes.lattice.unit_cell import UnitCell
 
 
 class _Dumper(yaml.Dumper):
@@ -19,7 +19,7 @@ class _Dumper(yaml.Dumper):
             pairs += sorted((k, v) for k, v in mapping.items() if k != "type")
             return super().represent_mapping(tag, pairs, flow_style)
         return super().represent_mapping(tag, mapping, flow_style)
-from src.metashapes.generators.report import GenerationBatchResult, GenerationReport
+from metashapes.generators.report import GenerationBatchResult, GenerationReport
 
 __all__ = [
     "save_unit_cells",

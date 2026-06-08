@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import List, Dict
 import inspect
 
-from src.metashapes.lattice.basis import Lattice
+from metashapes.lattice.basis import Lattice
 
 
 def lattice_inner_bounds(lattice: Lattice) -> tuple[float, float, float, float]:

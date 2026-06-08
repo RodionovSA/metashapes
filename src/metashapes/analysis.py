@@ -13,11 +13,11 @@ import numpy as np
 from shapely.affinity import translate
 from shapely.geometry.base import BaseGeometry
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.lattice.unit_cell import UnitCell
-from src.metashapes.shape.base import Shape
-from src.metashapes.shape.boolean import Union, Intersection, Difference
-from src.metashapes.shape.transforms import Translate, Rotate, Scale
+from metashapes.lattice.basis import Lattice
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.shape.base import Shape
+from metashapes.shape.boolean import Union, Intersection, Difference
+from metashapes.shape.transforms import Translate, Rotate, Scale
 
 __all__ = ["CellMetrics", "UnitCellAnalyzer"]
 
@@ -311,7 +311,7 @@ class UnitCellAnalyzer:
 # ---------------------------------------------------------------------------
 
 def _to_geom(shape: Shape) -> BaseGeometry:
-    from src.metashapes.adapters.shapely import shape_to_shapely, remove_holes
+    from metashapes.adapters.shapely import shape_to_shapely, remove_holes
     return remove_holes(shape_to_shapely(shape))
 
 

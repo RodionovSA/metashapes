@@ -6,9 +6,9 @@ from __future__ import annotations
 import math
 import torch
 
-from src.metashapes.shape.base import Shape
-from src.metashapes.shape.registry import register_shape
-from src.metashapes.shape.utils import _to_local_coords, register
+from metashapes.shape.base import Shape
+from metashapes.shape.registry import register_shape
+from metashapes.shape.utils import _to_local_coords, register
 
 __all__ = [
     "Cross",

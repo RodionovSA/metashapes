@@ -3,7 +3,7 @@
 import math
 import pytest
 import torch
-from src.metashapes.shape import Rectangle, ConvexQuad, IsoscelesTrapezoid
+from metashapes.shape import Rectangle, ConvexQuad, IsoscelesTrapezoid
 from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain
 
 

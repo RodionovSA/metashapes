@@ -5,10 +5,10 @@ import pytest
 import torch
 import torch.nn as nn
 
-from src.metashapes.lattice.basis import Lattice
-from src.metashapes.lattice.unit_cell import UnitCell
-from src.metashapes.shape.primitives.polygons import RegularPolygon
-from src.metashapes.shape.primitives.periodic import Stripe
+from metashapes.lattice.basis import Lattice
+from metashapes.lattice.unit_cell import UnitCell
+from metashapes.shape.primitives.polygons import RegularPolygon
+from metashapes.shape.primitives.periodic import Stripe
 
 from .conftest import make_learnable_polygon
 
@@ -289,7 +289,7 @@ class TestUnitCellGradients:
 
 class TestToShapely:
     def test_rectangle_clips_to_cell(self):
-        from src.metashapes.shape.primitives.quads import Rectangle
+        from metashapes.shape.primitives.quads import Rectangle
         lattice = Lattice.rectangular(2.0, 2.0)
         shape = Rectangle(center=torch.zeros(2), size=torch.tensor([0.8, 0.8]))
         cell = UnitCell(lattice, shape)
@@ -316,7 +316,7 @@ class TestToShapely:
         assert abs(geom.area - 2.0 * 1.0) < 0.01
 
     def test_shape_outside_cell_is_empty(self):
-        from src.metashapes.shape.primitives.quads import Rectangle
+        from metashapes.shape.primitives.quads import Rectangle
         lattice = Lattice.rectangular(2.0, 2.0)
         # Rectangle centered far outside the unit cell
         shape = Rectangle(center=torch.tensor([100.0, 100.0]),

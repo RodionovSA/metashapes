@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import math
 
-from src.metashapes.shape import Shape
+from metashapes.shape import Shape
 from .basis import Lattice
 from .grid import cartesian_grid
 
@@ -349,7 +349,7 @@ class UnitCell(nn.Module):
             scene_cy = (y0 + y1) / 2
 
         elif method == "centroid":
-            from src.metashapes.adapters.shapely import shape_to_shapely
+            from metashapes.adapters.shapely import shape_to_shapely
             geom = shape_to_shapely(self.scene)
             scene_cx = geom.centroid.x
             scene_cy = geom.centroid.y
@@ -367,7 +367,7 @@ class UnitCell(nn.Module):
     # --- shapely adapter ---------------------------------------------
     def to_shapely(self):
         from shapely.geometry import Polygon
-        from src.metashapes.adapters.shapely import shape_to_shapely
+        from metashapes.adapters.shapely import shape_to_shapely
 
         a1 = self.lattice.a1.detach().cpu().tolist()
         a2 = self.lattice.a2.detach().cpu().tolist()

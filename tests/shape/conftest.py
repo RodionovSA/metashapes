@@ -3,7 +3,7 @@
 
 import torch
 import pytest
-from src.metashapes.shape import Shape
+from metashapes.shape import Shape
 
 
 def sdf_at(shape, x, y):

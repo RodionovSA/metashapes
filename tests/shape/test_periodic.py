@@ -2,10 +2,10 @@
 
 import pytest
 import torch
-from src.metashapes.shape.primitives.periodic import Stripe
-from src.metashapes.shape.primitives.quads import Rectangle
-from src.metashapes.shape.transforms import Rotate
-from src.metashapes.shape import Shape
+from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.quads import Rectangle
+from metashapes.shape.transforms import Rotate
+from metashapes.shape import Shape
 from .conftest import assert_inside, assert_outside, assert_round_trip, sdf_at
 
 
