@@ -4,14 +4,14 @@ import math
 import pytest
 import torch
 
-from metashapes.adapters.shapely.dispatch import shape_to_shapely
-from metashapes.shape.primitives.quads import Rectangle, ConvexQuad, IsoscelesTrapezoid
-from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
-from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
-from metashapes.shape.primitives.junctions import Cross, TShape
-from metashapes.shape.primitives.periodic import Stripe
-from metashapes.shape.boolean import Union, Intersection, Difference
-from metashapes.shape.transforms import Translate, Rotate, Scale
+from src.metashapes.adapters.shapely.dispatch import shape_to_shapely
+from src.metashapes.shape.primitives.quads import Rectangle, ConvexQuad, IsoscelesTrapezoid
+from src.metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
+from src.metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
+from src.metashapes.shape.primitives.junctions import Cross, TShape
+from src.metashapes.shape.primitives.periodic import Stripe
+from src.metashapes.shape.boolean import Union, Intersection, Difference
+from src.metashapes.shape.transforms import Translate, Rotate, Scale
 
 
 def _centroid(geom):
@@ -211,7 +211,7 @@ class TestPrimitivesToShapely:
         assert width == pytest.approx(0.8, abs=1e-4)
 
     def test_unsupported_shape_raises(self):
-        from metashapes.shape.base import Shape
+        from src.metashapes.shape.base import Shape
 
         class _Unknown(Shape):
             def sdf(self, x, y):

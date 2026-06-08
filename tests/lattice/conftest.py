@@ -4,9 +4,9 @@ import pytest
 import torch
 import torch.nn as nn
 
-from metashapes.lattice.basis import Lattice
-from metashapes.lattice.unit_cell import UnitCell
-from metashapes.shape.primitives.polygons import RegularPolygon
+from src.metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.unit_cell import UnitCell
+from src.metashapes.shape.primitives.polygons import RegularPolygon
 
 
 @pytest.fixture

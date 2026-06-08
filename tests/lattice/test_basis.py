@@ -4,7 +4,7 @@ import math
 import pytest
 import torch
 
-from metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.basis import Lattice
 
 
 class TestLatticeConstruction:

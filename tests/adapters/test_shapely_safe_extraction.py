@@ -16,15 +16,15 @@ import pytest
 import torch
 import torch.nn as nn
 
-from metashapes.adapters.shapely import shape_to_shapely
-from metashapes.lattice.basis import Lattice
-from metashapes.lattice.unit_cell import UnitCell
-from metashapes.shape.primitives.quads import Rectangle, IsoscelesTrapezoid
-from metashapes.shape.primitives.conics import Ellipse, Stadium
-from metashapes.shape.primitives.polygons import RegularPolygon
-from metashapes.shape.primitives.junctions import Cross
-from metashapes.shape.primitives.periodic import Stripe
-from metashapes.shape.transforms import Translate, Rotate, Scale
+from src.metashapes.adapters.shapely import shape_to_shapely
+from src.metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.unit_cell import UnitCell
+from src.metashapes.shape.primitives.quads import Rectangle, IsoscelesTrapezoid
+from src.metashapes.shape.primitives.conics import Ellipse, Stadium
+from src.metashapes.shape.primitives.polygons import RegularPolygon
+from src.metashapes.shape.primitives.junctions import Cross
+from src.metashapes.shape.primitives.periodic import Stripe
+from src.metashapes.shape.transforms import Translate, Rotate, Scale
 
 
 # ---------------------------------------------------------------------------

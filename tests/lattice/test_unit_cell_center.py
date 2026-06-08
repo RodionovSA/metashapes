@@ -8,12 +8,12 @@ import pytest
 import torch
 import torch.nn as nn
 
-from metashapes.lattice.basis import Lattice
-from metashapes.lattice.unit_cell import UnitCell
-from metashapes.shape.primitives.quads import Rectangle
-from metashapes.shape.primitives.conics import Ellipse
-from metashapes.shape.primitives.periodic import Stripe
-from metashapes.shape.primitives.polygons import RegularPolygon
+from src.metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.unit_cell import UnitCell
+from src.metashapes.shape.primitives.quads import Rectangle
+from src.metashapes.shape.primitives.conics import Ellipse
+from src.metashapes.shape.primitives.periodic import Stripe
+from src.metashapes.shape.primitives.polygons import RegularPolygon
 
 from .conftest import make_learnable_polygon
 
@@ -40,7 +40,7 @@ def _cell_center(cell: UnitCell) -> tuple[float, float]:
 
 def _translate_offset(cell: UnitCell) -> tuple[float, float]:
     """Extract the outermost Translate dx/dy buffers from the scene."""
-    from metashapes.shape.transforms import Translate
+    from src.metashapes.shape.transforms import Translate
     scene = cell.scene
     assert isinstance(scene, Translate), f"Expected Translate, got {type(scene)}"
     return scene.dx.item(), scene.dy.item()
@@ -67,7 +67,7 @@ class TestBboxRectangular:
         cell = _rect_cell()
         centered = cell.center_scene()
 
-        from metashapes.shape.transforms import Translate
+        from src.metashapes.shape.transforms import Translate
         t = centered.scene
         assert isinstance(t, Translate)
         # dx and dy must be buffers, not nn.Parameters
@@ -121,7 +121,7 @@ class TestAlreadyCentered:
 
 class TestCentroidMethod:
     def test_shapely_centroid_at_cell_center(self):
-        from metashapes.adapters.shapely import shape_to_shapely
+        from src.metashapes.adapters.shapely import shape_to_shapely
 
         px, py = 2.0, 2.0
         # Shape at an off-centre position

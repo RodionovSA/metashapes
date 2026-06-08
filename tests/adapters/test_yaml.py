@@ -3,19 +3,19 @@
 import pytest
 import torch
 
-from metashapes.lattice.basis import Lattice
-from metashapes.lattice.unit_cell import UnitCell
-from metashapes.adapters.yaml import (
+from src.metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.unit_cell import UnitCell
+from src.metashapes.adapters.yaml import (
     save_unit_cells,
     load_unit_cells,
     save_batch_result,
     load_batch_result,
 )
-from metashapes.generators.report import GenerationBatchResult, GenerationReport
-from metashapes.shape.primitives.quads import Rectangle
-from metashapes.shape.primitives.conics import Ellipse
-from metashapes.shape.boolean import Union
-from metashapes.shape.transforms import Translate
+from src.metashapes.generators.report import GenerationBatchResult, GenerationReport
+from src.metashapes.shape.primitives.quads import Rectangle
+from src.metashapes.shape.primitives.conics import Ellipse
+from src.metashapes.shape.boolean import Union
+from src.metashapes.shape.transforms import Translate
 
 
 def _rect_cell(px=2.0, py=2.0):

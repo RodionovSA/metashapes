@@ -4,14 +4,14 @@ import math
 import pytest
 import torch
 
-from metashapes.lattice.basis import Lattice
-from metashapes.lattice.unit_cell import UnitCell
-from metashapes.shape.primitives.quads import Rectangle
-from metashapes.shape.primitives.conics import Ellipse
-from metashapes.shape.primitives.periodic import Stripe
-from metashapes.shape.boolean import Union, Intersection, Difference
-from metashapes.shape.transforms import Translate, Rotate, Scale
-from metashapes.analysis import (
+from src.metashapes.lattice.basis import Lattice
+from src.metashapes.lattice.unit_cell import UnitCell
+from src.metashapes.shape.primitives.quads import Rectangle
+from src.metashapes.shape.primitives.conics import Ellipse
+from src.metashapes.shape.primitives.periodic import Stripe
+from src.metashapes.shape.boolean import Union, Intersection, Difference
+from src.metashapes.shape.transforms import Translate, Rotate, Scale
+from src.metashapes.analysis import (
     CellMetrics,
     UnitCellAnalyzer,
     _leaf_shapes,
@@ -383,7 +383,7 @@ class TestComputeMinGap:
     def test_single_shape_positive_gap(self):
         # 0.2×0.2 shape in 1.0×1.0 cell → self-periodic gap = 0.8 (in x: 1.0 - 0.2)
         r = _rect(w=0.2, h=0.2)
-        from metashapes.adapters.shapely import shape_to_shapely, remove_holes
+        from src.metashapes.adapters.shapely import shape_to_shapely, remove_holes
         geom = remove_holes(shape_to_shapely(r))
         lattice = Lattice.rectangular(1.0, 1.0)
         gap = _compute_min_gap([r], [geom], lattice)
@@ -394,7 +394,7 @@ class TestComputeMinGap:
         # Two rects: left edge at -0.3+0.1=-0.2, right edge at 0.3-0.1=0.2 → gap=0.4
         a = _rect(cx=-0.3, w=0.2, h=0.2)
         b = _rect(cx=0.3, w=0.2, h=0.2)
-        from metashapes.adapters.shapely import shape_to_shapely, remove_holes
+        from src.metashapes.adapters.shapely import shape_to_shapely, remove_holes
         ga = remove_holes(shape_to_shapely(a))
         gb = remove_holes(shape_to_shapely(b))
         lattice = Lattice.rectangular(2.0, 2.0)
@@ -404,7 +404,7 @@ class TestComputeMinGap:
     def test_stripe_gap_is_perpendicular_only(self):
         # Stripe width=0.3 centered at y=0, py=1.0 → gap to y-periodic image = 1.0 - 0.3 = 0.7
         stripe = Stripe(offset=0.0, width=0.3, axis='x')
-        from metashapes.adapters.shapely import shape_to_shapely, remove_holes
+        from src.metashapes.adapters.shapely import shape_to_shapely, remove_holes
         geom = remove_holes(shape_to_shapely(stripe))
         lattice = Lattice.rectangular(1.0, 1.0)
         gap = _compute_min_gap([stripe], [geom], lattice)

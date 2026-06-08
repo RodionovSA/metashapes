@@ -2,7 +2,7 @@
 
 import pytest
 import torch
-from metashapes.shape.primitives.junctions import Cross, TShape
+from src.metashapes.shape.primitives.junctions import Cross, TShape
 from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
 
 
