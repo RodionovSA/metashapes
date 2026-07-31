@@ -25,7 +25,7 @@
 - [[_COMMUNITY_Shapely Compound Shape Tests|Shapely Compound Shape Tests]]
 - [[_COMMUNITY_Generator Integration Tests|Generator Integration Tests]]
 - [[_COMMUNITY_Generator Base Classes|Generator Base Classes]]
-- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Periodic Stripe Shape|Periodic Stripe Shape]]
 - [[_COMMUNITY_Shapely Adapter Modules|Shapely Adapter Modules]]
 - [[_COMMUNITY_YAML & Unit Cell Serialization|YAML & Unit Cell Serialization]]
 - [[_COMMUNITY_Unit Cell Tests|Unit Cell Tests]]
@@ -129,7 +129,7 @@ Nodes (5): TestLatticeConstruction, TestLatticeCoordinates, TestLatticeOffset, T
 Cohesion: 0.12
 Nodes (4): General triangle defined by two base angles and the base length (ASA).      Para, (A, B, C) as (x, y) tensor pairs, CCW, centroid at origin., Triangle, TestTriangle
 
-### Community 11 - "Community 11"
+### Community 11 - "Periodic Stripe Shape"
 Cohesion: 0.14
 Nodes (13): _generate_one(), Build metadata dict attached to every GenerationReport., Summarise key parameter ranges across generated cells., Base API for periodic unit-cell generators.      Generation pipeline for each ca, Return a (possibly rescaled) lattice for a single cell.          Uniform scaling, UnitCellGenerator, GeneratorConfig, _has_infinite_bounds() (+5 more)
 
@@ -213,11 +213,11 @@ Nodes (3): _cell_center(), The geometric midpoint (a1 + a2) / 2 as plain floats.
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Shape` connect `Shape Primitives Core` to `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `Conic Shape Primitives`, `YAML Serialization Tests`, `Shapely Transform Tests`, `Shapely Compound Shape Tests`, `Generator Base Classes`, `Community 11`, `Shapely Adapter Modules`, `Unit Cell Tests`, `PyTorch Differentiability`, `Lattice SDF Tests`, `Coordinate Transform Bridge`, `Periodic Unit Cell Ops`, `Shape Test Init`, `Lattice Test Init`?**
+- **Why does `Shape` connect `Shape Primitives Core` to `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `Conic Shape Primitives`, `YAML Serialization Tests`, `Shapely Transform Tests`, `Shapely Compound Shape Tests`, `Generator Base Classes`, `Periodic Stripe Shape`, `Shapely Adapter Modules`, `Unit Cell Tests`, `PyTorch Differentiability`, `Lattice SDF Tests`, `Coordinate Transform Bridge`, `Periodic Unit Cell Ops`, `Shape Test Init`, `Lattice Test Init`?**
   _High betweenness centrality (0.155) - this node is a cross-community bridge._
-- **Why does `Lattice` connect `Unit Cell Analyzer` to `Shape Primitives Core`, `Shape Analysis & SDF Concepts`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Generator Integration Tests`, `Community 11`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `PyTorch Differentiability`, `Boolean Shape Tests`, `Periodic Unit Cell Ops`, `Community 23`, `Community 24`, `Community 25`, `Adapters Test Init`, `Generators Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`?**
+- **Why does `Lattice` connect `Unit Cell Analyzer` to `Shape Primitives Core`, `Shape Analysis & SDF Concepts`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Generator Integration Tests`, `Periodic Stripe Shape`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `PyTorch Differentiability`, `Boolean Shape Tests`, `Periodic Unit Cell Ops`, `Community 23`, `Community 24`, `Community 25`, `Adapters Test Init`, `Generators Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`?**
   _High betweenness centrality (0.145) - this node is a cross-community bridge._
-- **Why does `UnitCell` connect `Community 23` to `Shape Primitives Core`, `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Community 11`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `Boolean Shape Tests`, `Periodic Unit Cell Ops`, `Community 24`, `Community 25`, `Adapters Test Init`, `Generators Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`, `Validator Rationale`?**
+- **Why does `UnitCell` connect `Community 23` to `Shape Primitives Core`, `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Periodic Stripe Shape`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `Boolean Shape Tests`, `Periodic Unit Cell Ops`, `Community 24`, `Community 25`, `Adapters Test Init`, `Generators Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`, `Validator Rationale`?**
   _High betweenness centrality (0.120) - this node is a cross-community bridge._
 - **Are the 64 inferred relationships involving `UnitCell` (e.g. with `CellMetrics` and `UnitCellAnalyzer`) actually correct?**
   _`UnitCell` has 64 INFERRED edges - model-reasoned connections that need verification._
