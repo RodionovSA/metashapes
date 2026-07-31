@@ -34,7 +34,7 @@ mask = cell.mask(nx=128, ny=128)  # binary mask as torch.Tensor
 sdf  = cell.rasterize(nx=128, ny=128)  # signed-distance grid
 ```
 
-Available primitives: `Rectangle`, `ConvexQuad`, `IsoscelesTrapezoid`, `Ellipse`, `RegularPolygon`, `Cross`, `TShape`, `Stripe`.
+Available primitives: `Rectangle`, `ConvexQuad`, `IsoscelesTrapezoid`, `Ellipse`, `RegularPolygon`, `Cross`, `TShape`, `Bar`.
 
 ## Boolean Operations
 

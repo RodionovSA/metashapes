@@ -9,7 +9,7 @@ from metashapes.shape.primitives.quads import Rectangle, ConvexQuad, IsoscelesTr
 from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
 from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
 from metashapes.shape.primitives.junctions import Cross, TShape
-from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.stripes import Bar
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale
 
@@ -192,18 +192,18 @@ class TestPrimitivesToShapely:
         assert not geom.is_empty
         assert geom.area > 0.0
 
-    def test_stripe_x_height(self):
-        # axis='x': stripe spans x, bounded in y with the given width
-        shape = Stripe(offset=torch.tensor(0.0), width=torch.tensor(1.0), axis='x')
+    def test_bar_x_height(self):
+        # axis='x': bar spans x, bounded in y with the given width
+        shape = Bar(offset=torch.tensor(0.0), width=torch.tensor(1.0), axis='x')
         geom = shape_to_shapely(shape)
         assert not geom.is_empty
         bounds = geom.bounds  # (minx, miny, maxx, maxy)
         height = bounds[3] - bounds[1]
         assert height == pytest.approx(1.0, abs=1e-4)
 
-    def test_stripe_y_width(self):
-        # axis='y': stripe spans y, bounded in x with the given width
-        shape = Stripe(offset=torch.tensor(0.0), width=torch.tensor(0.8), axis='y')
+    def test_bar_y_width(self):
+        # axis='y': bar spans y, bounded in x with the given width
+        shape = Bar(offset=torch.tensor(0.0), width=torch.tensor(0.8), axis='y')
         geom = shape_to_shapely(shape)
         assert not geom.is_empty
         bounds = geom.bounds  # (minx, miny, maxx, maxy)

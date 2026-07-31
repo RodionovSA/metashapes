@@ -12,7 +12,7 @@ from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.primitives.quads import Rectangle
 from metashapes.shape.primitives.conics import Ellipse
-from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.stripes import Bar
 from metashapes.shape.primitives.polygons import RegularPolygon
 
 from .conftest import make_learnable_polygon
@@ -139,26 +139,26 @@ class TestCentroidMethod:
 # ---------------------------------------------------------------------------
 
 class TestInfiniteBoundsError:
-    def test_stripe_raises_value_error(self):
+    def test_bar_raises_value_error(self):
         lattice = Lattice.rectangular(2.0, 2.0)
-        scene = Stripe(offset=0.0, width=0.3, axis="x")
+        scene = Bar(offset=0.0, width=0.3, axis="x")
         cell = UnitCell(lattice, scene)
 
         with pytest.raises(ValueError, match="infinite bounds"):
             cell.center_scene(method="bbox")
 
-    def test_stripe_centroid_does_not_raise(self):
+    def test_bar_centroid_does_not_raise(self):
         """method='centroid' on a shape that Shapely can represent should work."""
-        # Stripe mapped to a bounded polygon via Shapely adapter — just verify
+        # Bar mapped to a bounded polygon via Shapely adapter — just verify
         # no exception is raised (the centroid is well-defined after clipping).
         lattice = Lattice.rectangular(2.0, 2.0)
-        scene = Stripe(offset=0.0, width=0.3, axis="x")
+        scene = Bar(offset=0.0, width=0.3, axis="x")
         cell = UnitCell(lattice, scene)
         # The Shapely adapter clips to a bounding region; it should not raise.
         try:
             cell.center_scene(method="centroid")
         except Exception as e:
-            # If the adapter raises for a Stripe that's truly infinite, skip;
+            # If the adapter raises for a Bar that's truly infinite, skip;
             # we only care that it does NOT raise the bbox ValueError.
             assert "infinite bounds" not in str(e)
 

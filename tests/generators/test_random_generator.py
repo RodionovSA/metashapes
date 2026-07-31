@@ -116,7 +116,7 @@ class TestShapeTypes:
         "IsoscelesTrapezoid",
         "Cross",
         "TShape",
-        "Stripe",
+        "Bar",
     ])
     def test_each_shape_type_generates(self, shape_name):
         result = _gen(

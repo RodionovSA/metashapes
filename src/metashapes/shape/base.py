@@ -29,7 +29,7 @@ class Shape(nn.Module):
         Returns ((xmin, ymin), (xmax, ymax)).
 
         Shapes that are infinite along a direction return -inf / +inf
-        for that coordinate (e.g. a horizontal stripe is infinite in x).
+        for that coordinate (e.g. a horizontal bar is infinite in x).
         UnitCell uses this only to size the periodic-copy search, so an
         infinite extent simply means "one copy is enough in that
         direction" — the copies there are identical.

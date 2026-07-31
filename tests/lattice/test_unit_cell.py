@@ -8,7 +8,7 @@ import torch.nn as nn
 from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.primitives.polygons import RegularPolygon
-from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.stripes import Bar
 
 from .conftest import make_learnable_polygon
 
@@ -167,10 +167,10 @@ class TestUnitCellBoundary:
         assert pts.shape[0] > 0
 
     def test_boundary_points_empty_when_full(self):
-        # A Stripe much wider than the cell: all points inside, no boundary.
+        # A Bar much wider than the cell: all points inside, no boundary.
         lat = Lattice.rectangular(1.0, 1.0)
-        stripe = Stripe(offset=0.0, width=100.0, axis='x')
-        cell = UnitCell(lat, stripe)
+        bar = Bar(offset=0.0, width=100.0, axis='x')
+        cell = UnitCell(lat, bar)
         pts = cell.boundary_points(resolution=64)
         assert pts.shape == (0, 2)
 
@@ -304,15 +304,15 @@ class TestToShapely:
                              (a1[0]+a2[0], a1[1]+a2[1]), (a2[0], a2[1])])
         assert geom.difference(cell_poly).is_empty
 
-    def test_stripe_clips_to_cell(self):
+    def test_bar_clips_to_cell(self):
         lattice = Lattice.rectangular(2.0, 3.0)
-        # offset=1.5 centers the stripe in the [0,3] cell; y ∈ [1.0, 2.0] fully inside
-        shape = Stripe(offset=torch.tensor(1.5), width=torch.tensor(1.0), axis="x")
+        # offset=1.5 centers the bar in the [0,3] cell; y ∈ [1.0, 2.0] fully inside
+        shape = Bar(offset=torch.tensor(1.5), width=torch.tensor(1.0), axis="x")
         cell = UnitCell(lattice, shape)
         geom = cell.to_shapely()
         assert not geom.is_empty
         assert geom.area > 0.0
-        # stripe width=1.0, cell Lx=2.0 → intersection area = 2.0 * 1.0
+        # bar width=1.0, cell Lx=2.0 → intersection area = 2.0 * 1.0
         assert abs(geom.area - 2.0 * 1.0) < 0.01
 
     def test_shape_outside_cell_is_empty(self):

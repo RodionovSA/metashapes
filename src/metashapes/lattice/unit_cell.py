@@ -304,7 +304,7 @@ class UnitCell(nn.Module):
             ``"bbox"`` (default)
                 Midpoint of the scene's axis-aligned bounding box (AABB).
                 Fast and analytical; raises ``ValueError`` for shapes with
-                infinite extent (e.g. ``Stripe``).
+                infinite extent (e.g. ``Bar``).
 
             ``"centroid"``
                 Area-weighted geometric centroid via the Shapely adapter.

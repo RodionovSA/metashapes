@@ -1,5 +1,5 @@
-# metashapes/adapters/shapely/periodic.py
-# Shapely adapters for periodic primitive shapes.
+# metashapes/adapters/shapely/stripes.py
+# Shapely adapters for stripe shapes.
 
 from __future__ import annotations
 
@@ -14,11 +14,11 @@ from .helpers import as_float
 _LARGE = 1e6
 
 
-def stripe_to_shapely(shape: prim.Stripe) -> BaseGeometry:
+def bar_to_shapely(shape: prim.Bar) -> BaseGeometry:
     """
-    Convert a Stripe to a Shapely box.
+    Convert a Bar to a Shapely box.
 
-    The stripe is infinite along its axis, so we approximate it with a
+    The bar is infinite along its axis, so we approximate it with a
     very wide (axis='x') or very tall (axis='y') rectangle.  All
     within-cell distance computations are exact under this approximation.
     """

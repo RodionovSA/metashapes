@@ -66,7 +66,7 @@ class Rotate(Shape):
         if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
             raise NotImplementedError(
                 "Cannot rotate a shape with infinite spatial extent "
-                "(e.g. a Stripe or any boolean composition containing one). "
+                "(e.g. a Bar or any boolean composition containing one). "
                 "Define infinite shapes in their final orientation before composing."
             )
         self.shape = shape

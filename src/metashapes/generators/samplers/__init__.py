@@ -1,6 +1,6 @@
 from .quads import RectangleSampler, IsoscelesTrapezoidSampler, ConvexQuadSampler
 from .conics import EllipseSampler
-from .periodic import StripeSampler
+from .stripes import BarSampler
 from .polygons import RegularPolygonSampler
 from .junctions import CrossSampler, TShapeSampler
 
@@ -9,7 +9,7 @@ __all__ = [
     "IsoscelesTrapezoidSampler",
     "ConvexQuadSampler",
     "EllipseSampler",
-    "StripeSampler",
+    "BarSampler",
     "RegularPolygonSampler",
     "CrossSampler",
     "TShapeSampler",

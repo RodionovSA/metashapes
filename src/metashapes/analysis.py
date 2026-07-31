@@ -348,7 +348,7 @@ def _compute_min_gap(
     images), considering the 8 nearest periodic copies.
 
     Shifts where a shape with infinite extent along a lattice direction would
-    trivially overlap its own copy are excluded, so a Stripe's gap is measured
+    trivially overlap its own copy are excluded, so a Bar's gap is measured
     only in the perpendicular direction.
     """
     if not geoms:

@@ -1,5 +1,5 @@
-# metashapes/generators/samplers/periodic.py
-# Samplers for periodic primitive shapes.
+# metashapes/generators/samplers/stripes.py
+# Samplers for stripe shapes.
 
 from __future__ import annotations
 
@@ -13,14 +13,14 @@ from metashapes.generators.samplers.utils import (
     lattice_inner_bounds,
     resolve_param,
 )
-from metashapes.shape.primitives import Stripe
+from metashapes.shape.primitives import Bar
 
 
 @register_shape_sampler
-class StripeSampler(ShapeSampler):
-    shape_class = Stripe
+class BarSampler(ShapeSampler):
+    shape_class = Bar
 
-    def sample(self, rng, lattice: Lattice, config) -> Stripe:
+    def sample(self, rng, lattice: Lattice, config) -> Bar:
         min_size = config.min_shape_size or 0.1
         min_feature = config.min_feature_size or 0.0
 
@@ -47,4 +47,4 @@ class StripeSampler(ShapeSampler):
             default_range=(perp_lo + width / 2.0, perp_hi - width / 2.0),
         )
 
-        return Stripe(offset=offset, width=width, axis=axis)
+        return Bar(offset=offset, width=width, axis=axis)

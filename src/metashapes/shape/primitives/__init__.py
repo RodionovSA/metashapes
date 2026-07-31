@@ -10,13 +10,13 @@ from .polygons import __all__ as __polygons_all__
 from .junctions import *
 from .junctions import __all__ as __junctions_all__
 
-from .periodic import *
-from .periodic import __all__ as __periodic_all__
+from .stripes import *
+from .stripes import __all__ as __stripes_all__
 
 __all__ = [
     *__quads_all__,
     *__conics_all__,
     *__polygons_all__,
     *__junctions_all__,
-    *__periodic_all__,
+    *__stripes_all__,
 ]

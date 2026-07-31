@@ -1,5 +1,5 @@
-# metashapes/shape/primitives/periodic.py
-# Shapes that span the full unit cell in one periodic direction.
+# metashapes/shape/primitives/stripes.py
+# Shapes that span the full unit cell, infinite along one axis.
 
 from __future__ import annotations
 
@@ -10,31 +10,31 @@ from metashapes.shape.registry import register_shape
 from metashapes.shape.utils import register
 
 __all__ = [
-    "Stripe",
+    "Bar",
 ]
 
 
-@register_shape("Stripe")
-class Stripe(Shape):
+@register_shape("Bar")
+class Bar(Shape):
     """
-    An infinite stripe spanning the full unit cell along one axis.
+    An infinite bar spanning the full unit cell along one axis.
 
-    The stripe is unbounded along `axis` and has a finite thickness
+    The bar is unbounded along `axis` and has a finite thickness
     (`width`) in the perpendicular direction, centred at `offset`.
 
     Parameters:
-        offset: position of the stripe centre along the *perpendicular* axis
-        width:  full thickness of the stripe (must be positive)
-        axis:   ``'x'`` — stripe runs along x, bounded in y  (default)
-                ``'y'`` — stripe runs along y, bounded in x
+        offset: position of the bar centre along the *perpendicular* axis
+        width:  full thickness of the bar (must be positive)
+        axis:   ``'x'`` — bar runs along x, bounded in y  (default)
+                ``'y'`` — bar runs along y, bounded in x
 
     Example::
 
-        # Horizontal stripe of width 0.3 centred on y = 0
-        s = Stripe(offset=0.0, width=0.3, axis='x')
+        # Horizontal bar of width 0.3 centred on y = 0
+        s = Bar(offset=0.0, width=0.3, axis='x')
 
-        # Vertical stripe of width 0.2 shifted to x = 0.1
-        s = Stripe(offset=0.1, width=0.2, axis='y')
+        # Vertical bar of width 0.2 shifted to x = 0.1
+        s = Bar(offset=0.1, width=0.2, axis='y')
 
     """
 
@@ -50,7 +50,7 @@ class Stripe(Shape):
         register(self, "width", width)
 
         if torch.any(self.width <= 0):
-            raise ValueError("Stripe width must be positive")
+            raise ValueError("Bar width must be positive")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         w   = self.width
@@ -77,14 +77,14 @@ class Stripe(Shape):
     @property
     def min_feature_size(self) -> float:
         return self.width.detach().item()
-    
+
     def rotate(
         self,
         angle: float | torch.Tensor,
         origin: tuple[float | torch.Tensor, float | torch.Tensor] = (0.0, 0.0),
     ) -> "Shape":
         raise NotImplementedError(
-        "Stripe cannot be rotated: a stripe only tiles when its axis "
-        "is a lattice direction. Define the stripe in the desired "
+        "Bar cannot be rotated: a bar only tiles when its axis "
+        "is a lattice direction. Define the bar in the desired "
         "orientation instead."
     )

@@ -8,7 +8,7 @@ from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.primitives.quads import Rectangle
 from metashapes.shape.primitives.conics import Ellipse
-from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.stripes import Bar
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale
 from metashapes.analysis import (
@@ -205,10 +205,10 @@ class TestMetrics:
         assert m.min_gap is not None
         assert m.min_gap > 0.0
 
-    def test_stripe_min_gap_not_zero(self):
-        # Stripe infinite in x — self-periodic images in x direction should be skipped
-        stripe = Stripe(offset=0.0, width=0.3, axis='x')
-        cell = _cell(stripe, px=1.0, py=1.0)
+    def test_bar_min_gap_not_zero(self):
+        # Bar infinite in x — self-periodic images in x direction should be skipped
+        bar = Bar(offset=0.0, width=0.3, axis='x')
+        cell = _cell(bar, px=1.0, py=1.0)
         m = UnitCellAnalyzer().metrics(cell)
         # min_gap should be the gap to y-periodic image, not 0
         assert m.min_gap is not None
@@ -362,16 +362,16 @@ class TestSkipSelfShift:
         assert not _skip_self_shift(r, 1.0, 0.0)
         assert not _skip_self_shift(r, 0.0, 1.0)
 
-    def test_x_infinite_stripe_skips_x_shift(self):
-        stripe = Stripe(offset=0.0, width=0.3, axis='x')
-        # Stripe with axis='x' is infinite in x
-        assert _skip_self_shift(stripe, 1.0, 0.0)   # x-component → skip
-        assert not _skip_self_shift(stripe, 0.0, 1.0)  # y-only → don't skip
+    def test_x_infinite_bar_skips_x_shift(self):
+        bar = Bar(offset=0.0, width=0.3, axis='x')
+        # Bar with axis='x' is infinite in x
+        assert _skip_self_shift(bar, 1.0, 0.0)   # x-component → skip
+        assert not _skip_self_shift(bar, 0.0, 1.0)  # y-only → don't skip
 
-    def test_y_infinite_stripe_skips_y_shift(self):
-        stripe = Stripe(offset=0.0, width=0.3, axis='y')
-        assert not _skip_self_shift(stripe, 1.0, 0.0)  # x-only → don't skip
-        assert _skip_self_shift(stripe, 0.0, 1.0)   # y-component → skip
+    def test_y_infinite_bar_skips_y_shift(self):
+        bar = Bar(offset=0.0, width=0.3, axis='y')
+        assert not _skip_self_shift(bar, 1.0, 0.0)  # x-only → don't skip
+        assert _skip_self_shift(bar, 0.0, 1.0)   # y-component → skip
 
 
 class TestComputeMinGap:
@@ -401,12 +401,12 @@ class TestComputeMinGap:
         gap = _compute_min_gap([a, b], [ga, gb], lattice)
         assert gap == pytest.approx(0.4, abs=0.01)
 
-    def test_stripe_gap_is_perpendicular_only(self):
-        # Stripe width=0.3 centered at y=0, py=1.0 → gap to y-periodic image = 1.0 - 0.3 = 0.7
-        stripe = Stripe(offset=0.0, width=0.3, axis='x')
+    def test_bar_gap_is_perpendicular_only(self):
+        # Bar width=0.3 centered at y=0, py=1.0 → gap to y-periodic image = 1.0 - 0.3 = 0.7
+        bar = Bar(offset=0.0, width=0.3, axis='x')
         from metashapes.adapters.shapely import shape_to_shapely, remove_holes
-        geom = remove_holes(shape_to_shapely(stripe))
+        geom = remove_holes(shape_to_shapely(bar))
         lattice = Lattice.rectangular(1.0, 1.0)
-        gap = _compute_min_gap([stripe], [geom], lattice)
+        gap = _compute_min_gap([bar], [geom], lattice)
         assert gap is not None
         assert gap == pytest.approx(0.7, abs=0.02)

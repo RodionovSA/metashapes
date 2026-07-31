@@ -22,7 +22,7 @@ from metashapes.adapters.shapely import shape_to_shapely, remove_holes
 
 
 def _has_infinite_bounds(shape: Shape) -> bool:
-    """Return True if the shape has infinite spatial extent (e.g. Stripe)."""
+    """Return True if the shape has infinite spatial extent (e.g. Bar)."""
     (x0, y0), (x1, y1) = shape.bounds()
     return not all(math.isfinite(v) for v in (x0, y0, x1, y1))
 

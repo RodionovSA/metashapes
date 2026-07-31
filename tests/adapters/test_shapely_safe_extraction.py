@@ -23,7 +23,7 @@ from metashapes.shape.primitives.quads import Rectangle, IsoscelesTrapezoid
 from metashapes.shape.primitives.conics import Ellipse, Stadium
 from metashapes.shape.primitives.polygons import RegularPolygon
 from metashapes.shape.primitives.junctions import Cross
-from metashapes.shape.primitives.periodic import Stripe
+from metashapes.shape.primitives.stripes import Bar
 from metashapes.shape.transforms import Translate, Rotate, Scale
 
 
@@ -135,9 +135,9 @@ class TestCrossSafeExtraction:
         assert geom.area > 0
 
 
-class TestStripeSafeExtraction:
+class TestBarSafeExtraction:
     def test_learnable_offset_and_width(self):
-        shape = Stripe(offset=p(0.1), width=p(0.3), axis="x")
+        shape = Bar(offset=p(0.1), width=p(0.3), axis="x")
         geom = shape_to_shapely(shape)
         assert geom.area > 0
 
