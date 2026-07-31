@@ -8,11 +8,40 @@ import torch
 import torch.nn as nn
 import math
 
-from metashapes.shape import Shape
+from metashapes.shape import Shape, Translate, Union
+from metashapes.shape.base import is_empty_bounds
 from .basis import Lattice
 from .grid import cartesian_grid
 
 __all__ = ["UnitCell"]
+
+
+def _decompose_for_offsets(shape: Shape):
+    """Yield sub-shapes to measure separately when sizing the periodic
+    copy search, each with `bounds()` already reflecting its true world
+    position.
+
+    `Union` is split into its two operands: `Union.bounds()`'s
+    componentwise min/max lets one child's infinite extent (e.g. a `Bar`)
+    swallow another, finite child's true -- and possibly much larger --
+    span, so the two must be measured independently and their resulting
+    offset ranges combined, not their bounds. `Translate` is passed
+    through onto each decomposed piece (same idiom as `analysis.py`'s
+    `_leaf_shapes`) so decomposition still reaches into a scene like
+    `Translate(Union(...))`, which is exactly what `center_scene()`
+    produces. Everything else (single primitives, `Rotate`, `Scale`,
+    `Intersection`, `Difference`) is measured as one atomic piece via its
+    own `bounds()`.
+    """
+    if isinstance(shape, Union):
+        yield from _decompose_for_offsets(shape.left)
+        yield from _decompose_for_offsets(shape.right)
+    elif isinstance(shape, Translate):
+        for piece in _decompose_for_offsets(shape.shape):
+            yield piece.translate(shape.dx, shape.dy)
+    else:
+        yield shape
+
 
 class UnitCell(nn.Module):
     """
@@ -24,7 +53,9 @@ class UnitCell(nn.Module):
     minimum over lattice copies, and samples it on a one-cell grid.
 
     The cell is only a sampling viewport: shapes are never clipped to
-    it, so shapes touching or crossing the boundary stay continuous.
+    it, so shapes touching or crossing the boundary stay continuous --
+    and a shape positioned anywhere outside the cell, even far outside,
+    wraps back in rather than reading as empty.
 
     Parameters
     ----------
@@ -39,47 +70,94 @@ class UnitCell(nn.Module):
         self.lattice = lattice          # frozen dataclass, not a submodule
         self.scene = scene              # nn.Module -> auto-registered
 
-    # --- ring sizing -------------------------------------------------
-    def _ring_for(self, shape: Shape) -> tuple[int, int]:
-        """Number of periodic copies to search per lattice direction.
+    # --- periodic copy search ------------------------------------------
+    def _offsets_for(self, shape: Shape) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Integer lattice-copy offset range needed to cover `shape`, per
+        direction, for query points folded into the unit cell.
 
-        A finite shape spanning k cells needs ceil(k)+1 copies so that
-        a query point can always reach its nearest copy. An infinite
-        extent collapses to ring 1: every copy along that direction is
-        identical, so one is enough.
+        Position-aware: unlike a symmetric ring sized only from the
+        shape's own extent, this measures the shape's actual placement
+        relative to the cell, so a scene far from the cell still gets
+        exactly the copies it needs to wrap back in, rather than a ring
+        centered on the wrong place. See `_decompose_for_offsets` for why
+        `Union`/`Translate` are handled by decomposing first and unioning
+        the resulting ranges, rather than measuring `shape.bounds()`
+        directly.
         """
-        (x0, y0), (x1, y1) = shape.bounds()
+        i_range = j_range = None
+        for piece in _decompose_for_offsets(shape):
+            i, j = self._offsets_for_bounds(piece.bounds())
+            i_range = i if i_range is None else (min(i_range[0], i[0]), max(i_range[1], i[1]))
+            j_range = j if j_range is None else (min(j_range[0], j[0]), max(j_range[1], j[1]))
+        return i_range, j_range
 
-        # the four bbox corners, mapped to fractional lattice coords
-        corners_x = torch.tensor([x0, x0, x1, x1], dtype=self.lattice.dtype, device=self.lattice.device)
-        corners_y = torch.tensor([y0, y1, y0, y1], dtype=self.lattice.dtype, device=self.lattice.device)
-        f1, f2 = self.lattice.to_fractional(corners_x, corners_y)
+    def _offsets_for_bounds(
+        self, bounds: tuple[tuple[float, float], tuple[float, float]]
+    ) -> tuple[tuple[int, int], tuple[int, int]]:
+        """Integer offset range (per lattice direction) covering one bbox.
 
-        rings = []
-        for frac in (f1, f2):
-            vals = frac[torch.isfinite(frac)]
-            if vals.numel() < 2:
-                # infinite extent in this direction -> identical copies
-                rings.append(1)
+        For lattice direction k, the fractional coordinate is the linear
+        functional f_k(x, y) = b_k . (x, y), b_k the k-th row of the
+        inverse lattice matrix (matching `Lattice.to_fractional`). Its
+        extremes over an axis-aligned box are separable per world axis,
+        computed here directly rather than by mapping the box's four
+        corners through `to_fractional` and filtering non-finite results:
+        that approach hits `0 * inf -> NaN` whenever any bbox coordinate
+        is infinite, corrupting even a genuinely finite direction (L-02).
+        Here a zero coefficient against an infinite side simply
+        contributes nothing, which is exact, not a fallback.
+
+        A copy whose fractional interval falls entirely more than one
+        full cell outside [0, 1) cannot be the nearest copy to any query
+        point already folded into [0, 1), so the search is widened by
+        exactly one cell on each side of that interval.
+        """
+        if is_empty_bounds(bounds):
+            return (0, 0), (0, 0)
+        (x0, y0), (x1, y1) = bounds
+        inv = torch.linalg.inv(self.lattice.matrix).tolist()  # rows = b_0, b_1
+
+        ranges = []
+        for b0, b1 in inv:
+            lo = hi = 0.0
+            infinite = False
+            for coef, (d0, d1) in ((b0, (x0, x1)), (b1, (y0, y1))):
+                if coef == 0.0:
+                    continue  # infinite side is irrelevant on this axis
+                u, v = coef * d0, coef * d1
+                if math.isinf(u) or math.isinf(v):
+                    infinite = True
+                    break
+                lo += min(u, v)
+                hi += max(u, v)
+            if infinite:
+                # every copy along this direction is identical -> one is enough
+                ranges.append((-1, 1))
             else:
-                ext = (vals.max() - vals.min()).item()
-                rings.append(int(math.ceil(ext)) + 1)
-        return rings[0], rings[1]
+                ranges.append((math.ceil(-1.0 - hi), math.floor(2.0 - lo)))
+        return ranges[0], ranges[1]
 
     # --- periodic SDF ------------------------------------------------
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """Periodic signed distance of the scene at Cartesian (x, y).
 
-        Minimum over lattice copies. The ring is sized from the scene's
-        bounding box, so shapes larger than one cell are still connected
-        correctly and infinite shapes continue across the seam.
+        Query points are first folded into the unit cell via fractional
+        modulo, then the minimum is taken over the lattice copies needed
+        to reach the scene from anywhere in the cell (sized and
+        positioned by `_offsets_for`). Folding first means the result
+        only depends on a point's cell-relative position -- matching
+        `rasterize`/`mask` -- and that the scene wraps back into the cell
+        correctly however far from it the scene is actually defined.
         """
-        r1, r2 = self._ring_for(self.scene)
+        f1, f2 = self.lattice.to_fractional(x, y)
+        xf, yf = self.lattice.to_cartesian(f1 % 1.0, f2 % 1.0)
+
+        (i0, i1), (j0, j1) = self._offsets_for(self.scene)
         best = None
-        for i in range(-r1, r1 + 1):
-            for j in range(-r2, r2 + 1):
+        for i in range(i0, i1 + 1):
+            for j in range(j0, j1 + 1):
                 ox, oy = self.lattice.offset(i, j)
-                d = self.scene.sdf(x - ox, y - oy)
+                d = self.scene.sdf(xf - ox, yf - oy)
                 best = d if best is None else torch.minimum(best, d)
         return best
 
@@ -100,9 +178,9 @@ class UnitCell(nn.Module):
             of the supercell; output shape [ny·n2, nx·n1]. Rows are
             horizontal in world space — correct for imshow display of any
             lattice geometry, including hexagonal.
-            Query points are folded back into the unit cell via fractional
-            modulo before SDF evaluation, so the ring search stays valid
-            regardless of repeat size.
+            `sdf()` itself folds query points back into the unit cell via
+            fractional modulo, so the copy search stays valid regardless
+            of repeat size.
         """
         n1, n2 = repeat
 
@@ -120,11 +198,7 @@ class UnitCell(nn.Module):
         ys = torch.linspace(ymin, ymax, ny * n2,
                             dtype=self.lattice.dtype, device=self.lattice.device)
         X, Y = torch.meshgrid(xs, ys, indexing="xy")
-
-        # Fold to unit cell: points stay in [0,1) fractional → ring search valid
-        f1, f2 = self.lattice.to_fractional(X, Y)
-        Xw, Yw = self.lattice.to_cartesian(f1 % 1.0, f2 % 1.0)
-        return self.sdf(Xw, Yw)
+        return self.sdf(X, Y)
 
     def mask(self, nx, ny, *, soft=False, softness=None,
              repeat: tuple[int, int] = (1, 1),
@@ -339,7 +413,13 @@ class UnitCell(nn.Module):
         cell_cx, cell_cy = c[0].item(), c[1].item()
 
         if method == "bbox":
-            (x0, y0), (x1, y1) = self.scene.bounds()
+            scene_bounds = self.scene.bounds()
+            if is_empty_bounds(scene_bounds):
+                raise ValueError(
+                    "Scene is empty (e.g. the intersection of disjoint shapes); "
+                    "there is no bounding box to center."
+                )
+            (x0, y0), (x1, y1) = scene_bounds
             if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
                 raise ValueError(
                     "Scene has infinite bounds; method='bbox' requires finite bounds. "
@@ -366,15 +446,18 @@ class UnitCell(nn.Module):
 
     # --- shapely adapter ---------------------------------------------
     def to_shapely(self):
-        """Shapely geometry of the scene, clipped to the unit cell.
+        """Shapely geometry of the scene, wrapped periodically into the
+        unit cell.
 
         Periodic, matching `sdf()`: shapes touching or crossing the cell
         boundary are unioned with their neighbouring lattice copies before
-        clipping, so the wrapped-around part is included rather than lost.
-        Uses the same copy count as `sdf()` (`_ring_for`), so a shape fully
-        inside the cell gives the same result as clipping it alone -- its
-        other copies fall entirely outside `cell_poly` and are discarded by
-        the intersection.
+        clipping, so the wrapped-around part is included rather than lost
+        -- and a scene positioned entirely outside the cell (even far
+        outside) still contributes its wrapped-in copy rather than reading
+        as empty. Uses the same copy search as `sdf()` (`_offsets_for`),
+        so a shape fully inside the cell gives the same result as clipping
+        it alone -- its other copies fall entirely outside `cell_poly` and
+        are discarded by the intersection.
         """
         from shapely.affinity import translate
         from shapely.geometry import Polygon
@@ -382,10 +465,10 @@ class UnitCell(nn.Module):
         from metashapes.adapters.shapely import shape_to_shapely
 
         base = shape_to_shapely(self.scene)
-        r1, r2 = self._ring_for(self.scene)
+        (i0, i1), (j0, j1) = self._offsets_for(self.scene)
         copies = []
-        for i in range(-r1, r1 + 1):
-            for j in range(-r2, r2 + 1):
+        for i in range(i0, i1 + 1):
+            for j in range(j0, j1 + 1):
                 if i == 0 and j == 0:
                     copies.append(base)
                     continue

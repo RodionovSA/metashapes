@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import torch
 
-from .base import Shape, to_plain_data
+from .base import EMPTY_BOUNDS, Shape, is_empty_bounds, to_plain_data
 from .registry import register_shape
 from .utils import register
 
@@ -37,6 +37,15 @@ class Union(Shape):
         (x0, y0), (x1, y1) = self.left.bounds()
         (x2, y2), (x3, y3) = self.right.bounds()
         return (min(x0, x2), min(y0, y2)), (max(x1, x3), max(y1, y3))
+
+    # No min_feature_size override: unlike Translate/Rotate/Scale (rigid or
+    # uniform-scale motions that can't change a shape's narrowest width),
+    # combining two shapes can create a *new*, thinner feature at the seam
+    # between them (e.g. two rectangles unioned edge-to-edge can pinch to a
+    # feature narrower than either operand's own min_feature_size). There is
+    # no cheap, generally-correct formula from the children's values alone,
+    # so this deliberately stays None ("unknown") rather than propagating a
+    # possibly-too-large min() that would understate the risk.
 
     def to_parametric(self) -> dict:
         return {
@@ -83,7 +92,18 @@ class Intersection(Shape):
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
         (x0, y0), (x1, y1) = self.left.bounds()
         (x2, y2), (x3, y3) = self.right.bounds()
-        return (max(x0, x2), max(y0, y2)), (min(x1, x3), min(y1, y3))
+        box = (max(x0, x2), max(y0, y2)), (min(x1, x3), min(y1, y3))
+        # For disjoint operands the naive componentwise max/min produces an
+        # inverted box (xmin > xmax and/or ymin > ymax) rather than a
+        # meaningful extent -- normalize to the canonical empty sentinel so
+        # downstream consumers (ring sizing, centering, further transforms)
+        # never do arithmetic on a nonsense box.
+        return EMPTY_BOUNDS if is_empty_bounds(box) else box
+
+    # See Union's min_feature_size comment: intersecting/subtracting can
+    # create a feature thinner than either child's own value, so this stays
+    # None ("unknown") rather than propagating a possibly-too-optimistic
+    # min() from the children.
 
     def to_parametric(self) -> dict:
         return {
@@ -129,6 +149,10 @@ class Difference(Shape):
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
         return self.left.bounds()
+
+    # See Union's min_feature_size comment: subtracting `right` can leave a
+    # sliver of `left` thinner than left.min_feature_size, so this stays
+    # None ("unknown") rather than propagating the child's value unchanged.
 
     def to_parametric(self) -> dict:
         return {

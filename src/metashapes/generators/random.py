@@ -17,13 +17,21 @@ import metashapes.generators.samplers
 
 from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
-from metashapes.shape.base import Shape
+from metashapes.shape.base import Shape, is_empty_bounds
 from metashapes.adapters.shapely import shape_to_shapely, remove_holes
 
 
 def _has_infinite_bounds(shape: Shape) -> bool:
-    """Return True if the shape has infinite spatial extent (e.g. Bar)."""
-    (x0, y0), (x1, y1) = shape.bounds()
+    """Return True if the shape has infinite spatial extent (e.g. Bar).
+
+    An empty shape (e.g. the intersection of disjoint shapes) is not
+    infinite -- it has no extent at all -- even though its bounds() sentinel
+    involves +/-inf, so that case is excluded explicitly.
+    """
+    bounds = shape.bounds()
+    if is_empty_bounds(bounds):
+        return False
+    (x0, y0), (x1, y1) = bounds
     return not all(math.isfinite(v) for v in (x0, y0, x1, y1))
 
 

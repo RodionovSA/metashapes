@@ -3,11 +3,30 @@
 
 from __future__ import annotations
 
+import math
+
 import torch
 import torch.nn as nn
 
-from shapely.geometry.base import BaseGeometry
 from .registry import SHAPE_REGISTRY
+
+# Canonical empty axis-aligned bounding box. An "inverted" box (xmin > xmax
+# or ymin > ymax) has no valid interpretation as a real extent, so this is
+# the single sentinel value used across the shape package to mean "this
+# shape covers no area" (e.g. the intersection of two disjoint shapes).
+# It doubles as the identity element for Union.bounds()'s componentwise
+# min/max (min(inf, x) == x, max(-inf, x) == x) and for Translate.bounds()'s
+# addition (inf + dx == inf), so composite shapes containing an empty child
+# already combine correctly with no special-casing.
+EMPTY_BOUNDS: tuple[tuple[float, float], tuple[float, float]] = (
+    (math.inf, math.inf), (-math.inf, -math.inf)
+)
+
+
+def is_empty_bounds(bounds: tuple[tuple[float, float], tuple[float, float]]) -> bool:
+    """True if `bounds` (as returned by `Shape.bounds()`) is an empty/inverted box."""
+    (x0, y0), (x1, y1) = bounds
+    return x1 < x0 or y1 < y0
 
 
 class Shape(nn.Module):
@@ -38,7 +57,13 @@ class Shape(nn.Module):
             f"{type(self).__name__} must implement bounds()")
     
     @property
-    def min_feature_size(self) -> float:
+    def min_feature_size(self) -> float | None:
+        """Narrowest place the shape gets, in world units, or None if unknown.
+
+        Leaf primitives that can compute it override this property. `None`
+        means "unknown" (not "infinite") — callers must not treat a missing
+        value as if there were no constraint.
+        """
         return None
 
     # Boolean operators for easy shape composition

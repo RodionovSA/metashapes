@@ -315,15 +315,33 @@ class TestToShapely:
         # bar width=1.0, cell Lx=2.0 → intersection area = 2.0 * 1.0
         assert abs(geom.area - 2.0 * 1.0) < 0.01
 
-    def test_shape_outside_cell_is_empty(self):
+    def test_shape_outside_cell_wraps_periodically(self):
+        # Regression for L-02/L-03: to_shapely() (and sdf()/mask()) are
+        # fully periodic, so a scene positioned far outside the cell still
+        # wraps back in -- it does not read as empty. A rect 50 cells away
+        # on a 2.0 lattice must give exactly the same geometry as the same
+        # rect placed at the cell origin.
         from metashapes.shape.primitives.quads import Rectangle
         lattice = Lattice.rectangular(2.0, 2.0)
-        # Rectangle centered far outside the unit cell
-        shape = Rectangle(center=torch.tensor([100.0, 100.0]),
+        far = Rectangle(center=torch.tensor([100.3, 100.3]),
+                         size=torch.tensor([0.5, 0.5]))
+        near = Rectangle(center=torch.tensor([0.3, 0.3]),
                           size=torch.tensor([0.5, 0.5]))
-        cell = UnitCell(lattice, shape)
-        geom = cell.to_shapely()
-        assert geom.is_empty
+        far_cell = UnitCell(lattice, far)
+        near_cell = UnitCell(lattice, near)
+
+        far_geom = far_cell.to_shapely()
+        near_geom = near_cell.to_shapely()
+        assert not far_geom.is_empty
+        assert far_geom.area == pytest.approx(near_geom.area, abs=1e-6)
+        assert far_geom.area == pytest.approx(0.25, abs=1e-6)
+        # float32 precision at a ~200-unit offset limits how tightly the two
+        # polygons can agree; the mask comparison below is the tight check.
+        assert far_geom.symmetric_difference(near_geom).area == pytest.approx(0.0, abs=1e-4)
+
+        far_mask = far_cell.mask(64, 64)
+        near_mask = near_cell.mask(64, 64)
+        assert torch.equal(far_mask, near_mask)
 
     def test_area_matches_periodic_sdf_for_seam_straddling_shape(self):
         # Regression for L-01: to_shapely() used to convert a single,
@@ -352,6 +370,140 @@ class TestToShapely:
         cell = UnitCell(lattice, shape)
         geom = cell.to_shapely()
         assert geom.area == pytest.approx(0.25, abs=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# _offsets_for() / periodic copy search tests (L-02, L-03)
+# ---------------------------------------------------------------------------
+
+def _brute_force_sdf(cell, x, y, ring=20):
+    """Independent reference: fold into the cell, then search a ring far
+    larger than any offset _offsets_for should ever need. Used to verify
+    _offsets_for's copy search is actually sufficient, not just internally
+    consistent."""
+    f1, f2 = cell.lattice.to_fractional(x, y)
+    xf, yf = cell.lattice.to_cartesian(f1 % 1.0, f2 % 1.0)
+    best = None
+    for i in range(-ring, ring + 1):
+        for j in range(-ring, ring + 1):
+            ox, oy = cell.lattice.offset(i, j)
+            d = cell.scene.sdf(xf - ox, yf - oy)
+            best = d if best is None else torch.minimum(best, d)
+    return best
+
+
+class TestOffsetsForRing:
+    def test_bar_offsets_are_finite_not_nan(self):
+        # Regression for L-02: Bar's bbox has an infinite x-extent, and the
+        # old _ring_for mapped literal +/-inf bbox corners through
+        # to_fractional, hitting 0*inf -> NaN even in the finite (y)
+        # direction on some lattices.
+        lattice = Lattice.rectangular(1.0, 1.0)
+        bar = Bar(offset=torch.tensor(0.0), width=torch.tensor(0.3), axis="x")
+        cell = UnitCell(lattice, bar)
+        (i0, i1), (j0, j1) = cell._offsets_for(bar)
+        assert all(math.isfinite(v) for v in (i0, i1, j0, j1))
+
+    def test_bar_offsets_finite_on_hexagonal_lattice_too(self):
+        lattice = Lattice.hexagonal(1.0, orientation="pointy")
+        bar = Bar(offset=torch.tensor(0.0), width=torch.tensor(0.3), axis="x")
+        cell = UnitCell(lattice, bar)
+        (i0, i1), (j0, j1) = cell._offsets_for(bar)
+        assert all(math.isfinite(v) for v in (i0, i1, j0, j1))
+
+    def test_mixed_infinite_and_wide_finite_union_covers_the_finite_branch(self):
+        # Regression for L-02's real failure mode: Union(Bar, wide Rectangle)
+        # used to collapse to ring (1, 1) because Union.bounds()'s
+        # componentwise min/max let the Bar's -inf/+inf x-extent swallow the
+        # Rectangle's own, finite, much wider extent.
+        from metashapes.shape.primitives.quads import Rectangle
+        from metashapes.shape.boolean import Union
+
+        lattice = Lattice.rectangular(1.0, 1.0)
+        bar = Bar(offset=torch.tensor(0.0), width=torch.tensor(0.3), axis="x")
+        wide_rect = Rectangle(center=torch.tensor([0.0, 0.0]), size=torch.tensor([5.0, 0.2]))
+        union = Union(bar, wide_rect)
+        cell = UnitCell(lattice, union)
+
+        (i0, i1), _ = cell._offsets_for(union)
+        # The rectangle spans 5 cells in x; a single ring of 1 (offsets
+        # -1..1) cannot possibly cover it.
+        assert i1 - i0 >= 5
+
+        # And the periodic sdf must actually agree with a much larger
+        # brute-force search -- not just report a wide-looking range.
+        xs = torch.linspace(-3.0, 3.0, 41)
+        X, Y = torch.meshgrid(xs, xs, indexing="xy")
+        assert torch.allclose(cell.sdf(X, Y), _brute_force_sdf(cell, X, Y), atol=1e-5)
+
+    def test_offsets_for_bounds_empty_is_zero_zero(self):
+        from metashapes.shape.boolean import Intersection
+        from metashapes.shape.primitives.quads import Rectangle
+
+        lattice = Lattice.rectangular(1.0, 1.0)
+        disjoint = Intersection(
+            Rectangle(center=torch.tensor([0.0, 0.0]), size=torch.tensor([0.5, 0.5])),
+            Rectangle(center=torch.tensor([5.0, 5.0]), size=torch.tensor([0.5, 0.5])),
+        )
+        cell = UnitCell(lattice, disjoint)
+        assert cell._offsets_for_bounds(disjoint.bounds()) == ((0, 0), (0, 0))
+
+
+class TestPeriodicSdfMatchesBruteForce:
+    """sdf() after the L-02/L-03 rewrite must agree with a large brute-force
+    reference search for a variety of lattices and shape placements --
+    not just be self-consistent with its own (tighter) offset range."""
+
+    @pytest.mark.parametrize("lattice_factory", [
+        lambda: Lattice.rectangular(1.0, 1.0),
+        lambda: Lattice.hexagonal(1.0, orientation="pointy"),
+        lambda: Lattice(a1=torch.tensor([1.0, 0.0]), a2=torch.tensor([0.7, 0.4])),
+    ], ids=["rectangular", "hexagonal", "oblique"])
+    @pytest.mark.parametrize("center,size", [
+        ((0.5, 0.5), (0.2, 0.2)),   # cell-centred, typical after center_scene()
+        ((0.0, 0.0), (0.2, 0.2)),   # straddling the seam
+        ((0.5, 0.5), (2.5, 0.2)),   # spans multiple cells
+        ((10.0, 10.0), (0.3, 0.3)), # far from the cell -- must still wrap in
+    ])
+    def test_matches_brute_force(self, lattice_factory, center, size):
+        from metashapes.shape.primitives.quads import Rectangle
+
+        lattice = lattice_factory()
+        shape = Rectangle(center=torch.tensor(center), size=torch.tensor(size))
+        cell = UnitCell(lattice, shape)
+
+        xs = torch.linspace(-1.5, 2.5, 40)
+        X, Y = torch.meshgrid(xs, xs, indexing="xy")
+        got = cell.sdf(X, Y)
+
+        # Reference ring: a fixed margin *on top of* whatever _offsets_for
+        # itself reports, not a fixed constant -- a shape placed many cells
+        # away (e.g. the (10, 10) case, especially on an oblique lattice)
+        # can legitimately need a much wider search than a fixed ring of
+        # 20 covers. This keeps the brute force a true superset of what
+        # _offsets_for searches, so the comparison still catches an
+        # undershoot rather than just failing due to its own insufficient
+        # ring.
+        (i0, i1), (j0, j1) = cell._offsets_for(shape)
+        ring = max(abs(i0), abs(i1), abs(j0), abs(j1)) + 5
+        ref = _brute_force_sdf(cell, X, Y, ring=ring)
+        assert torch.allclose(got, ref, atol=1e-4), (
+            f"max diff = {(got - ref).abs().max().item():.3e}"
+        )
+
+
+class TestOffsetSearchOverhead:
+    def test_centered_small_shape_uses_nine_copies(self):
+        # L-03: a small shape centred in the cell should need only ring-1
+        # (9 copies), not the old fixed ceil(extent)+1 >= 2 ring (25 copies).
+        from metashapes.shape.primitives.quads import Rectangle
+
+        lattice = Lattice.rectangular(1.0, 1.0)
+        shape = Rectangle(center=torch.tensor([0.5, 0.5]), size=torch.tensor([0.2, 0.2]))
+        cell = UnitCell(lattice, shape)
+        (i0, i1), (j0, j1) = cell._offsets_for(shape)
+        n_copies = (i1 - i0 + 1) * (j1 - j0 + 1)
+        assert n_copies == 9
 
 
 # ---------------------------------------------------------------------------

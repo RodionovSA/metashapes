@@ -186,6 +186,25 @@ class TestMetrics:
         m = UnitCellAnalyzer().metrics(cell)
         assert m.min_feature_size is None
 
+    def test_min_feature_size_survives_centering(self):
+        # Regression for S-04: _leaf_shapes() re-wraps each leaf in its
+        # enclosing Translate/Rotate (so leaf positions stay correct), and
+        # before Translate/Rotate forwarded min_feature_size, that re-wrap
+        # silently turned every leaf's min_feature_size into None --
+        # meaning UnitCell.center_scene() (Translate(Union(...))) disabled
+        # the min_feature_size check for every centered cell.
+        a = _rect(cx=0.2, cy=0.2, w=0.3, h=0.8)
+        b = _rect(cx=1.2, cy=1.2, w=0.4, h=0.4)
+        cell = _cell(a | b, px=2.0, py=2.0)
+        centered = cell.center_scene()
+
+        assert isinstance(centered.scene, Translate)
+        m = UnitCellAnalyzer().metrics(centered)
+        assert m.min_feature_size == pytest.approx(0.3, abs=1e-4)
+
+        failures = UnitCellAnalyzer(min_feature_size=0.5).check(centered)
+        assert any("min_feature_size" in f for f in failures)
+
     def test_min_gap_two_shapes(self):
         # Two rects at x=-0.3 and x=+0.3, each with width 0.2
         # right edge of left rect: -0.3 + 0.1 = -0.2

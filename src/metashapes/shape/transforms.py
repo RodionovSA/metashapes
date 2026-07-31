@@ -7,7 +7,7 @@ import math
 from typing import Any, Tuple
 import torch
 
-from .base import Shape, to_plain_data
+from .base import EMPTY_BOUNDS, Shape, is_empty_bounds, to_plain_data
 from .registry import register_shape
 from .utils import register
 
@@ -34,6 +34,11 @@ class Translate(Shape):
         dy = self.dy.detach().item()
         (x0, y0), (x1, y1) = self.shape.bounds()
         return (x0 + dx, y0 + dy), (x1 + dx, y1 + dy)
+
+    @property
+    def min_feature_size(self) -> float | None:
+        # A translation is a rigid motion: it changes no width.
+        return self.shape.min_feature_size
 
     def to_parametric(self) -> dict:
         return {
@@ -62,19 +67,24 @@ class Rotate(Shape):
                  origin: Tuple[float | torch.Tensor,
                                float | torch.Tensor]  = (0.0, 0.0)):
         super().__init__()
-        (x0, y0), (x1, y1) = shape.bounds()
-        if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
-            raise NotImplementedError(
-                "Cannot rotate a shape with infinite spatial extent "
-                "(e.g. a Bar or any boolean composition containing one). "
-                "Define infinite shapes in their final orientation before composing."
-            )
+        child_bounds = shape.bounds()
+        if not is_empty_bounds(child_bounds):
+            (x0, y0), (x1, y1) = child_bounds
+            if not all(math.isfinite(v) for v in (x0, y0, x1, y1)):
+                raise NotImplementedError(
+                    "Cannot rotate a shape with infinite spatial extent "
+                    "(e.g. a Bar or any boolean composition containing one). "
+                    "Define infinite shapes in their final orientation before composing."
+                )
         self.shape = shape
         register(self, "angle", angle)
         register(self, "origin", origin)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
-        (x0, y0), (x1, y1) = self.shape.bounds()
+        child_bounds = self.shape.bounds()
+        if is_empty_bounds(child_bounds):
+            return EMPTY_BOUNDS
+        (x0, y0), (x1, y1) = child_bounds
         angle = self.angle.detach().item()
         ox, oy = self.origin.detach().tolist()
 
@@ -84,6 +94,11 @@ class Rotate(Shape):
         xs = [ox + c * (x - ox) - s * (y - oy) for x, y in corners]
         ys = [oy + s * (x - ox) + c * (y - oy) for x, y in corners]
         return (min(xs), min(ys)), (max(xs), max(ys))
+
+    @property
+    def min_feature_size(self) -> float | None:
+        # A rotation is a rigid motion: it changes no width.
+        return self.shape.min_feature_size
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         xr = x - self.origin[0]
@@ -111,7 +126,7 @@ class Rotate(Shape):
         return cls(
             shape=Shape.from_parametric(data["shape"]),
             angle=data["angle"],
-            origin=data.get("origin", "center"),
+            origin=data.get("origin", (0.0, 0.0)),
         )
 
 @register_shape("Scale")
@@ -134,12 +149,22 @@ class Scale(Shape):
             
     
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        child_bounds = self.shape.bounds()
+        if is_empty_bounds(child_bounds):
+            return EMPTY_BOUNDS
         s = self.s.detach().item()
         ox, oy = self.origin.detach().tolist()
-        (x0, y0), (x1, y1) = self.shape.bounds()
+        (x0, y0), (x1, y1) = child_bounds
         xs = [ox + s * (x0 - ox), ox + s * (x1 - ox)]
         ys = [oy + s * (y0 - oy), oy + s * (y1 - oy)]
         return (min(xs), min(ys)), (max(xs), max(ys))
+
+    @property
+    def min_feature_size(self) -> float | None:
+        child = self.shape.min_feature_size
+        if child is None:
+            return None
+        return child * self.s.detach().item()
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         x_local = (x - self.origin[0]) / self.s + self.origin[0]
@@ -159,5 +184,5 @@ class Scale(Shape):
         return cls(
             shape=Shape.from_parametric(data["shape"]),
             s=data["s"],
-            origin=data.get("origin", "center"),
+            origin=data.get("origin", (0.0, 0.0)),
         )
