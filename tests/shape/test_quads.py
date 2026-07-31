@@ -4,7 +4,7 @@ import math
 import pytest
 import torch
 from metashapes.shape import Rectangle, ConvexQuad, IsoscelesTrapezoid
-from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain
+from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
 
 
 # ---------------------------------------------------------------------------
@@ -119,6 +119,30 @@ class TestConvexQuad:
             alpha=0.1, beta=0.05, angle=10.0, corner_radius=0.02
         )
         assert_round_trip(q)
+
+    def test_oversized_corner_radius_raises_at_construction(self):
+        # Regression for S-02: on a unit-square quad (u=[1,0], v=[0,1],
+        # true inradius 1.0) the old check raised at rr=1.0 but silently
+        # accepted rr=1.1 and rr=1.5, returning wrong geometry (e.g.
+        # sdf(0,0) = -2.0 for a shape whose true inradius is 1.0). The
+        # bound must now reject every radius at or above the true inradius,
+        # at construction time, not just a knife-edge value.
+        for rr in (1.0, 1.05, 1.1, 1.5):
+            with pytest.raises(ValueError):
+                ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=rr)
+
+    def test_valid_corner_radius_still_constructs_and_evaluates(self):
+        q = ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=0.9)
+        d = sdf_at(q, 0.0, 0.0)
+        assert d == pytest.approx(-1.0, abs=1e-3)
+
+    def test_corner_radius_bound_is_monotonic(self):
+        # Every radius above the analytic bound must raise -- guards
+        # against the old non-monotonic behavior (some larger radii were
+        # silently accepted after a smaller one had already been rejected).
+        for rr in torch.linspace(1.0, 2.0, 11).tolist():
+            with pytest.raises(ValueError):
+                ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=rr)
 
 
 # ---------------------------------------------------------------------------

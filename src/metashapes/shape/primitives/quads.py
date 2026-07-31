@@ -119,14 +119,109 @@ class ConvexQuad(Shape):
         register(self, "beta", beta)
         register(self, "angle", angle)
         register(self, "corner_radius", corner_radius)
-        
+
         if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
-        
+
         uv_cross = self.u[0] * self.v[1] - self.u[1] * self.v[0]
         if uv_cross.abs().item() <= 1e-12:
             raise ValueError("u and v must not be collinear")
-        
+
+        # Corner-radius validity depends only on the quad's own geometry
+        # (edge lengths and interior angles), not on rotation -- a rigid
+        # rotation changes neither. So it's checked once here, against the
+        # unrotated frame, rather than being (re-)discovered inside sdf()
+        # on every call via a degeneracy side-effect of the inset
+        # construction (see _max_corner_radius for why that guard was
+        # unsound above a certain radius).
+        zero = torch.zeros((), dtype=self.u.dtype, device=self.u.device)
+        base_verts = ConvexQuad._quad_vertices(
+            zero, zero, self.u[0], self.u[1], self.v[0], self.v[1], self.alpha, self.beta
+        )
+        area2 = ConvexQuad._signed_area2(base_verts)
+        if area2.abs().item() <= 1e-12:
+            raise ValueError("Degenerate quadrilateral")
+        if area2.item() < 0:
+            base_verts = [base_verts[0], base_verts[3], base_verts[2], base_verts[1]]
+
+        if torch.any(self.corner_radius > 0):
+            rr_max = self._max_corner_radius(base_verts)
+            if torch.any(self.corner_radius >= rr_max):
+                raise ValueError(
+                    f"corner_radius must be < {rr_max:.6g} for this quad's "
+                    "geometry (offsetting each edge inward by corner_radius "
+                    "would make the rounded corners overlap or invert)"
+                )
+
+    @staticmethod
+    def _quad_vertices(cx, cy, ux, uy, vx, vy, alpha, beta):
+        """The four corners of the (possibly stretched) parallelogram
+        frame, in construction order -- CCW or CW depending on the sign of
+        u x v; callers that need a definite orientation check/fix it via
+        `_signed_area2`. Shared by `__init__` (unrotated, for validation)
+        and `sdf` (rotated, for the actual query).
+        """
+        v0 = (cx - ux - vx, cy - uy - vy)
+        v1 = (cx + ux - vx, cy + uy - vy)
+        v2 = (cx + (1.0 + alpha) * ux + (1.0 + beta) * vx,
+              cy + (1.0 + alpha) * uy + (1.0 + beta) * vy)
+        v3 = (cx - (1.0 + alpha) * ux + (1.0 + beta) * vx,
+              cy - (1.0 + alpha) * uy + (1.0 + beta) * vy)
+        return [v0, v1, v2, v3]
+
+    @staticmethod
+    def _signed_area2(poly):
+        s = torch.zeros((), dtype=poly[0][0].dtype, device=poly[0][0].device)
+        n = len(poly)
+        for i in range(n):
+            x1, y1 = poly[i]
+            x2, y2 = poly[(i + 1) % n]
+            s = s + x1 * y2 - x2 * y1
+        return s
+
+    @staticmethod
+    def _max_corner_radius(verts) -> torch.Tensor:
+        """Largest radius for which eroding `verts` (via the same
+        edge-normal line-intersection construction `sdf` uses) stays a
+        valid, positively-oriented polygon.
+
+        Standard convex-polygon erosion bound: offsetting each edge inward
+        by `rad` advances the intersection of adjacent offset lines by
+        `rad / tan(interior_angle / 2)` along the edge from each endpoint.
+        The construction stays valid for every edge only while the two
+        endpoints' advances don't together exceed the edge's own length --
+        `rr_max` is the tightest (minimum) such bound over all edges.
+        Verified against a brute-force inset-area check over thousands of
+        random convex quads: never unsound (never permits a radius that
+        actually produces a degenerate/negative-area inset).
+        """
+        n = len(verts)
+        eps = 1e-9
+        half_pi = math.pi / 2 - eps
+        angles = []
+        for i in range(n):
+            vx, vy = verts[i]
+            px, py = verts[i - 1]
+            nx, ny = verts[(i + 1) % n]
+            d1x, d1y = px - vx, py - vy
+            d2x, d2y = nx - vx, ny - vy
+            l1 = torch.sqrt(d1x * d1x + d1y * d1y).clamp(min=eps)
+            l2 = torch.sqrt(d2x * d2x + d2y * d2y).clamp(min=eps)
+            cos_t = torch.clamp((d1x * d2x + d1y * d2y) / (l1 * l2), -1.0, 1.0)
+            angles.append(torch.acos(cos_t))
+
+        rr_max = None
+        for i in range(n):
+            j = (i + 1) % n
+            ex = verts[j][0] - verts[i][0]
+            ey = verts[j][1] - verts[i][1]
+            edge_len = torch.sqrt(ex * ex + ey * ey)
+            tan_a = torch.tan(torch.clamp(angles[i] / 2, min=eps, max=half_pi))
+            tan_b = torch.tan(torch.clamp(angles[j] / 2, min=eps, max=half_pi))
+            edge_rr_max = edge_len / (1.0 / tan_a + 1.0 / tan_b)
+            rr_max = edge_rr_max if rr_max is None else torch.minimum(rr_max, edge_rr_max)
+        return rr_max
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         cx, cy = self.center[0], self.center[1]
         u0x, u0y = self.u[0], self.u[1]
@@ -146,25 +241,14 @@ class ConvexQuad(Shape):
         vx = ct * v0x - st * v0y
         vy = st * v0x + ct * v0y
 
-        v0 = (cx - ux - vx, cy - uy - vy)
-        v1 = (cx + ux - vx, cy + uy - vy)
-        v2 = (cx + (1.0 + alpha) * ux + (1.0 + beta) * vx,
-            cy + (1.0 + alpha) * uy + (1.0 + beta) * vy)
-        v3 = (cx - (1.0 + alpha) * ux + (1.0 + beta) * vx,
-            cy - (1.0 + alpha) * uy + (1.0 + beta) * vy)
+        verts = ConvexQuad._quad_vertices(cx, cy, ux, uy, vx, vy, alpha, beta)
 
-        verts = [v0, v1, v2, v3]
-
-        def _signed_area2(poly):
-            s = torch.zeros((), dtype=x.dtype, device=x.device)
-            n = len(poly)
-            for i in range(n):
-                x1, y1 = poly[i]
-                x2, y2 = poly[(i + 1) % n]
-                s = s + x1 * y2 - x2 * y1
-            return s
-
-        area2 = _signed_area2(verts)
+        # Rotation is rigid, so it can't turn a valid (non-degenerate) quad
+        # degenerate or flip which winding correction __init__ already
+        # determined -- but alpha/beta/u/v aren't re-validated here (they
+        # were fixed at construction), so this stays a cheap live check
+        # rather than trusting stale __init__-time state.
+        area2 = ConvexQuad._signed_area2(verts)
         if area2.abs().item() <= 1e-12:
             raise ValueError("Degenerate quadrilateral")
 
@@ -204,10 +288,12 @@ class ConvexQuad(Shape):
                 ix, iy = _line_intersection(p1x, p1y, r1x, r1y, p2x, p2y, r2x, r2y)
                 out.append((ix, iy))
 
-            area2_in = _signed_area2(out)
-            if area2_in.abs().item() <= 1e-12 or area2_in.item() <= 0:
-                raise ValueError("corner_radius is too large")
-
+            # No degeneracy check here: __init__ already guarantees
+            # corner_radius < the exact bound for which this construction
+            # stays valid (see _max_corner_radius) -- unlike the area-sign
+            # check this replaced, which was non-monotonic in rr and
+            # silently accepted some invalid radii past a certain point
+            # (see screening_shape_lattice.md S-02).
             return out
 
         if rr.item() > 0:

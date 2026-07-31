@@ -366,8 +366,32 @@ class UnitCell(nn.Module):
 
     # --- shapely adapter ---------------------------------------------
     def to_shapely(self):
+        """Shapely geometry of the scene, clipped to the unit cell.
+
+        Periodic, matching `sdf()`: shapes touching or crossing the cell
+        boundary are unioned with their neighbouring lattice copies before
+        clipping, so the wrapped-around part is included rather than lost.
+        Uses the same copy count as `sdf()` (`_ring_for`), so a shape fully
+        inside the cell gives the same result as clipping it alone -- its
+        other copies fall entirely outside `cell_poly` and are discarded by
+        the intersection.
+        """
+        from shapely.affinity import translate
         from shapely.geometry import Polygon
+        from shapely.ops import unary_union
         from metashapes.adapters.shapely import shape_to_shapely
+
+        base = shape_to_shapely(self.scene)
+        r1, r2 = self._ring_for(self.scene)
+        copies = []
+        for i in range(-r1, r1 + 1):
+            for j in range(-r2, r2 + 1):
+                if i == 0 and j == 0:
+                    copies.append(base)
+                    continue
+                ox, oy = self.lattice.offset(i, j)
+                copies.append(translate(base, xoff=ox.item(), yoff=oy.item()))
+        unioned = unary_union(copies)
 
         a1 = self.lattice.a1.detach().cpu().tolist()
         a2 = self.lattice.a2.detach().cpu().tolist()
@@ -377,7 +401,7 @@ class UnitCell(nn.Module):
             (a1[0] + a2[0], a1[1] + a2[1]),
             (a2[0], a2[1]),
         ])
-        return shape_to_shapely(self.scene).intersection(cell_poly)
+        return unioned.intersection(cell_poly)
 
     # --- serialization -----------------------------------------------
     def to_parametric(self) -> dict:

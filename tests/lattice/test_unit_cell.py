@@ -325,6 +325,34 @@ class TestToShapely:
         geom = cell.to_shapely()
         assert geom.is_empty
 
+    def test_area_matches_periodic_sdf_for_seam_straddling_shape(self):
+        # Regression for L-01: to_shapely() used to convert a single,
+        # un-translated copy of the scene and intersect with the cell --
+        # any shape crossing the boundary lost its wrapped-around part.
+        # A 0.4x0.4 rectangle straddling the x=0 seam on a 1x1 cell: the
+        # true (periodic) area is the full 0.4*0.4=0.16, not the 0.08 the
+        # old, non-periodic clip returned.
+        from metashapes.shape.primitives.quads import Rectangle
+        lattice = Lattice.rectangular(1.0, 1.0)
+        shape = Rectangle(center=torch.tensor([0.0, 0.5]),
+                          size=torch.tensor([0.4, 0.4]))
+        cell = UnitCell(lattice, shape)
+        geom = cell.to_shapely()
+        assert geom.area == pytest.approx(0.16, abs=1e-6)
+
+    def test_fully_interior_shape_unaffected_by_periodic_union(self):
+        # A shape entirely inside the cell must give the same result as
+        # before -- its neighbouring copies fall outside cell_poly and are
+        # discarded by the intersection, same as a plain single-copy clip.
+        # cell_poly spans [0, px] x [0, py], not centered at the origin, so
+        # the shape must be placed mid-cell to actually stay interior.
+        from metashapes.shape.primitives.quads import Rectangle
+        lattice = Lattice.rectangular(2.0, 2.0)
+        shape = Rectangle(center=torch.tensor([1.0, 1.0]), size=torch.tensor([0.5, 0.5]))
+        cell = UnitCell(lattice, shape)
+        geom = cell.to_shapely()
+        assert geom.area == pytest.approx(0.25, abs=1e-6)
+
 
 # ---------------------------------------------------------------------------
 # extent() tests
