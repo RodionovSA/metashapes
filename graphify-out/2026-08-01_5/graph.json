@@ -387,7 +387,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_boolean_py",
-      "community": 70,
+      "community": 55,
       "norm_label": "boolean.py"
     },
     {
@@ -396,7 +396,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L14",
       "id": "shape_boolean_union",
-      "community": 70,
+      "community": 2,
       "norm_label": "union"
     },
     {
@@ -405,7 +405,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L18",
       "id": "shape_boolean_union_init",
-      "community": 70,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -414,7 +414,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L29",
       "id": "shape_boolean_union_sdf",
-      "community": 70,
+      "community": 2,
       "norm_label": ".sdf()"
     },
     {
@@ -423,7 +423,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L36",
       "id": "shape_boolean_union_bounds",
-      "community": 70,
+      "community": 2,
       "norm_label": ".bounds()"
     },
     {
@@ -432,7 +432,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L50",
       "id": "shape_boolean_union_to_parametric",
-      "community": 70,
+      "community": 2,
       "norm_label": ".to_parametric()"
     },
     {
@@ -441,7 +441,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L60",
       "id": "shape_boolean_from_parametric",
-      "community": 70,
+      "community": 55,
       "norm_label": "from_parametric()"
     },
     {
@@ -450,7 +450,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L70",
       "id": "shape_boolean_intersection",
-      "community": 70,
+      "community": 2,
       "norm_label": "intersection"
     },
     {
@@ -459,7 +459,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L83",
       "id": "shape_boolean_intersection_init",
-      "community": 78,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -468,7 +468,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L94",
       "id": "shape_boolean_intersection_sdf",
-      "community": 70,
+      "community": 2,
       "norm_label": ".sdf()"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L101",
       "id": "shape_boolean_intersection_bounds",
-      "community": 70,
+      "community": 2,
       "norm_label": ".bounds()"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L117",
       "id": "shape_boolean_intersection_to_parametric",
-      "community": 55,
+      "community": 2,
       "norm_label": ".to_parametric()"
     },
     {
@@ -495,7 +495,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L137",
       "id": "shape_boolean_difference",
-      "community": 70,
+      "community": 2,
       "norm_label": "difference"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L146",
       "id": "shape_boolean_difference_init",
-      "community": 78,
+      "community": 2,
       "norm_label": ".__init__()"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L157",
       "id": "shape_boolean_difference_sdf",
-      "community": 70,
+      "community": 2,
       "norm_label": ".sdf()"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L164",
       "id": "shape_boolean_difference_bounds",
-      "community": 70,
+      "community": 2,
       "norm_label": ".bounds()"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L171",
       "id": "shape_boolean_difference_to_parametric",
-      "community": 55,
+      "community": 2,
       "norm_label": ".to_parametric()"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L192",
       "id": "shape_boolean_smooth_min_poly",
-      "community": 70,
+      "community": 2,
       "norm_label": "smooth_min_poly()"
     },
     {
@@ -549,7 +549,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L197",
       "id": "shape_boolean_smooth_max_poly",
-      "community": 70,
+      "community": 2,
       "norm_label": "smooth_max_poly()"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L15",
       "id": "shape_boolean_rationale_15",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic union of two shapes."
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L71",
       "id": "shape_boolean_rationale_71",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic intersection of two shapes.      note: `max(d1, d2)` is the standard cs"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L138",
       "id": "shape_boolean_rationale_138",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic difference of two shapes: left - right.      note: like `intersection`,"
     },
     {
@@ -594,7 +594,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L16",
       "id": "shape_transforms_translate",
-      "community": 2,
+      "community": 0,
       "norm_label": "translate"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L20",
       "id": "shape_transforms_translate_init",
-      "community": 2,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L29",
       "id": "shape_transforms_translate_sdf",
-      "community": 2,
+      "community": 0,
       "norm_label": ".sdf()"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L32",
       "id": "shape_transforms_translate_bounds",
-      "community": 2,
+      "community": 0,
       "norm_label": ".bounds()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L43",
       "id": "shape_transforms_translate_to_parametric",
-      "community": 2,
+      "community": 0,
       "norm_label": ".to_parametric()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L52",
       "id": "shape_transforms_from_parametric",
-      "community": 52,
+      "community": 70,
       "norm_label": "from_parametric()"
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L60",
       "id": "shape_transforms_rotate",
-      "community": 2,
+      "community": 0,
       "norm_label": "rotate"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L64",
       "id": "shape_transforms_rotate_init",
-      "community": 2,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L83",
       "id": "shape_transforms_rotate_bounds",
-      "community": 2,
+      "community": 55,
       "norm_label": ".bounds()"
     },
     {
@@ -684,7 +684,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L103",
       "id": "shape_transforms_rotate_sdf",
-      "community": 2,
+      "community": 0,
       "norm_label": ".sdf()"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L116",
       "id": "shape_transforms_rotate_to_parametric",
-      "community": 2,
+      "community": 0,
       "norm_label": ".to_parametric()"
     },
     {
@@ -702,7 +702,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L133",
       "id": "shape_transforms_scale",
-      "community": 2,
+      "community": 0,
       "norm_label": "scale"
     },
     {
@@ -711,7 +711,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L137",
       "id": "shape_transforms_scale_init",
-      "community": 2,
+      "community": 0,
       "norm_label": ".__init__()"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L151",
       "id": "shape_transforms_scale_bounds",
-      "community": 2,
+      "community": 0,
       "norm_label": ".bounds()"
     },
     {
@@ -729,7 +729,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L169",
       "id": "shape_transforms_scale_sdf",
-      "community": 2,
+      "community": 0,
       "norm_label": ".sdf()"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L174",
       "id": "shape_transforms_scale_to_parametric",
-      "community": 2,
+      "community": 0,
       "norm_label": ".to_parametric()"
     },
     {
@@ -747,7 +747,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L17",
       "id": "shape_transforms_rationale_17",
-      "community": 2,
+      "community": 0,
       "norm_label": "symbolic translation of a shape."
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L61",
       "id": "shape_transforms_rationale_61",
-      "community": 2,
+      "community": 0,
       "norm_label": "symbolic rotation of a shape."
     },
     {
@@ -765,7 +765,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L134",
       "id": "shape_transforms_rationale_134",
-      "community": 2,
+      "community": 0,
       "norm_label": "symbolic scaling of a shape."
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L26",
       "id": "shape_base_is_empty_bounds",
-      "community": 25,
+      "community": 55,
       "norm_label": "is_empty_bounds()"
     },
     {
@@ -909,7 +909,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L69",
       "id": "shape_base_min_feature_size",
-      "community": 55,
+      "community": 70,
       "norm_label": "min_feature_size()"
     },
     {
@@ -999,7 +999,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L130",
       "id": "shape_base_shape_to_parametric",
-      "community": 55,
+      "community": 70,
       "norm_label": ".to_parametric()"
     },
     {
@@ -1017,7 +1017,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L172",
       "id": "shape_base_to_plain_data",
-      "community": 55,
+      "community": 70,
       "norm_label": "to_plain_data()"
     },
     {
@@ -1080,7 +1080,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L173",
       "id": "shape_base_rationale_173",
-      "community": 55,
+      "community": 70,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "src/metashapes/shape/primitives/quads.py",
       "source_location": "L30",
       "id": "primitives_quads_rectangle_init",
-      "community": 78,
+      "community": 17,
       "norm_label": ".__init__()"
     },
     {
@@ -1701,7 +1701,7 @@
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L307",
       "id": "primitives_conics_egg_bounds",
-      "community": 6,
+      "community": 32,
       "norm_label": ".bounds()"
     },
     {
@@ -1791,7 +1791,7 @@
       "source_file": "src/metashapes/shape/primitives/stripes.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_stripes_py",
-      "community": 12,
+      "community": 82,
       "norm_label": "stripes.py"
     },
     {
@@ -1845,7 +1845,7 @@
       "source_file": "src/metashapes/shape/primitives/stripes.py",
       "source_location": "L78",
       "id": "primitives_stripes_min_feature_size",
-      "community": 12,
+      "community": 82,
       "norm_label": "min_feature_size()"
     },
     {
@@ -1872,23 +1872,14 @@
       "source_file": "src/metashapes/lattice/basis.py",
       "source_location": "L1",
       "id": "src_metashapes_lattice_basis_py",
-      "community": 0,
+      "community": 3,
       "norm_label": "basis.py"
-    },
-    {
-      "label": "_scalar()",
-      "file_type": "code",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L10",
-      "id": "lattice_basis_scalar",
-      "community": 0,
-      "norm_label": "_scalar()"
     },
     {
       "label": "Lattice",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L35",
+      "source_location": "L7",
       "id": "lattice_basis_lattice",
       "community": 3,
       "norm_label": "lattice"
@@ -1897,70 +1888,70 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L49",
+      "source_location": "L19",
       "id": "lattice_basis_lattice_init",
-      "community": 78,
+      "community": 3,
       "norm_label": ".__init__()"
     },
     {
       "label": "device()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L62",
+      "source_location": "L29",
       "id": "lattice_basis_device",
-      "community": 0,
+      "community": 3,
       "norm_label": "device()"
     },
     {
       "label": "dtype()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L64",
+      "source_location": "L31",
       "id": "lattice_basis_dtype",
-      "community": 0,
+      "community": 3,
       "norm_label": "dtype()"
     },
     {
       "label": "rectangular()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L67",
+      "source_location": "L34",
       "id": "lattice_basis_rectangular",
-      "community": 0,
+      "community": 3,
       "norm_label": "rectangular()"
     },
     {
       "label": "hexagonal()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L82",
+      "source_location": "L42",
       "id": "lattice_basis_hexagonal",
-      "community": 0,
+      "community": 3,
       "norm_label": "hexagonal()"
     },
     {
       "label": "matrix()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L119",
+      "source_location": "L77",
       "id": "lattice_basis_matrix",
-      "community": 0,
+      "community": 3,
       "norm_label": "matrix()"
     },
     {
       "label": "cell_area()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L124",
+      "source_location": "L82",
       "id": "lattice_basis_cell_area",
-      "community": 0,
+      "community": 3,
       "norm_label": "cell_area()"
     },
     {
       "label": ".to_fractional()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L128",
+      "source_location": "L86",
       "id": "lattice_basis_lattice_to_fractional",
       "community": 3,
       "norm_label": ".to_fractional()"
@@ -1969,7 +1960,7 @@
       "label": ".to_cartesian()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L134",
+      "source_location": "L92",
       "id": "lattice_basis_lattice_to_cartesian",
       "community": 3,
       "norm_label": ".to_cartesian()"
@@ -1978,7 +1969,7 @@
       "label": ".offset()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L141",
+      "source_location": "L99",
       "id": "lattice_basis_lattice_offset",
       "community": 3,
       "norm_label": ".offset()"
@@ -1987,62 +1978,53 @@
       "label": ".neighbor_offsets()",
       "file_type": "code",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L145",
+      "source_location": "L103",
       "id": "lattice_basis_lattice_neighbor_offsets",
       "community": 3,
       "norm_label": ".neighbor_offsets()"
     },
     {
-      "label": "Coerce a constructor scalar to float, refusing grad-carrying tensors.      ``rec",
+      "label": "In-plane periodicity of the unit cell. Fixed (non-optimizable).     Defined by t",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L11",
-      "id": "lattice_basis_rationale_11",
-      "community": 0,
-      "norm_label": "coerce a constructor scalar to float, refusing grad-carrying tensors.      ``rec"
-    },
-    {
-      "label": "In-plane periodicity of the unit cell.     Defined by two lattice vectors. A rec",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L36",
-      "id": "lattice_basis_rationale_36",
+      "source_location": "L8",
+      "id": "lattice_basis_rationale_8",
       "community": 3,
-      "norm_label": "in-plane periodicity of the unit cell.     defined by two lattice vectors. a rec"
+      "norm_label": "in-plane periodicity of the unit cell. fixed (non-optimizable).     defined by t"
     },
     {
-      "label": "Build an axis-aligned rectangular lattice from two periods.          Parameters",
+      "label": "Build an axis-aligned rectangular lattice from two periods.",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L68",
-      "id": "lattice_basis_rationale_68",
-      "community": 66,
-      "norm_label": "build an axis-aligned rectangular lattice from two periods.          parameters"
+      "source_location": "L35",
+      "id": "lattice_basis_rationale_35",
+      "community": 37,
+      "norm_label": "build an axis-aligned rectangular lattice from two periods."
     },
     {
       "label": "Build a hexagonal (triangular) lattice from the lattice constant.          Param",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L83",
-      "id": "lattice_basis_rationale_83",
-      "community": 67,
+      "source_location": "L43",
+      "id": "lattice_basis_rationale_43",
+      "community": 38,
       "norm_label": "build a hexagonal (triangular) lattice from the lattice constant.          param"
     },
     {
       "label": "2x2 matrix A with columns [a1 | a2].",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L120",
-      "id": "lattice_basis_rationale_120",
-      "community": 30,
+      "source_location": "L78",
+      "id": "lattice_basis_rationale_78",
+      "community": 39,
       "norm_label": "2x2 matrix a with columns [a1 | a2]."
     },
     {
       "label": "Cartesian (x, y) -> fractional (f1, f2).",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L129",
-      "id": "lattice_basis_rationale_129",
+      "source_location": "L87",
+      "id": "lattice_basis_rationale_87",
       "community": 3,
       "norm_label": "cartesian (x, y) -> fractional (f1, f2)."
     },
@@ -2050,8 +2032,8 @@
       "label": "Fractional (f1, f2) -> Cartesian (x, y).",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L135",
-      "id": "lattice_basis_rationale_135",
+      "source_location": "L93",
+      "id": "lattice_basis_rationale_93",
       "community": 3,
       "norm_label": "fractional (f1, f2) -> cartesian (x, y)."
     },
@@ -2059,8 +2041,8 @@
       "label": "Cartesian translation for lattice cell (i, j).",
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L142",
-      "id": "lattice_basis_rationale_142",
+      "source_location": "L100",
+      "id": "lattice_basis_rationale_100",
       "community": 3,
       "norm_label": "cartesian translation for lattice cell (i, j)."
     },
@@ -2070,7 +2052,7 @@
       "source_file": "src/metashapes/lattice/grid.py",
       "source_location": "L1",
       "id": "src_metashapes_lattice_grid_py",
-      "community": 0,
+      "community": 3,
       "norm_label": "grid.py"
     },
     {
@@ -2079,7 +2061,7 @@
       "source_file": "src/metashapes/lattice/grid.py",
       "source_location": "L7",
       "id": "lattice_grid_fractional_grid",
-      "community": 0,
+      "community": 3,
       "norm_label": "fractional_grid()"
     },
     {
@@ -2088,7 +2070,7 @@
       "source_file": "src/metashapes/lattice/grid.py",
       "source_location": "L21",
       "id": "lattice_grid_cartesian_grid",
-      "community": 0,
+      "community": 3,
       "norm_label": "cartesian_grid()"
     },
     {
@@ -2097,7 +2079,7 @@
       "source_file": "src/metashapes/lattice/grid.py",
       "source_location": "L9",
       "id": "lattice_grid_rationale_9",
-      "community": 0,
+      "community": 3,
       "norm_label": "sample points covering exactly one unit cell, in fractional     coordinates [0,1"
     },
     {
@@ -2106,7 +2088,7 @@
       "source_file": "src/metashapes/lattice/grid.py",
       "source_location": "L23",
       "id": "lattice_grid_rationale_23",
-      "community": 0,
+      "community": 3,
       "norm_label": "one unit cell sampled in cartesian coordinates.      builds the fractional grid"
     },
     {
@@ -2115,7 +2097,7 @@
       "source_file": "src/metashapes/lattice/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_lattice_init_py",
-      "community": 0,
+      "community": 3,
       "norm_label": "__init__.py"
     },
     {
@@ -2124,7 +2106,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L1",
       "id": "src_metashapes_lattice_unit_cell_py",
-      "community": 0,
+      "community": 3,
       "norm_label": "unit_cell.py"
     },
     {
@@ -2142,7 +2124,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L46",
       "id": "lattice_unit_cell_unitcell",
-      "community": 20,
+      "community": 30,
       "norm_label": "unitcell"
     },
     {
@@ -2151,7 +2133,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L68",
       "id": "lattice_unit_cell_unitcell_init",
-      "community": 20,
+      "community": 30,
       "norm_label": ".__init__()"
     },
     {
@@ -2187,7 +2169,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L165",
       "id": "lattice_unit_cell_unitcell_rasterize",
-      "community": 0,
+      "community": 20,
       "norm_label": ".rasterize()"
     },
     {
@@ -2196,7 +2178,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L208",
       "id": "lattice_unit_cell_unitcell_mask",
-      "community": 0,
+      "community": 20,
       "norm_label": ".mask()"
     },
     {
@@ -2214,7 +2196,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L348",
       "id": "lattice_unit_cell_unitcell_extent",
-      "community": 0,
+      "community": 20,
       "norm_label": ".extent()"
     },
     {
@@ -2223,7 +2205,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L382",
       "id": "lattice_unit_cell_unitcell_center_scene",
-      "community": 25,
+      "community": 30,
       "norm_label": ".center_scene()"
     },
     {
@@ -2241,7 +2223,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L505",
       "id": "lattice_unit_cell_unitcell_to_parametric",
-      "community": 20,
+      "community": 30,
       "norm_label": ".to_parametric()"
     },
     {
@@ -2250,7 +2232,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L516",
       "id": "lattice_unit_cell_from_parametric",
-      "community": 0,
+      "community": 3,
       "norm_label": "from_parametric()"
     },
     {
@@ -2268,7 +2250,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L47",
       "id": "lattice_unit_cell_rationale_47",
-      "community": 20,
+      "community": 30,
       "norm_label": "a periodic structure: one lattice + one shape (the scene).      the lattice owns"
     },
     {
@@ -2304,7 +2286,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L168",
       "id": "lattice_unit_cell_rationale_168",
-      "community": 0,
+      "community": 20,
       "norm_label": "periodic sdf sampled over a supercell.          repeat=(n1, n2) \u2014 tile n1 cells"
     },
     {
@@ -2313,7 +2295,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L211",
       "id": "lattice_unit_cell_rationale_211",
-      "community": 0,
+      "community": 20,
       "norm_label": "rasterize the periodic structure into a mask. shape [ny\u00b7n2, nx\u00b7n1].          sof"
     },
     {
@@ -2331,7 +2313,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L349",
       "id": "lattice_unit_cell_rationale_349",
-      "community": 0,
+      "community": 20,
       "norm_label": "axis-aligned cartesian bounding box of the supercell.          returns ``(xmin,"
     },
     {
@@ -2340,7 +2322,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L383",
       "id": "lattice_unit_cell_rationale_383",
-      "community": 25,
+      "community": 30,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the"
     },
     {
@@ -2412,7 +2394,7 @@
       "source_file": "src/metashapes/adapters/yaml.py",
       "source_location": "L104",
       "id": "adapters_yaml_load_batch_result",
-      "community": 19,
+      "community": 7,
       "norm_label": "load_batch_result()"
     },
     {
@@ -2484,7 +2466,7 @@
       "source_file": "src/metashapes/adapters/yaml.py",
       "source_location": "L105",
       "id": "adapters_yaml_rationale_105",
-      "community": 19,
+      "community": 7,
       "norm_label": "load a :class:`~metashapes.generators.report.generationbatchresult`     from a y"
     },
     {
@@ -2592,7 +2574,7 @@
       "source_file": "src/metashapes/adapters/shapely/dispatch.py",
       "source_location": "L33",
       "id": "shapely_dispatch_shape_to_shapely",
-      "community": 1,
+      "community": 27,
       "norm_label": "shape_to_shapely()"
     },
     {
@@ -2943,7 +2925,7 @@
       "source_file": "src/metashapes/generators/validator.py",
       "source_location": "L1",
       "id": "src_metashapes_generators_validator_py",
-      "community": 7,
+      "community": 11,
       "norm_label": "validator.py"
     },
     {
@@ -2952,7 +2934,7 @@
       "source_file": "src/metashapes/generators/validator.py",
       "source_location": "L12",
       "id": "generators_validator_unitcellvalidator",
-      "community": 7,
+      "community": 11,
       "norm_label": "unitcellvalidator"
     },
     {
@@ -2961,7 +2943,7 @@
       "source_file": "",
       "source_location": "",
       "id": "abc",
-      "community": 3,
+      "community": 11,
       "norm_label": "abc"
     },
     {
@@ -2970,7 +2952,7 @@
       "source_file": "src/metashapes/generators/validator.py",
       "source_location": "L14",
       "id": "generators_validator_validate",
-      "community": 7,
+      "community": 11,
       "norm_label": "validate()"
     },
     {
@@ -2979,7 +2961,7 @@
       "source_file": "src/metashapes/generators/validator.py",
       "source_location": "L21",
       "id": "generators_validator_defaultunitcellvalidator",
-      "community": 7,
+      "community": 11,
       "norm_label": "defaultunitcellvalidator"
     },
     {
@@ -2988,7 +2970,7 @@
       "source_file": "src/metashapes/generators/validator.py",
       "source_location": "L22",
       "id": "generators_validator_defaultunitcellvalidator_validate",
-      "community": 7,
+      "community": 11,
       "norm_label": ".validate()"
     },
     {
@@ -3006,7 +2988,7 @@
       "source_file": "src/metashapes/generators/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_generators_init_py",
-      "community": 11,
+      "community": 19,
       "norm_label": "__init__.py"
     },
     {
@@ -4482,7 +4464,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L131",
       "id": "shape_test_stripes_testbardtypedevicegrad",
-      "community": 12,
+      "community": 67,
       "norm_label": "testbardtypedevicegrad"
     },
     {
@@ -4491,7 +4473,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L132",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_dtype_device_flow",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -4500,7 +4482,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L136",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_direct_call_dtype_promotion",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_direct_call_dtype_promotion()"
     },
     {
@@ -4509,7 +4491,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L140",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_integer_query_does_not_crash",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_integer_query_does_not_crash()"
     },
     {
@@ -4518,7 +4500,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L145",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_gradients_finite_generic_point",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_gradients_finite_generic_point()"
     },
     {
@@ -4527,7 +4509,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L153",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_gradients_finite_both_axes",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_gradients_finite_both_axes()"
     },
     {
@@ -4536,7 +4518,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L159",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_infinite_bounds_does_not_affect_min_feature_size",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_infinite_bounds_does_not_affect_min_feature_size()"
     },
     {
@@ -4545,7 +4527,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L167",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_broadcast_x_y_different_shapes",
-      "community": 12,
+      "community": 67,
       "norm_label": ".test_broadcast_x_y_different_shapes()"
     },
     {
@@ -4554,7 +4536,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L1",
       "id": "tests_shape_test_junctions_py",
-      "community": 9,
+      "community": 28,
       "norm_label": "test_junctions.py"
     },
     {
@@ -4563,7 +4545,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L17",
       "id": "shape_test_junctions_testcross",
-      "community": 9,
+      "community": 36,
       "norm_label": "testcross"
     },
     {
@@ -4572,7 +4554,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L18",
       "id": "shape_test_junctions_testcross_basic",
-      "community": 9,
+      "community": 36,
       "norm_label": "._basic()"
     },
     {
@@ -4581,7 +4563,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L21",
       "id": "shape_test_junctions_testcross_test_center_is_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_center_is_inside()"
     },
     {
@@ -4590,7 +4572,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L24",
       "id": "shape_test_junctions_testcross_test_arm_tips_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_arm_tips_inside()"
     },
     {
@@ -4599,7 +4581,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L29",
       "id": "shape_test_junctions_testcross_test_corners_outside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_corners_outside()"
     },
     {
@@ -4608,7 +4590,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L34",
       "id": "shape_test_junctions_testcross_test_tip_boundary",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_tip_boundary()"
     },
     {
@@ -4617,7 +4599,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L40",
       "id": "shape_test_junctions_testcross_test_offset_center",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -4626,7 +4608,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L45",
       "id": "shape_test_junctions_testcross_test_rotated",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_rotated()"
     },
     {
@@ -4635,7 +4617,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L49",
       "id": "shape_test_junctions_testcross_test_outer_corner_radius",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_outer_corner_radius()"
     },
     {
@@ -4644,7 +4626,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L53",
       "id": "shape_test_junctions_testcross_test_inner_corner_radius",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_inner_corner_radius()"
     },
     {
@@ -4653,7 +4635,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L60",
       "id": "shape_test_junctions_testcross_test_zero_inner_radius_sdf_finite_and_correct",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_zero_inner_radius_sdf_finite_and_correct()"
     },
     {
@@ -4662,7 +4644,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L73",
       "id": "shape_test_junctions_testcross_test_bounds",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_bounds()"
     },
     {
@@ -4680,7 +4662,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L85",
       "id": "shape_test_junctions_testcross_test_width_exceeds_length_raises",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_width_exceeds_length_raises()"
     },
     {
@@ -4689,7 +4671,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L89",
       "id": "shape_test_junctions_testcross_test_outer_radius_too_large_raises",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_outer_radius_too_large_raises()"
     },
     {
@@ -4698,7 +4680,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L93",
       "id": "shape_test_junctions_testcross_test_round_trip",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -4707,7 +4689,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L100",
       "id": "shape_test_junctions_testcross_test_round_trip_no_rounding",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_round_trip_no_rounding()"
     },
     {
@@ -4716,7 +4698,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L109",
       "id": "shape_test_junctions_testtshape",
-      "community": 9,
+      "community": 36,
       "norm_label": "testtshape"
     },
     {
@@ -4725,7 +4707,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L110",
       "id": "shape_test_junctions_testtshape_basic",
-      "community": 9,
+      "community": 36,
       "norm_label": "._basic()"
     },
     {
@@ -4734,7 +4716,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L113",
       "id": "shape_test_junctions_testtshape_test_center_is_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_center_is_inside()"
     },
     {
@@ -4743,7 +4725,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L116",
       "id": "shape_test_junctions_testtshape_test_stem_is_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_stem_is_inside()"
     },
     {
@@ -4752,7 +4734,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L120",
       "id": "shape_test_junctions_testtshape_test_bar_tip_is_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_bar_tip_is_inside()"
     },
     {
@@ -4761,7 +4743,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L124",
       "id": "shape_test_junctions_testtshape_test_below_stem_is_outside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_below_stem_is_outside()"
     },
     {
@@ -4770,7 +4752,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L128",
       "id": "shape_test_junctions_testtshape_test_top_bar_corners_outside",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_top_bar_corners_outside()"
     },
     {
@@ -4779,7 +4761,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L133",
       "id": "shape_test_junctions_testtshape_test_offset_center",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -4788,7 +4770,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L138",
       "id": "shape_test_junctions_testtshape_test_rotated",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_rotated()"
     },
     {
@@ -4797,7 +4779,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L142",
       "id": "shape_test_junctions_testtshape_test_outer_corner_radius",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_outer_corner_radius()"
     },
     {
@@ -4806,7 +4788,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L146",
       "id": "shape_test_junctions_testtshape_test_inner_corner_radius",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_inner_corner_radius()"
     },
     {
@@ -4815,7 +4797,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L153",
       "id": "shape_test_junctions_testtshape_test_zero_inner_radius_sdf_finite_and_correct",
-      "community": 9,
+      "community": 36,
       "norm_label": ".test_zero_inner_radius_sdf_finite_and_correct()"
     },
     {
@@ -4833,7 +4815,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L169",
       "id": "shape_test_junctions_testtshape_test_bounds_contain_interior",
-      "community": 36,
+      "community": 9,
       "norm_label": ".test_bounds_contain_interior()"
     },
     {
@@ -5049,7 +5031,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L18",
       "id": "shape_test_quads_testrectangle",
-      "community": 36,
+      "community": 17,
       "norm_label": "testrectangle"
     },
     {
@@ -5076,7 +5058,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L27",
       "id": "shape_test_quads_testrectangle_test_sdf_value_at_boundary",
-      "community": 36,
+      "community": 17,
       "norm_label": ".test_sdf_value_at_boundary()"
     },
     {
@@ -5085,7 +5067,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L33",
       "id": "shape_test_quads_testrectangle_test_negative_interior_sdf",
-      "community": 36,
+      "community": 17,
       "norm_label": ".test_negative_interior_sdf()"
     },
     {
@@ -5130,7 +5112,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L65",
       "id": "shape_test_quads_testrectangle_test_bounds_contain_interior",
-      "community": 36,
+      "community": 17,
       "norm_label": ".test_bounds_contain_interior()"
     },
     {
@@ -5139,7 +5121,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L69",
       "id": "shape_test_quads_testrectangle_test_invalid_size",
-      "community": 36,
+      "community": 17,
       "norm_label": ".test_invalid_size()"
     },
     {
@@ -5553,7 +5535,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L463",
       "id": "shape_test_quads_testconvexquaddtypedevicegrad_test_dtype_device_flow",
-      "community": 17,
+      "community": 28,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -5634,7 +5616,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L532",
       "id": "shape_test_quads_testisoscelestrapezoiddtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 15,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -5706,7 +5688,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L1",
       "id": "tests_shape_test_boolean_py",
-      "community": 25,
+      "community": 66,
       "norm_label": "test_boolean.py"
     },
     {
@@ -5715,7 +5697,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L15",
       "id": "shape_test_boolean_rect",
-      "community": 25,
+      "community": 66,
       "norm_label": "_rect()"
     },
     {
@@ -5724,7 +5706,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L19",
       "id": "shape_test_boolean_testisemptybounds",
-      "community": 25,
+      "community": 55,
       "norm_label": "testisemptybounds"
     },
     {
@@ -5733,7 +5715,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L20",
       "id": "shape_test_boolean_testisemptybounds_test_normal_box_is_not_empty",
-      "community": 25,
+      "community": 55,
       "norm_label": ".test_normal_box_is_not_empty()"
     },
     {
@@ -5742,7 +5724,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L23",
       "id": "shape_test_boolean_testisemptybounds_test_zero_area_box_is_not_empty",
-      "community": 25,
+      "community": 55,
       "norm_label": ".test_zero_area_box_is_not_empty()"
     },
     {
@@ -5751,7 +5733,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L28",
       "id": "shape_test_boolean_testisemptybounds_test_inverted_box_is_empty",
-      "community": 25,
+      "community": 55,
       "norm_label": ".test_inverted_box_is_empty()"
     },
     {
@@ -5760,7 +5742,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L31",
       "id": "shape_test_boolean_testisemptybounds_test_canonical_sentinel_is_empty",
-      "community": 25,
+      "community": 55,
       "norm_label": ".test_canonical_sentinel_is_empty()"
     },
     {
@@ -5769,7 +5751,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L35",
       "id": "shape_test_boolean_testintersectionbounds",
-      "community": 25,
+      "community": 66,
       "norm_label": "testintersectionbounds"
     },
     {
@@ -5778,7 +5760,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L36",
       "id": "shape_test_boolean_testintersectionbounds_test_disjoint_shapes_give_canonical_empty_bounds",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_disjoint_shapes_give_canonical_empty_bounds()"
     },
     {
@@ -5787,7 +5769,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L43",
       "id": "shape_test_boolean_testintersectionbounds_test_overlapping_shapes_give_real_bounds",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_overlapping_shapes_give_real_bounds()"
     },
     {
@@ -5796,7 +5778,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L52",
       "id": "shape_test_boolean_testintersectionbounds_test_touching_shapes_are_not_empty",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_touching_shapes_are_not_empty()"
     },
     {
@@ -5805,7 +5787,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L62",
       "id": "shape_test_boolean_testunionboundswithemptychild",
-      "community": 25,
+      "community": 66,
       "norm_label": "testunionboundswithemptychild"
     },
     {
@@ -5814,7 +5796,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L63",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_empty_left_operand_yields_right_bounds",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_empty_left_operand_yields_right_bounds()"
     },
     {
@@ -5823,7 +5805,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L68",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_empty_right_operand_yields_left_bounds",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_empty_right_operand_yields_left_bounds()"
     },
     {
@@ -5832,7 +5814,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L73",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_both_empty_stays_empty",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_both_empty_stays_empty()"
     },
     {
@@ -5841,7 +5823,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L79",
       "id": "shape_test_boolean_testdifferencebounds",
-      "community": 25,
+      "community": 66,
       "norm_label": "testdifferencebounds"
     },
     {
@@ -5850,7 +5832,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L80",
       "id": "shape_test_boolean_testdifferencebounds_test_returns_left_bounds",
-      "community": 25,
+      "community": 66,
       "norm_label": ".test_returns_left_bounds()"
     },
     {
@@ -5868,7 +5850,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L1",
       "id": "tests_shape_test_conics_py",
-      "community": 35,
+      "community": 28,
       "norm_label": "test_conics.py"
     },
     {
@@ -5931,7 +5913,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L41",
       "id": "shape_test_conics_testellipse_test_offset_center",
-      "community": 6,
+      "community": 36,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -5940,7 +5922,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L46",
       "id": "shape_test_conics_testellipse_test_rotated_ellipse",
-      "community": 6,
+      "community": 36,
       "norm_label": ".test_rotated_ellipse()"
     },
     {
@@ -5958,7 +5940,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L60",
       "id": "shape_test_conics_testellipse_test_bounds_contain_interior",
-      "community": 36,
+      "community": 6,
       "norm_label": ".test_bounds_contain_interior()"
     },
     {
@@ -5976,7 +5958,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L70",
       "id": "shape_test_conics_testellipse_test_round_trip",
-      "community": 9,
+      "community": 6,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -5985,7 +5967,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L74",
       "id": "shape_test_conics_testellipse_test_round_trip_circle",
-      "community": 9,
+      "community": 6,
       "norm_label": ".test_round_trip_circle()"
     },
     {
@@ -6012,7 +5994,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L105",
       "id": "shape_test_conics_test_matches_brute_force_nearest_point",
-      "community": 35,
+      "community": 28,
       "norm_label": "test_matches_brute_force_nearest_point()"
     },
     {
@@ -6048,7 +6030,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L154",
       "id": "shape_test_conics_testegg_test_center_is_inside",
-      "community": 32,
+      "community": 36,
       "norm_label": ".test_center_is_inside()"
     },
     {
@@ -6057,7 +6039,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L158",
       "id": "shape_test_conics_testegg_test_far_point_is_outside",
-      "community": 35,
+      "community": 32,
       "norm_label": ".test_far_point_is_outside()"
     },
     {
@@ -6111,7 +6093,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L203",
       "id": "shape_test_conics_testegg_test_offset_center",
-      "community": 32,
+      "community": 35,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -6129,7 +6111,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L215",
       "id": "shape_test_conics_testegg_test_bounds",
-      "community": 32,
+      "community": 35,
       "norm_label": ".test_bounds()"
     },
     {
@@ -6147,7 +6129,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L227",
       "id": "shape_test_conics_testegg_test_invalid_width",
-      "community": 32,
+      "community": 35,
       "norm_label": ".test_invalid_width()"
     },
     {
@@ -6174,7 +6156,7 @@
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L241",
       "id": "shape_test_conics_testegg_test_round_trip",
-      "community": 6,
+      "community": 32,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -6885,7 +6867,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L9",
       "id": "shape_conftest_sdf_at",
-      "community": 35,
+      "community": 28,
       "norm_label": "sdf_at()"
     },
     {
@@ -6894,7 +6876,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L16",
       "id": "shape_conftest_assert_inside",
-      "community": 9,
+      "community": 36,
       "norm_label": "assert_inside()"
     },
     {
@@ -6903,7 +6885,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L23",
       "id": "shape_conftest_assert_outside",
-      "community": 10,
+      "community": 36,
       "norm_label": "assert_outside()"
     },
     {
@@ -6912,7 +6894,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L30",
       "id": "shape_conftest_assert_round_trip",
-      "community": 9,
+      "community": 28,
       "norm_label": "assert_round_trip()"
     },
     {
@@ -6921,7 +6903,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L49",
       "id": "shape_conftest_assert_bounds_contain",
-      "community": 36,
+      "community": 28,
       "norm_label": "assert_bounds_contain()"
     },
     {
@@ -6975,7 +6957,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L17",
       "id": "shape_conftest_rationale_17",
-      "community": 9,
+      "community": 36,
       "norm_label": "all points should have sdf < tol (inside or on boundary)."
     },
     {
@@ -6984,7 +6966,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L24",
       "id": "shape_conftest_rationale_24",
-      "community": 10,
+      "community": 36,
       "norm_label": "all points should have sdf > -tol (outside or on boundary)."
     },
     {
@@ -6993,7 +6975,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L31",
       "id": "shape_conftest_rationale_31",
-      "community": 9,
+      "community": 28,
       "norm_label": "serialise \u2192 deserialise and verify sdf equality on a small grid."
     },
     {
@@ -7002,7 +6984,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L50",
       "id": "shape_conftest_rationale_50",
-      "community": 36,
+      "community": 28,
       "norm_label": "all points should lie inside (or on) the reported bounding box."
     },
     {
@@ -7506,7 +7488,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L314",
       "id": "shape_test_polygons_teststar_test_offset_center",
-      "community": 10,
+      "community": 14,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -7542,7 +7524,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L335",
       "id": "shape_test_polygons_teststar_test_bounds_contain_center",
-      "community": 18,
+      "community": 10,
       "norm_label": ".test_bounds_contain_center()"
     },
     {
@@ -7551,7 +7533,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L341",
       "id": "shape_test_polygons_teststar_test_round_trip",
-      "community": 18,
+      "community": 10,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -7623,7 +7605,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L403",
       "id": "shape_test_polygons_testregularpolygondtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 14,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -7695,7 +7677,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L468",
       "id": "shape_test_polygons_testtriangledtypedevicegrad",
-      "community": 28,
+      "community": 10,
       "norm_label": "testtriangledtypedevicegrad"
     },
     {
@@ -7704,7 +7686,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L469",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -7722,7 +7704,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L478",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_integer_query_does_not_crash",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_integer_query_does_not_crash()"
     },
     {
@@ -7731,7 +7713,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L483",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_gradients_finite_generic_point",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_gradients_finite_generic_point()"
     },
     {
@@ -7740,7 +7722,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L494",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_gradients_finite_at_zero_and_near_inradius_corner_radius",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_gradients_finite_at_zero_and_near_inradius_corner_radius()"
     },
     {
@@ -7749,7 +7731,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L501",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_gradients_finite_right_angle",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_gradients_finite_right_angle()"
     },
     {
@@ -7758,7 +7740,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L518",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_gradients_finite_near_degenerate_angle_sum",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_gradients_finite_near_degenerate_angle_sum()"
     },
     {
@@ -7767,7 +7749,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L529",
       "id": "shape_test_polygons_testtriangledtypedevicegrad_test_broadcast_x_y_different_shapes",
-      "community": 28,
+      "community": 10,
       "norm_label": ".test_broadcast_x_y_different_shapes()"
     },
     {
@@ -7864,7 +7846,7 @@
       "label": "TestLatticePackageExports",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L11",
+      "source_location": "L10",
       "id": "lattice_test_basis_testlatticepackageexports",
       "community": 3,
       "norm_label": "testlatticepackageexports"
@@ -7873,7 +7855,7 @@
       "label": ".test_lattice_and_unit_cell_importable_from_package()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L12",
+      "source_location": "L11",
       "id": "lattice_test_basis_testlatticepackageexports_test_lattice_and_unit_cell_importable_from_package",
       "community": 3,
       "norm_label": ".test_lattice_and_unit_cell_importable_from_package()"
@@ -7882,7 +7864,7 @@
       "label": ".test_grid_helpers_importable_from_package()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L23",
+      "source_location": "L22",
       "id": "lattice_test_basis_testlatticepackageexports_test_grid_helpers_importable_from_package",
       "community": 3,
       "norm_label": ".test_grid_helpers_importable_from_package()"
@@ -7891,7 +7873,7 @@
       "label": "TestLatticeConstruction",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L33",
+      "source_location": "L32",
       "id": "lattice_test_basis_testlatticeconstruction",
       "community": 3,
       "norm_label": "testlatticeconstruction"
@@ -7900,7 +7882,7 @@
       "label": ".test_rectangular_vectors()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L34",
+      "source_location": "L33",
       "id": "lattice_test_basis_testlatticeconstruction_test_rectangular_vectors",
       "community": 3,
       "norm_label": ".test_rectangular_vectors()"
@@ -7909,7 +7891,7 @@
       "label": ".test_hexagonal_pointy_vectors()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L39",
+      "source_location": "L38",
       "id": "lattice_test_basis_testlatticeconstruction_test_hexagonal_pointy_vectors",
       "community": 3,
       "norm_label": ".test_hexagonal_pointy_vectors()"
@@ -7918,7 +7900,7 @@
       "label": ".test_hexagonal_flat_vectors()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L45",
+      "source_location": "L44",
       "id": "lattice_test_basis_testlatticeconstruction_test_hexagonal_flat_vectors",
       "community": 3,
       "norm_label": ".test_hexagonal_flat_vectors()"
@@ -7927,7 +7909,7 @@
       "label": ".test_hexagonal_invalid_orientation()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L51",
+      "source_location": "L50",
       "id": "lattice_test_basis_testlatticeconstruction_test_hexagonal_invalid_orientation",
       "community": 3,
       "norm_label": ".test_hexagonal_invalid_orientation()"
@@ -7936,115 +7918,16 @@
       "label": ".test_singular_raises()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L55",
+      "source_location": "L54",
       "id": "lattice_test_basis_testlatticeconstruction_test_singular_raises",
       "community": 3,
       "norm_label": ".test_singular_raises()"
     },
     {
-      "label": ".test_wrong_shape_raises()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L59",
-      "id": "lattice_test_basis_testlatticeconstruction_test_wrong_shape_raises",
-      "community": 3,
-      "norm_label": ".test_wrong_shape_raises()"
-    },
-    {
-      "label": "TestLatticeOptimizableVectors",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L64",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors",
-      "community": 3,
-      "norm_label": "testlatticeoptimizablevectors"
-    },
-    {
-      "label": ".test_parameter_registers_as_parameter()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L71",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_parameter_registers_as_parameter",
-      "community": 3,
-      "norm_label": ".test_parameter_registers_as_parameter()"
-    },
-    {
-      "label": ".test_plain_value_registers_as_buffer()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L77",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_plain_value_registers_as_buffer",
-      "community": 3,
-      "norm_label": ".test_plain_value_registers_as_buffer()"
-    },
-    {
-      "label": ".test_state_dict_keys_unchanged_by_parameter_vs_buffer()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L82",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_state_dict_keys_unchanged_by_parameter_vs_buffer",
-      "community": 3,
-      "norm_label": ".test_state_dict_keys_unchanged_by_parameter_vs_buffer()"
-    },
-    {
-      "label": ".test_gradient_reaches_caller_parameter_via_cell_area()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L87",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_cell_area",
-      "community": 3,
-      "norm_label": ".test_gradient_reaches_caller_parameter_via_cell_area()"
-    },
-    {
-      "label": ".test_gradient_reaches_caller_parameter_via_to_fractional()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L94",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_to_fractional",
-      "community": 3,
-      "norm_label": ".test_gradient_reaches_caller_parameter_via_to_fractional()"
-    },
-    {
-      "label": ".test_rectangular_rejects_parameter()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L101",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_rejects_parameter",
-      "community": 3,
-      "norm_label": ".test_rectangular_rejects_parameter()"
-    },
-    {
-      "label": ".test_hexagonal_rejects_parameter()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L105",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_hexagonal_rejects_parameter",
-      "community": 3,
-      "norm_label": ".test_hexagonal_rejects_parameter()"
-    },
-    {
-      "label": ".test_rectangular_rejects_requires_grad_tensor()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L109",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_rejects_requires_grad_tensor",
-      "community": 3,
-      "norm_label": ".test_rectangular_rejects_requires_grad_tensor()"
-    },
-    {
-      "label": ".test_rectangular_accepts_plain_scalar_tensor()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L113",
-      "id": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_accepts_plain_scalar_tensor",
-      "community": 3,
-      "norm_label": ".test_rectangular_accepts_plain_scalar_tensor()"
-    },
-    {
       "label": "TestLatticeProperties",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L119",
+      "source_location": "L59",
       "id": "lattice_test_basis_testlatticeproperties",
       "community": 3,
       "norm_label": "testlatticeproperties"
@@ -8053,7 +7936,7 @@
       "label": ".test_matrix_columns()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L120",
+      "source_location": "L60",
       "id": "lattice_test_basis_testlatticeproperties_test_matrix_columns",
       "community": 3,
       "norm_label": ".test_matrix_columns()"
@@ -8062,7 +7945,7 @@
       "label": ".test_cell_area_rectangular()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L126",
+      "source_location": "L66",
       "id": "lattice_test_basis_testlatticeproperties_test_cell_area_rectangular",
       "community": 3,
       "norm_label": ".test_cell_area_rectangular()"
@@ -8071,7 +7954,7 @@
       "label": ".test_cell_area_hexagonal()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L131",
+      "source_location": "L71",
       "id": "lattice_test_basis_testlatticeproperties_test_cell_area_hexagonal",
       "community": 3,
       "norm_label": ".test_cell_area_hexagonal()"
@@ -8080,7 +7963,7 @@
       "label": ".test_device_property()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L137",
+      "source_location": "L77",
       "id": "lattice_test_basis_testlatticeproperties_test_device_property",
       "community": 3,
       "norm_label": ".test_device_property()"
@@ -8089,7 +7972,7 @@
       "label": ".test_dtype_property()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L141",
+      "source_location": "L81",
       "id": "lattice_test_basis_testlatticeproperties_test_dtype_property",
       "community": 3,
       "norm_label": ".test_dtype_property()"
@@ -8098,7 +7981,7 @@
       "label": "TestLatticeCoordinates",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L146",
+      "source_location": "L86",
       "id": "lattice_test_basis_testlatticecoordinates",
       "community": 3,
       "norm_label": "testlatticecoordinates"
@@ -8107,7 +7990,7 @@
       "label": ".test_round_trip_fractional_cartesian()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L147",
+      "source_location": "L87",
       "id": "lattice_test_basis_testlatticecoordinates_test_round_trip_fractional_cartesian",
       "community": 3,
       "norm_label": ".test_round_trip_fractional_cartesian()"
@@ -8116,7 +7999,7 @@
       "label": ".test_round_trip_oblique()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L156",
+      "source_location": "L96",
       "id": "lattice_test_basis_testlatticecoordinates_test_round_trip_oblique",
       "community": 3,
       "norm_label": ".test_round_trip_oblique()"
@@ -8125,7 +8008,7 @@
       "label": ".test_fractional_of_a1()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L165",
+      "source_location": "L105",
       "id": "lattice_test_basis_testlatticecoordinates_test_fractional_of_a1",
       "community": 3,
       "norm_label": ".test_fractional_of_a1()"
@@ -8134,7 +8017,7 @@
       "label": ".test_fractional_of_a2()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L171",
+      "source_location": "L111",
       "id": "lattice_test_basis_testlatticecoordinates_test_fractional_of_a2",
       "community": 3,
       "norm_label": ".test_fractional_of_a2()"
@@ -8143,7 +8026,7 @@
       "label": ".test_cartesian_of_unit_f1()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L177",
+      "source_location": "L117",
       "id": "lattice_test_basis_testlatticecoordinates_test_cartesian_of_unit_f1",
       "community": 3,
       "norm_label": ".test_cartesian_of_unit_f1()"
@@ -8152,7 +8035,7 @@
       "label": ".test_cartesian_of_unit_f2()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L182",
+      "source_location": "L122",
       "id": "lattice_test_basis_testlatticecoordinates_test_cartesian_of_unit_f2",
       "community": 3,
       "norm_label": ".test_cartesian_of_unit_f2()"
@@ -8161,7 +8044,7 @@
       "label": "TestLatticeOffset",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L188",
+      "source_location": "L128",
       "id": "lattice_test_basis_testlatticeoffset",
       "community": 3,
       "norm_label": "testlatticeoffset"
@@ -8170,7 +8053,7 @@
       "label": ".test_offset_origin()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L189",
+      "source_location": "L129",
       "id": "lattice_test_basis_testlatticeoffset_test_offset_origin",
       "community": 3,
       "norm_label": ".test_offset_origin()"
@@ -8179,7 +8062,7 @@
       "label": ".test_offset_a1()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L194",
+      "source_location": "L134",
       "id": "lattice_test_basis_testlatticeoffset_test_offset_a1",
       "community": 3,
       "norm_label": ".test_offset_a1()"
@@ -8188,7 +8071,7 @@
       "label": ".test_offset_a2()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L198",
+      "source_location": "L138",
       "id": "lattice_test_basis_testlatticeoffset_test_offset_a2",
       "community": 3,
       "norm_label": ".test_offset_a2()"
@@ -8197,7 +8080,7 @@
       "label": ".test_offset_negative()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L202",
+      "source_location": "L142",
       "id": "lattice_test_basis_testlatticeoffset_test_offset_negative",
       "community": 3,
       "norm_label": ".test_offset_negative()"
@@ -8206,7 +8089,7 @@
       "label": ".test_offset_combined()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L206",
+      "source_location": "L146",
       "id": "lattice_test_basis_testlatticeoffset_test_offset_combined",
       "community": 3,
       "norm_label": ".test_offset_combined()"
@@ -8215,7 +8098,7 @@
       "label": "TestNeighborOffsets",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L211",
+      "source_location": "L151",
       "id": "lattice_test_basis_testneighboroffsets",
       "community": 3,
       "norm_label": "testneighboroffsets"
@@ -8224,7 +8107,7 @@
       "label": ".test_ring1_count()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L212",
+      "source_location": "L152",
       "id": "lattice_test_basis_testneighboroffsets_test_ring1_count",
       "community": 3,
       "norm_label": ".test_ring1_count()"
@@ -8233,7 +8116,7 @@
       "label": ".test_ring2_count()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L217",
+      "source_location": "L157",
       "id": "lattice_test_basis_testneighboroffsets_test_ring2_count",
       "community": 3,
       "norm_label": ".test_ring2_count()"
@@ -8242,7 +8125,7 @@
       "label": ".test_ring1_contains_origin()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L222",
+      "source_location": "L162",
       "id": "lattice_test_basis_testneighboroffsets_test_ring1_contains_origin",
       "community": 3,
       "norm_label": ".test_ring1_contains_origin()"
@@ -8251,19 +8134,10 @@
       "label": ".test_ring0_is_origin_only()",
       "file_type": "code",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L227",
+      "source_location": "L167",
       "id": "lattice_test_basis_testneighboroffsets_test_ring0_is_origin_only",
       "community": 3,
       "norm_label": ".test_ring0_is_origin_only()"
-    },
-    {
-      "label": "a1/a2 accept an nn.Parameter directly, becoming a real optimizable     parameter",
-      "file_type": "rationale",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L65",
-      "id": "lattice_test_basis_rationale_65",
-      "community": 3,
-      "norm_label": "a1/a2 accept an nn.parameter directly, becoming a real optimizable     parameter"
     },
     {
       "label": "test_unit_cell.py",
@@ -8644,73 +8518,64 @@
       "norm_label": ".test_grad_soft_mask_wrt_side_length_nonzero_pixels()"
     },
     {
-      "label": ".test_grad_soft_mask_wrt_optimizable_lattice_vector()",
-      "file_type": "code",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L303",
-      "id": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
-      "community": 31,
-      "norm_label": ".test_grad_soft_mask_wrt_optimizable_lattice_vector()"
-    },
-    {
       "label": "TestToShapely",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L321",
+      "source_location": "L308",
       "id": "lattice_test_unit_cell_testtoshapely",
-      "community": 29,
+      "community": 30,
       "norm_label": "testtoshapely"
     },
     {
       "label": ".test_rectangle_clips_to_cell()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L322",
+      "source_location": "L309",
       "id": "lattice_test_unit_cell_testtoshapely_test_rectangle_clips_to_cell",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_rectangle_clips_to_cell()"
     },
     {
       "label": ".test_bar_clips_to_cell()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L338",
+      "source_location": "L325",
       "id": "lattice_test_unit_cell_testtoshapely_test_bar_clips_to_cell",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_bar_clips_to_cell()"
     },
     {
       "label": ".test_shape_outside_cell_wraps_periodically()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L349",
+      "source_location": "L336",
       "id": "lattice_test_unit_cell_testtoshapely_test_shape_outside_cell_wraps_periodically",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_shape_outside_cell_wraps_periodically()"
     },
     {
       "label": ".test_area_matches_periodic_sdf_for_seam_straddling_shape()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L377",
+      "source_location": "L364",
       "id": "lattice_test_unit_cell_testtoshapely_test_area_matches_periodic_sdf_for_seam_straddling_shape",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_area_matches_periodic_sdf_for_seam_straddling_shape()"
     },
     {
       "label": ".test_fully_interior_shape_unaffected_by_periodic_union()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L390",
+      "source_location": "L377",
       "id": "lattice_test_unit_cell_testtoshapely_test_fully_interior_shape_unaffected_by_periodic_union",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_fully_interior_shape_unaffected_by_periodic_union()"
     },
     {
       "label": "_brute_force_sdf()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L408",
+      "source_location": "L395",
       "id": "lattice_test_unit_cell_brute_force_sdf",
       "community": 16,
       "norm_label": "_brute_force_sdf()"
@@ -8719,61 +8584,61 @@
       "label": "TestOffsetsForRing",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L424",
+      "source_location": "L411",
       "id": "lattice_test_unit_cell_testoffsetsforring",
-      "community": 29,
+      "community": 77,
       "norm_label": "testoffsetsforring"
     },
     {
       "label": ".test_bar_offsets_are_finite_not_nan()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L425",
+      "source_location": "L412",
       "id": "lattice_test_unit_cell_testoffsetsforring_test_bar_offsets_are_finite_not_nan",
-      "community": 29,
+      "community": 77,
       "norm_label": ".test_bar_offsets_are_finite_not_nan()"
     },
     {
       "label": ".test_bar_offsets_finite_on_hexagonal_lattice_too()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L435",
+      "source_location": "L422",
       "id": "lattice_test_unit_cell_testoffsetsforring_test_bar_offsets_finite_on_hexagonal_lattice_too",
-      "community": 29,
+      "community": 77,
       "norm_label": ".test_bar_offsets_finite_on_hexagonal_lattice_too()"
     },
     {
       "label": ".test_mixed_infinite_and_wide_finite_union_covers_the_finite_branch()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L442",
+      "source_location": "L429",
       "id": "lattice_test_unit_cell_testoffsetsforring_test_mixed_infinite_and_wide_finite_union_covers_the_finite_branch",
-      "community": 29,
+      "community": 77,
       "norm_label": ".test_mixed_infinite_and_wide_finite_union_covers_the_finite_branch()"
     },
     {
       "label": ".test_offsets_for_bounds_empty_is_zero_zero()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L467",
+      "source_location": "L454",
       "id": "lattice_test_unit_cell_testoffsetsforring_test_offsets_for_bounds_empty_is_zero_zero",
-      "community": 29,
+      "community": 77,
       "norm_label": ".test_offsets_for_bounds_empty_is_zero_zero()"
     },
     {
       "label": "TestPeriodicSdfMatchesBruteForce",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L480",
+      "source_location": "L467",
       "id": "lattice_test_unit_cell_testperiodicsdfmatchesbruteforce",
-      "community": 27,
+      "community": 16,
       "norm_label": "testperiodicsdfmatchesbruteforce"
     },
     {
       "label": "test_matches_brute_force()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L496",
+      "source_location": "L483",
       "id": "lattice_test_unit_cell_test_matches_brute_force",
       "community": 16,
       "norm_label": "test_matches_brute_force()"
@@ -8782,25 +8647,25 @@
       "label": "TestOffsetSearchOverhead",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L523",
+      "source_location": "L510",
       "id": "lattice_test_unit_cell_testoffsetsearchoverhead",
-      "community": 29,
+      "community": 30,
       "norm_label": "testoffsetsearchoverhead"
     },
     {
       "label": ".test_centered_small_shape_uses_nine_copies()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L524",
+      "source_location": "L511",
       "id": "lattice_test_unit_cell_testoffsetsearchoverhead_test_centered_small_shape_uses_nine_copies",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_centered_small_shape_uses_nine_copies()"
     },
     {
       "label": "TestExtent",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L541",
+      "source_location": "L528",
       "id": "lattice_test_unit_cell_testextent",
       "community": 5,
       "norm_label": "testextent"
@@ -8809,7 +8674,7 @@
       "label": ".test_rectangular_unit_cell()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L542",
+      "source_location": "L529",
       "id": "lattice_test_unit_cell_testextent_test_rectangular_unit_cell",
       "community": 5,
       "norm_label": ".test_rectangular_unit_cell()"
@@ -8818,7 +8683,7 @@
       "label": ".test_rectangular_repeat()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L550",
+      "source_location": "L537",
       "id": "lattice_test_unit_cell_testextent_test_rectangular_repeat",
       "community": 5,
       "norm_label": ".test_rectangular_repeat()"
@@ -8827,7 +8692,7 @@
       "label": ".test_hexagonal_pointy_width()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L558",
+      "source_location": "L545",
       "id": "lattice_test_unit_cell_testextent_test_hexagonal_pointy_width",
       "community": 5,
       "norm_label": ".test_hexagonal_pointy_width()"
@@ -8836,7 +8701,7 @@
       "label": ".test_hexagonal_repeat_n1_grows_width()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L567",
+      "source_location": "L554",
       "id": "lattice_test_unit_cell_testextent_test_hexagonal_repeat_n1_grows_width",
       "community": 5,
       "norm_label": ".test_hexagonal_repeat_n1_grows_width()"
@@ -8845,7 +8710,7 @@
       "label": ".test_returns_plain_floats()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L577",
+      "source_location": "L564",
       "id": "lattice_test_unit_cell_testextent_test_returns_plain_floats",
       "community": 5,
       "norm_label": ".test_returns_plain_floats()"
@@ -8854,7 +8719,7 @@
       "label": ".test_default_repeat_is_1_1()",
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L584",
+      "source_location": "L571",
       "id": "lattice_test_unit_cell_testextent_test_default_repeat_is_1_1",
       "community": 5,
       "norm_label": ".test_default_repeat_is_1_1()"
@@ -8887,20 +8752,11 @@
       "norm_label": "at least some pixels must have non-trivial gradient contribution."
     },
     {
-      "label": "A Lattice built with an nn.Parameter a1 is itself optimizable:         gradient",
-      "file_type": "rationale",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L304",
-      "id": "lattice_test_unit_cell_rationale_304",
-      "community": 31,
-      "norm_label": "a lattice built with an nn.parameter a1 is itself optimizable:         gradient"
-    },
-    {
       "label": "Independent reference: fold into the cell, then search a ring far     larger tha",
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L409",
-      "id": "lattice_test_unit_cell_rationale_409",
+      "source_location": "L396",
+      "id": "lattice_test_unit_cell_rationale_396",
       "community": 16,
       "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha"
     },
@@ -8908,9 +8764,9 @@
       "label": "sdf() must agree with a large brute-force reference search for a     variety of",
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L481",
-      "id": "lattice_test_unit_cell_rationale_481",
-      "community": 27,
+      "source_location": "L468",
+      "id": "lattice_test_unit_cell_rationale_468",
+      "community": 16,
       "norm_label": "sdf() must agree with a large brute-force reference search for a     variety of"
     },
     {
@@ -9288,7 +9144,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L1",
       "id": "tests_lattice_conftest_py",
-      "community": 14,
+      "community": 79,
       "norm_label": "conftest.py"
     },
     {
@@ -9297,7 +9153,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L13",
       "id": "lattice_conftest_rect_lattice",
-      "community": 14,
+      "community": 79,
       "norm_label": "rect_lattice()"
     },
     {
@@ -9306,7 +9162,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L18",
       "id": "lattice_conftest_hex_lattice",
-      "community": 14,
+      "community": 79,
       "norm_label": "hex_lattice()"
     },
     {
@@ -9315,7 +9171,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L23",
       "id": "lattice_conftest_square_in_rect",
-      "community": 14,
+      "community": 79,
       "norm_label": "square_in_rect()"
     },
     {
@@ -9522,7 +9378,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L1",
       "id": "tests_adapters_test_shapely_py",
-      "community": 1,
+      "community": 29,
       "norm_label": "test_shapely.py"
     },
     {
@@ -9531,7 +9387,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L17",
       "id": "adapters_test_shapely_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": "_centroid()"
     },
     {
@@ -9540,7 +9396,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L25",
       "id": "adapters_test_shapely_testprimitivestoshapely",
-      "community": 1,
+      "community": 27,
       "norm_label": "testprimitivestoshapely"
     },
     {
@@ -9549,7 +9405,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L26",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_rectangle",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_rectangle()"
     },
     {
@@ -9558,7 +9414,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L32",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_rectangle_with_corner_radius",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_rectangle_with_corner_radius()"
     },
     {
@@ -9567,7 +9423,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L39",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_ellipse",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_ellipse()"
     },
     {
@@ -9576,7 +9432,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L46",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_ellipse_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_ellipse_centroid()"
     },
     {
@@ -9585,7 +9441,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L53",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_egg",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_egg()"
     },
     {
@@ -9594,7 +9450,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L62",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_egg_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_egg_centroid()"
     },
     {
@@ -9603,7 +9459,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L70",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_stadium()"
     },
     {
@@ -9612,7 +9468,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L80",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_stadium_centroid()"
     },
     {
@@ -9621,7 +9477,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L87",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium_degenerate_circle",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_stadium_degenerate_circle()"
     },
     {
@@ -9630,7 +9486,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L94",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_convex_quad",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_convex_quad()"
     },
     {
@@ -9639,7 +9495,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L108",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_isosceles_trapezoid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_isosceles_trapezoid()"
     },
     {
@@ -9648,7 +9504,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L120",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_equilateral_area",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_triangle_equilateral_area()"
     },
     {
@@ -9657,7 +9513,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L127",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_triangle_centroid()"
     },
     {
@@ -9666,7 +9522,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L134",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_corner_radius_reduces_area",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_triangle_corner_radius_reduces_area()"
     },
     {
@@ -9675,7 +9531,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L141",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_area_in_bounds",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_star_area_in_bounds()"
     },
     {
@@ -9684,7 +9540,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L149",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_star_centroid()"
     },
     {
@@ -9693,7 +9549,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L156",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_outer_corner_radius_reduces_area",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_star_outer_corner_radius_reduces_area()"
     },
     {
@@ -9702,7 +9558,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L162",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_regular_polygon_square",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_regular_polygon_square()"
     },
     {
@@ -9711,7 +9567,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L168",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_regular_polygon_hexagon",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_regular_polygon_hexagon()"
     },
     {
@@ -9720,7 +9576,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L175",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_cross",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_cross()"
     },
     {
@@ -9729,7 +9585,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L185",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_tshape",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_tshape()"
     },
     {
@@ -9738,7 +9594,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L195",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_bar_x_height",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_bar_x_height()"
     },
     {
@@ -9747,7 +9603,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L204",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_bar_y_width",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_bar_y_width()"
     },
     {
@@ -9756,7 +9612,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L213",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_unsupported_shape_raises",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_unsupported_shape_raises()"
     },
     {
@@ -9765,7 +9621,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L230",
       "id": "adapters_test_shapely_testbooleanstoshapely",
-      "community": 1,
+      "community": 69,
       "norm_label": "testbooleanstoshapely"
     },
     {
@@ -9774,7 +9630,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L231",
       "id": "adapters_test_shapely_testbooleanstoshapely_non_overlapping_pair",
-      "community": 1,
+      "community": 69,
       "norm_label": "._non_overlapping_pair()"
     },
     {
@@ -9783,7 +9639,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L236",
       "id": "adapters_test_shapely_testbooleanstoshapely_overlapping_pair",
-      "community": 1,
+      "community": 69,
       "norm_label": "._overlapping_pair()"
     },
     {
@@ -9792,7 +9648,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L241",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_non_overlapping_area",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_union_non_overlapping_area()"
     },
     {
@@ -9801,7 +9657,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L246",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_non_overlapping_contains_both_centers",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_union_non_overlapping_contains_both_centers()"
     },
     {
@@ -9810,7 +9666,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L253",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_overlapping_area",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_union_overlapping_area()"
     },
     {
@@ -9819,7 +9675,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L259",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_intersection_overlapping_area",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_intersection_overlapping_area()"
     },
     {
@@ -9828,7 +9684,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L265",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_intersection_non_overlapping_is_empty",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_intersection_non_overlapping_is_empty()"
     },
     {
@@ -9837,7 +9693,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L270",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_difference_area",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_difference_area()"
     },
     {
@@ -9846,7 +9702,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L276",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_difference_excludes_r2_region",
-      "community": 1,
+      "community": 69,
       "norm_label": ".test_difference_excludes_r2_region()"
     },
     {
@@ -9855,7 +9711,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L290",
       "id": "adapters_test_shapely_testtransformstoshapely",
-      "community": 1,
+      "community": 29,
       "norm_label": "testtransformstoshapely"
     },
     {
@@ -9864,7 +9720,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L291",
       "id": "adapters_test_shapely_testtransformstoshapely_test_translate_moves_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_translate_moves_centroid()"
     },
     {
@@ -9873,7 +9729,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L298",
       "id": "adapters_test_shapely_testtransformstoshapely_test_translate_preserves_area",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_translate_preserves_area()"
     },
     {
@@ -9882,7 +9738,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L304",
       "id": "adapters_test_shapely_testtransformstoshapely_test_rotate_preserves_area",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_rotate_preserves_area()"
     },
     {
@@ -9891,7 +9747,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L310",
       "id": "adapters_test_shapely_testtransformstoshapely_test_rotate_moves_centroid",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_rotate_moves_centroid()"
     },
     {
@@ -9900,7 +9756,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L318",
       "id": "adapters_test_shapely_testtransformstoshapely_test_scale_area",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_scale_area()"
     },
     {
@@ -9909,7 +9765,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L325",
       "id": "adapters_test_shapely_testtransformstoshapely_test_scale_centroid_unchanged_at_origin",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_scale_centroid_unchanged_at_origin()"
     },
     {
@@ -9918,7 +9774,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L337",
       "id": "adapters_test_shapely_testcompoundshapestoshapely",
-      "community": 1,
+      "community": 29,
       "norm_label": "testcompoundshapestoshapely"
     },
     {
@@ -9927,7 +9783,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L338",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_translated_union",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_translated_union()"
     },
     {
@@ -9936,7 +9792,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L346",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_intersection_of_ellipses",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_intersection_of_ellipses()"
     },
     {
@@ -9945,7 +9801,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L353",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_difference_rect_minus_ellipse",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_difference_rect_minus_ellipse()"
     },
     {
@@ -9954,7 +9810,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L361",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_scale_then_translate",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_scale_then_translate()"
     },
     {
@@ -9963,7 +9819,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L369",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_nested_booleans",
-      "community": 1,
+      "community": 29,
       "norm_label": ".test_nested_booleans()"
     },
     {
@@ -9981,7 +9837,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L1",
       "id": "tests_adapters_test_shapely_safe_extraction_py",
-      "community": 2,
+      "community": 0,
       "norm_label": "test_shapely_safe_extraction.py"
     },
     {
@@ -10044,7 +9900,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L69",
       "id": "adapters_test_shapely_safe_extraction_testellipsesafeextraction",
-      "community": 65,
+      "community": 0,
       "norm_label": "testellipsesafeextraction"
     },
     {
@@ -10071,7 +9927,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L85",
       "id": "adapters_test_shapely_safe_extraction_teststadiumsafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "teststadiumsafeextraction"
     },
     {
@@ -10089,7 +9945,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L97",
       "id": "adapters_test_shapely_safe_extraction_testregularpolygonsafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "testregularpolygonsafeextraction"
     },
     {
@@ -10107,7 +9963,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L110",
       "id": "adapters_test_shapely_safe_extraction_testisoscelestrapezoidsafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "testisoscelestrapezoidsafeextraction"
     },
     {
@@ -10125,7 +9981,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L124",
       "id": "adapters_test_shapely_safe_extraction_testcrosssafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "testcrosssafeextraction"
     },
     {
@@ -10143,7 +9999,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L138",
       "id": "adapters_test_shapely_safe_extraction_testbarsafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "testbarsafeextraction"
     },
     {
@@ -10197,7 +10053,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L173",
       "id": "adapters_test_shapely_safe_extraction_testunitcellsafeextraction",
-      "community": 2,
+      "community": 0,
       "norm_label": "testunitcellsafeextraction"
     },
     {
@@ -10296,7 +10152,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L40",
       "id": "generators_test_random_generator_sdf_grid",
-      "community": 19,
+      "community": 7,
       "norm_label": "_sdf_grid()"
     },
     {
@@ -10719,7 +10575,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L410",
       "id": "generators_test_random_generator_testyamlsaving",
-      "community": 19,
+      "community": 7,
       "norm_label": "testyamlsaving"
     },
     {
@@ -10728,7 +10584,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L411",
       "id": "generators_test_random_generator_testyamlsaving_test_save_load_batch_result",
-      "community": 19,
+      "community": 7,
       "norm_label": ".test_save_load_batch_result()"
     },
     {
@@ -10746,7 +10602,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L428",
       "id": "generators_test_random_generator_testyamlsaving_test_loaded_report_counters_preserved",
-      "community": 19,
+      "community": 7,
       "norm_label": ".test_loaded_report_counters_preserved()"
     },
     {
@@ -10755,7 +10611,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L439",
       "id": "generators_test_random_generator_testyamlsaving_test_loaded_report_metadata_preserved",
-      "community": 19,
+      "community": 7,
       "norm_label": ".test_loaded_report_metadata_preserved()"
     },
     {
@@ -10764,7 +10620,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L448",
       "id": "generators_test_random_generator_testyamlsaving_test_complex_shapes_survive_yaml_round_trip",
-      "community": 19,
+      "community": 7,
       "norm_label": ".test_complex_shapes_survive_yaml_round_trip()"
     },
     {
@@ -10773,7 +10629,7 @@
       "source_file": "tests/generators/test_random_generator.py",
       "source_location": "L456",
       "id": "generators_test_random_generator_testyamlsaving_test_mixed_shape_types_survive_yaml_round_trip",
-      "community": 19,
+      "community": 7,
       "norm_label": ".test_mixed_shape_types_survive_yaml_round_trip()"
     },
     {
@@ -10892,6 +10748,492 @@
       "id": "metashapes_claude_graphify",
       "community": 26,
       "norm_label": "graphify"
+    },
+    {
+      "label": "screening_shape_lattice.md",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L1",
+      "id": "screening_shape_lattice_md",
+      "community": 85,
+      "norm_label": "screening_shape_lattice.md"
+    },
+    {
+      "label": "Screening: `src/metashapes/shape/` + `src/metashapes/lattice/`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L1",
+      "id": "metashapes_screening_shape_lattice_screening_src_metashapes_shape_src_metashapes_lattice",
+      "community": 85,
+      "norm_label": "screening: `src/metashapes/shape/` + `src/metashapes/lattice/`"
+    },
+    {
+      "label": "Severity / Priority / Effort",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L18",
+      "id": "metashapes_screening_shape_lattice_severity_priority_effort",
+      "community": 85,
+      "norm_label": "severity / priority / effort"
+    },
+    {
+      "label": "Summary",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L28",
+      "id": "metashapes_screening_shape_lattice_summary",
+      "community": 85,
+      "norm_label": "summary"
+    },
+    {
+      "label": "Critical",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L66",
+      "id": "metashapes_screening_shape_lattice_critical",
+      "community": 72,
+      "norm_label": "critical"
+    },
+    {
+      "label": "S-01 \u2014 `Egg.sdf` is discontinuous and sign-wrong across the y=0 seam",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L68",
+      "id": "metashapes_screening_shape_lattice_s_01_egg_sdf_is_discontinuous_and_sign_wrong_across_the_y_0_seam",
+      "community": 72,
+      "norm_label": "s-01 \u2014 `egg.sdf` is discontinuous and sign-wrong across the y=0 seam"
+    },
+    {
+      "label": "code:block1 (Egg(center=[0,0], width=2.0, height=2.5, skew=0.6)   # a=1, )",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L78",
+      "id": "metashapes_screening_shape_lattice_codeblock_1",
+      "community": 72,
+      "norm_label": "code:block1 (egg(center=[0,0], width=2.0, height=2.5, skew=0.6)   # a=1, )"
+    },
+    {
+      "label": "L-01 \u2014 `UnitCell.to_shapely()` is non-periodic while `UnitCell.sdf()` is periodic",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L113",
+      "id": "metashapes_screening_shape_lattice_l_01_unitcell_to_shapely_is_non_periodic_while_unitcell_sdf_is_periodic",
+      "community": 72,
+      "norm_label": "l-01 \u2014 `unitcell.to_shapely()` is non-periodic while `unitcell.sdf()` is periodic"
+    },
+    {
+      "label": "code:python (lat = Lattice.rectangular(1.0, 1.0))",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L124",
+      "id": "metashapes_screening_shape_lattice_codeblock_2",
+      "community": 72,
+      "norm_label": "code:python (lat = lattice.rectangular(1.0, 1.0))"
+    },
+    {
+      "label": "S-02 \u2014 `ConvexQuad` corner-radius validity check is non-monotonic and fails open",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L151",
+      "id": "metashapes_screening_shape_lattice_s_02_convexquad_corner_radius_validity_check_is_non_monotonic_and_fails_open",
+      "community": 72,
+      "norm_label": "s-02 \u2014 `convexquad` corner-radius validity check is non-monotonic and fails open"
+    },
+    {
+      "label": "code:block3 (rr=0.9: constructed OK, sdf OK)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L159",
+      "id": "metashapes_screening_shape_lattice_codeblock_3",
+      "community": 72,
+      "norm_label": "code:block3 (rr=0.9: constructed ok, sdf ok)"
+    },
+    {
+      "label": "S-03 \u2014 `Ellipse.sdf` sign test misclassifies interior points",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L190",
+      "id": "metashapes_screening_shape_lattice_s_03_ellipse_sdf_sign_test_misclassifies_interior_points",
+      "community": 72,
+      "norm_label": "s-03 \u2014 `ellipse.sdf` sign test misclassifies interior points"
+    },
+    {
+      "label": "code:block4 (y=0.0000: sdf=+0.00000        (center \u2014 should be strongly n)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L199",
+      "id": "metashapes_screening_shape_lattice_codeblock_4",
+      "community": 72,
+      "norm_label": "code:block4 (y=0.0000: sdf=+0.00000        (center \u2014 should be strongly n)"
+    },
+    {
+      "label": "High",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L239",
+      "id": "metashapes_screening_shape_lattice_high",
+      "community": 68,
+      "norm_label": "high"
+    },
+    {
+      "label": "S-04 \u2014 `min_feature_size` is silently lost through every transform and boolean",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L241",
+      "id": "metashapes_screening_shape_lattice_s_04_min_feature_size_is_silently_lost_through_every_transform_and_boolean",
+      "community": 68,
+      "norm_label": "s-04 \u2014 `min_feature_size` is silently lost through every transform and boolean"
+    },
+    {
+      "label": "code:block5 (Rectangle(size=[0.3, 0.8]).min_feature_size          -> 0.3)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L248",
+      "id": "metashapes_screening_shape_lattice_codeblock_5",
+      "community": 68,
+      "norm_label": "code:block5 (rectangle(size=[0.3, 0.8]).min_feature_size          -> 0.3)"
+    },
+    {
+      "label": "S-05 \u2014 `Rotate`/`Scale.from_parametric` crash when `origin` is omitted",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L287",
+      "id": "metashapes_screening_shape_lattice_s_05_rotate_scale_from_parametric_crash_when_origin_is_omitted",
+      "community": 68,
+      "norm_label": "s-05 \u2014 `rotate`/`scale.from_parametric` crash when `origin` is omitted"
+    },
+    {
+      "label": "code:python (Rotate.from_parametric({\"type\": \"Rotate\", \"shape\": ..., \"ang)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L292",
+      "id": "metashapes_screening_shape_lattice_codeblock_6",
+      "community": 68,
+      "norm_label": "code:python (rotate.from_parametric({\"type\": \"rotate\", \"shape\": ..., \"ang)"
+    },
+    {
+      "label": "S-06 \u2014 `Intersection.bounds()` returns an inverted box for disjoint shapes",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L310",
+      "id": "metashapes_screening_shape_lattice_s_06_intersection_bounds_returns_an_inverted_box_for_disjoint_shapes",
+      "community": 68,
+      "norm_label": "s-06 \u2014 `intersection.bounds()` returns an inverted box for disjoint shapes"
+    },
+    {
+      "label": "code:python (Intersection(Rectangle(center=[0,0], size=[1,1]), Rectangle()",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L315",
+      "id": "metashapes_screening_shape_lattice_codeblock_7",
+      "community": 68,
+      "norm_label": "code:python (intersection(rectangle(center=[0,0], size=[1,1]), rectangle()"
+    },
+    {
+      "label": "L-02 \u2014 `_ring_for` correctness currently depends on `0 \u00d7 inf \u2192 NaN`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L349",
+      "id": "metashapes_screening_shape_lattice_l_02_ring_for_correctness_currently_depends_on_0_inf_nan",
+      "community": 68,
+      "norm_label": "l-02 \u2014 `_ring_for` correctness currently depends on `0 \u00d7 inf \u2192 nan`"
+    },
+    {
+      "label": "code:block8 (f1 = [-inf, -inf, inf, inf])",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L358",
+      "id": "metashapes_screening_shape_lattice_codeblock_8",
+      "community": 68,
+      "norm_label": "code:block8 (f1 = [-inf, -inf, inf, inf])"
+    },
+    {
+      "label": "L-03 \u2014 `UnitCell.sdf` costs ~22\u00d7 a single shape evaluation for small shapes",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L406",
+      "id": "metashapes_screening_shape_lattice_l_03_unitcell_sdf_costs_22_a_single_shape_evaluation_for_small_shapes",
+      "community": 68,
+      "norm_label": "l-03 \u2014 `unitcell.sdf` costs ~22\u00d7 a single shape evaluation for small shapes"
+    },
+    {
+      "label": "code:block9 (_ring_for -> (2, 2)  =>  25 full scene.sdf() evaluations per)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L411",
+      "id": "metashapes_screening_shape_lattice_codeblock_9",
+      "community": 68,
+      "norm_label": "code:block9 (_ring_for -> (2, 2)  =>  25 full scene.sdf() evaluations per)"
+    },
+    {
+      "label": "Medium",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L452",
+      "id": "metashapes_screening_shape_lattice_medium",
+      "community": 23,
+      "norm_label": "medium"
+    },
+    {
+      "label": "S-07 \u2014 `torch.empty_like` + `torch.where` is a latent NaN-gradient hazard",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L454",
+      "id": "metashapes_screening_shape_lattice_s_07_torch_empty_like_torch_where_is_a_latent_nan_gradient_hazard",
+      "community": 23,
+      "norm_label": "s-07 \u2014 `torch.empty_like` + `torch.where` is a latent nan-gradient hazard"
+    },
+    {
+      "label": "code:python (a = torch.tensor([1.0], requires_grad=True))",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L468",
+      "id": "metashapes_screening_shape_lattice_codeblock_10",
+      "community": 23,
+      "norm_label": "code:python (a = torch.tensor([1.0], requires_grad=true))"
+    },
+    {
+      "label": "L-04 \u2014 Rasterize's two sampling paths use different conventions for the same `nx`/`ny`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L489",
+      "id": "metashapes_screening_shape_lattice_l_04_rasterize_s_two_sampling_paths_use_different_conventions_for_the_same_nx_ny",
+      "community": 23,
+      "norm_label": "l-04 \u2014 rasterize's two sampling paths use different conventions for the same `nx`/`ny`"
+    },
+    {
+      "label": "code:block11 (fractional_grid(4,4) row:              [0.0, 0.25, 0.5, 0.75)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L495",
+      "id": "metashapes_screening_shape_lattice_codeblock_11",
+      "community": 23,
+      "norm_label": "code:block11 (fractional_grid(4,4) row:              [0.0, 0.25, 0.5, 0.75)"
+    },
+    {
+      "label": "S-08 \u2014 Quilez ellipse-SDF solver duplicated ~100 lines between `Ellipse` and `Egg`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L521",
+      "id": "metashapes_screening_shape_lattice_s_08_quilez_ellipse_sdf_solver_duplicated_100_lines_between_ellipse_and_egg",
+      "community": 23,
+      "norm_label": "s-08 \u2014 quilez ellipse-sdf solver duplicated ~100 lines between `ellipse` and `egg`"
+    },
+    {
+      "label": "S-09 \u2014 Rounded-box SDF reimplemented four times",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L540",
+      "id": "metashapes_screening_shape_lattice_s_09_rounded_box_sdf_reimplemented_four_times",
+      "community": 23,
+      "norm_label": "s-09 \u2014 rounded-box sdf reimplemented four times"
+    },
+    {
+      "label": "S-10 \u2014 Data-dependent Python control flow inside `sdf()`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L567",
+      "id": "metashapes_screening_shape_lattice_s_10_data_dependent_python_control_flow_inside_sdf",
+      "community": 23,
+      "norm_label": "s-10 \u2014 data-dependent python control flow inside `sdf()`"
+    },
+    {
+      "label": "S-11 \u2014 No re-validation after construction; parameters can drift invalid during training",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L619",
+      "id": "metashapes_screening_shape_lattice_s_11_no_re_validation_after_construction_parameters_can_drift_invalid_during_training",
+      "community": 23,
+      "norm_label": "s-11 \u2014 no re-validation after construction; parameters can drift invalid during training"
+    },
+    {
+      "label": "S-12 \u2014 Inconsistent validation idiom risks a runtime crash on non-scalar parameters",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L643",
+      "id": "metashapes_screening_shape_lattice_s_12_inconsistent_validation_idiom_risks_a_runtime_crash_on_non_scalar_parameters",
+      "community": 23,
+      "norm_label": "s-12 \u2014 inconsistent validation idiom risks a runtime crash on non-scalar parameters"
+    },
+    {
+      "label": "L-05 \u2014 `lattice/__init__.py` is empty; `Lattice` isn't importable from the package",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L663",
+      "id": "metashapes_screening_shape_lattice_l_05_lattice_init_py_is_empty_lattice_isn_t_importable_from_the_package",
+      "community": 23,
+      "norm_label": "l-05 \u2014 `lattice/__init__.py` is empty; `lattice` isn't importable from the package"
+    },
+    {
+      "label": "code:python (from metashapes.lattice import Lattice   # ImportError)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L668",
+      "id": "metashapes_screening_shape_lattice_codeblock_12",
+      "community": 23,
+      "norm_label": "code:python (from metashapes.lattice import lattice   # importerror)"
+    },
+    {
+      "label": "S-13 \u2014 `Star`/`ConvexQuad.min_feature_size` are geometrically wrong",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L687",
+      "id": "metashapes_screening_shape_lattice_s_13_star_convexquad_min_feature_size_are_geometrically_wrong",
+      "community": 23,
+      "norm_label": "s-13 \u2014 `star`/`convexquad.min_feature_size` are geometrically wrong"
+    },
+    {
+      "label": "S-14 \u2014 float32 is hardcoded throughout",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L751",
+      "id": "metashapes_screening_shape_lattice_s_14_float32_is_hardcoded_throughout",
+      "community": 23,
+      "norm_label": "s-14 \u2014 float32 is hardcoded throughout"
+    },
+    {
+      "label": "S-15 \u2014 CSG min/max SDF is a bound, not exact, inside `Intersection`/`Difference`/`TShape`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L774",
+      "id": "metashapes_screening_shape_lattice_s_15_csg_min_max_sdf_is_a_bound_not_exact_inside_intersection_difference_tshape",
+      "community": 23,
+      "norm_label": "s-15 \u2014 csg min/max sdf is a bound, not exact, inside `intersection`/`difference`/`tshape`"
+    },
+    {
+      "label": "Low",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L810",
+      "id": "metashapes_screening_shape_lattice_low",
+      "community": 73,
+      "norm_label": "low"
+    },
+    {
+      "label": "L-06 \u2014 Stale docstring contradicts the code",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L812",
+      "id": "metashapes_screening_shape_lattice_l_06_stale_docstring_contradicts_the_code",
+      "community": 73,
+      "norm_label": "l-06 \u2014 stale docstring contradicts the code"
+    },
+    {
+      "label": "S-16 \u2014 Unused `BaseGeometry` import in `shape/base.py`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L825",
+      "id": "metashapes_screening_shape_lattice_s_16_unused_basegeometry_import_in_shape_base_py",
+      "community": 73,
+      "norm_label": "s-16 \u2014 unused `basegeometry` import in `shape/base.py`"
+    },
+    {
+      "label": "S-17 \u2014 `Shape(nn.Module)` never defines `forward()`",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L840",
+      "id": "metashapes_screening_shape_lattice_s_17_shape_nn_module_never_defines_forward",
+      "community": 73,
+      "norm_label": "s-17 \u2014 `shape(nn.module)` never defines `forward()`"
+    },
+    {
+      "label": "S-18 \u2014 `Star.sdf` recomputes `sin_beta` and shadows loop variables",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L857",
+      "id": "metashapes_screening_shape_lattice_s_18_star_sdf_recomputes_sin_beta_and_shadows_loop_variables",
+      "community": 73,
+      "norm_label": "s-18 \u2014 `star.sdf` recomputes `sin_beta` and shadows loop variables"
+    },
+    {
+      "label": "S-19 \u2014 `outer_corner_radius`/`inner_corner_radius` deviate from the `corner_radius` convention, undocumented as an exception",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L874",
+      "id": "metashapes_screening_shape_lattice_s_19_outer_corner_radius_inner_corner_radius_deviate_from_the_corner_radius_convention_undocumented_as_an_exception",
+      "community": 73,
+      "norm_label": "s-19 \u2014 `outer_corner_radius`/`inner_corner_radius` deviate from the `corner_radius` convention, undocumented as an exception"
+    },
+    {
+      "label": "S-20 \u2014 Inconsistent bounds tightness with no stated contract",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L891",
+      "id": "metashapes_screening_shape_lattice_s_20_inconsistent_bounds_tightness_with_no_stated_contract",
+      "community": 73,
+      "norm_label": "s-20 \u2014 inconsistent bounds tightness with no stated contract"
+    },
+    {
+      "label": "L-07 \u2014 `fractional_grid` is unreachable public API",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L909",
+      "id": "metashapes_screening_shape_lattice_l_07_fractional_grid_is_unreachable_public_api",
+      "community": 73,
+      "norm_label": "l-07 \u2014 `fractional_grid` is unreachable public api"
+    },
+    {
+      "label": "S-21 \u2014 `Cross` uses `>` where sibling `TShape` uses `>=` for an equivalent check",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L923",
+      "id": "metashapes_screening_shape_lattice_s_21_cross_uses_where_sibling_tshape_uses_for_an_equivalent_check",
+      "community": 73,
+      "norm_label": "s-21 \u2014 `cross` uses `>` where sibling `tshape` uses `>=` for an equivalent check"
+    },
+    {
+      "label": "Post-screening findings (from the dtype/device/gradient test pass)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L943",
+      "id": "metashapes_screening_shape_lattice_post_screening_findings_from_the_dtype_device_gradient_test_pass",
+      "community": 84,
+      "norm_label": "post-screening findings (from the dtype/device/gradient test pass)"
+    },
+    {
+      "label": "S-22 \u2014 `IsoscelesTrapezoid` never got the S-02 treatment \u2705 Fixed",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L949",
+      "id": "metashapes_screening_shape_lattice_s_22_isoscelestrapezoid_never_got_the_s_02_treatment_fixed",
+      "community": 84,
+      "norm_label": "s-22 \u2014 `isoscelestrapezoid` never got the s-02 treatment \u2705 fixed"
+    },
+    {
+      "label": "S-23 \u2014 `Ellipse`/`Egg`'s cubic-solve has a real cube-root gradient singularity \u2705 Fixed",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L973",
+      "id": "metashapes_screening_shape_lattice_s_23_ellipse_egg_s_cubic_solve_has_a_real_cube_root_gradient_singularity_fixed",
+      "community": 84,
+      "norm_label": "s-23 \u2014 `ellipse`/`egg`'s cubic-solve has a real cube-root gradient singularity \u2705 fixed"
+    },
+    {
+      "label": "S-24 \u2014 Branch-1 `acos(\u00b11)` gradient singularity on any on-axis query \u2705 Fixed",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L1013",
+      "id": "metashapes_screening_shape_lattice_s_24_branch_1_acos_1_gradient_singularity_on_any_on_axis_query_fixed",
+      "community": 84,
+      "norm_label": "s-24 \u2014 branch-1 `acos(\u00b11)` gradient singularity on any on-axis query \u2705 fixed"
+    },
+    {
+      "label": "S-25 \u2014 Near-circular ellipses overflow `c\u00b3` in float32, producing NaN *values* \u2705 Fixed",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L1040",
+      "id": "metashapes_screening_shape_lattice_s_25_near_circular_ellipses_overflow_c3_in_float32_producing_nan_values_fixed",
+      "community": 84,
+      "norm_label": "s-25 \u2014 near-circular ellipses overflow `c3` in float32, producing nan *values* \u2705 fixed"
+    },
+    {
+      "label": "Suggested fix order (P0 \u2192 P3)",
+      "file_type": "document",
+      "source_file": "screening_shape_lattice.md",
+      "source_location": "L1067",
+      "id": "metashapes_screening_shape_lattice_suggested_fix_order_p0_p3",
+      "community": 85,
+      "norm_label": "suggested fix order (p0 \u2192 p3)"
     },
     {
       "label": "README.md",
@@ -11047,573 +11389,6 @@
       "norm_label": "license"
     },
     {
-      "label": "In-plane periodicity of the unit cell. Fixed (non-optimizable).     Defined by t",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L8",
-      "community": 3,
-      "norm_label": "in-plane periodicity of the unit cell. fixed (non-optimizable).     defined by t",
-      "id": "lattice_basis_rationale_8"
-    },
-    {
-      "label": "Build an axis-aligned rectangular lattice from two periods.",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L35",
-      "community": 37,
-      "norm_label": "build an axis-aligned rectangular lattice from two periods.",
-      "id": "lattice_basis_rationale_35"
-    },
-    {
-      "label": "Build a hexagonal (triangular) lattice from the lattice constant.          Param",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L43",
-      "community": 38,
-      "norm_label": "build a hexagonal (triangular) lattice from the lattice constant.          param",
-      "id": "lattice_basis_rationale_43"
-    },
-    {
-      "label": "2x2 matrix A with columns [a1 | a2].",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L78",
-      "community": 39,
-      "norm_label": "2x2 matrix a with columns [a1 | a2].",
-      "id": "lattice_basis_rationale_78"
-    },
-    {
-      "label": "Cartesian (x, y) -> fractional (f1, f2).",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L87",
-      "community": 3,
-      "norm_label": "cartesian (x, y) -> fractional (f1, f2).",
-      "id": "lattice_basis_rationale_87"
-    },
-    {
-      "label": "Fractional (f1, f2) -> Cartesian (x, y).",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L93",
-      "community": 3,
-      "norm_label": "fractional (f1, f2) -> cartesian (x, y).",
-      "id": "lattice_basis_rationale_93"
-    },
-    {
-      "label": "Cartesian translation for lattice cell (i, j).",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L100",
-      "community": 3,
-      "norm_label": "cartesian translation for lattice cell (i, j).",
-      "id": "lattice_basis_rationale_100"
-    },
-    {
-      "label": "Independent reference: fold into the cell, then search a ring far     larger tha",
-      "file_type": "rationale",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L396",
-      "community": 16,
-      "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha",
-      "id": "lattice_test_unit_cell_rationale_396"
-    },
-    {
-      "label": "sdf() must agree with a large brute-force reference search for a     variety of",
-      "file_type": "rationale",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L468",
-      "community": 27,
-      "norm_label": "sdf() must agree with a large brute-force reference search for a     variety of",
-      "id": "lattice_test_unit_cell_rationale_468"
-    },
-    {
-      "label": "screening_shape_lattice.md",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L1",
-      "community": 85,
-      "norm_label": "screening_shape_lattice.md",
-      "id": "screening_shape_lattice_md"
-    },
-    {
-      "label": "Screening: `src/metashapes/shape/` + `src/metashapes/lattice/`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L1",
-      "community": 85,
-      "norm_label": "screening: `src/metashapes/shape/` + `src/metashapes/lattice/`",
-      "id": "metashapes_screening_shape_lattice_screening_src_metashapes_shape_src_metashapes_lattice"
-    },
-    {
-      "label": "Severity / Priority / Effort",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L18",
-      "community": 85,
-      "norm_label": "severity / priority / effort",
-      "id": "metashapes_screening_shape_lattice_severity_priority_effort"
-    },
-    {
-      "label": "Summary",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L28",
-      "community": 85,
-      "norm_label": "summary",
-      "id": "metashapes_screening_shape_lattice_summary"
-    },
-    {
-      "label": "Critical",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L66",
-      "community": 72,
-      "norm_label": "critical",
-      "id": "metashapes_screening_shape_lattice_critical"
-    },
-    {
-      "label": "S-01 \u2014 `Egg.sdf` is discontinuous and sign-wrong across the y=0 seam",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L68",
-      "community": 72,
-      "norm_label": "s-01 \u2014 `egg.sdf` is discontinuous and sign-wrong across the y=0 seam",
-      "id": "metashapes_screening_shape_lattice_s_01_egg_sdf_is_discontinuous_and_sign_wrong_across_the_y_0_seam"
-    },
-    {
-      "label": "code:block1 (Egg(center=[0,0], width=2.0, height=2.5, skew=0.6)   # a=1, )",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L78",
-      "community": 72,
-      "norm_label": "code:block1 (egg(center=[0,0], width=2.0, height=2.5, skew=0.6)   # a=1, )",
-      "id": "metashapes_screening_shape_lattice_codeblock_1"
-    },
-    {
-      "label": "L-01 \u2014 `UnitCell.to_shapely()` is non-periodic while `UnitCell.sdf()` is periodic",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L113",
-      "community": 72,
-      "norm_label": "l-01 \u2014 `unitcell.to_shapely()` is non-periodic while `unitcell.sdf()` is periodic",
-      "id": "metashapes_screening_shape_lattice_l_01_unitcell_to_shapely_is_non_periodic_while_unitcell_sdf_is_periodic"
-    },
-    {
-      "label": "code:python (lat = Lattice.rectangular(1.0, 1.0))",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L124",
-      "community": 72,
-      "norm_label": "code:python (lat = lattice.rectangular(1.0, 1.0))",
-      "id": "metashapes_screening_shape_lattice_codeblock_2"
-    },
-    {
-      "label": "S-02 \u2014 `ConvexQuad` corner-radius validity check is non-monotonic and fails open",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L151",
-      "community": 72,
-      "norm_label": "s-02 \u2014 `convexquad` corner-radius validity check is non-monotonic and fails open",
-      "id": "metashapes_screening_shape_lattice_s_02_convexquad_corner_radius_validity_check_is_non_monotonic_and_fails_open"
-    },
-    {
-      "label": "code:block3 (rr=0.9: constructed OK, sdf OK)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L159",
-      "community": 72,
-      "norm_label": "code:block3 (rr=0.9: constructed ok, sdf ok)",
-      "id": "metashapes_screening_shape_lattice_codeblock_3"
-    },
-    {
-      "label": "S-03 \u2014 `Ellipse.sdf` sign test misclassifies interior points",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L190",
-      "community": 72,
-      "norm_label": "s-03 \u2014 `ellipse.sdf` sign test misclassifies interior points",
-      "id": "metashapes_screening_shape_lattice_s_03_ellipse_sdf_sign_test_misclassifies_interior_points"
-    },
-    {
-      "label": "code:block4 (y=0.0000: sdf=+0.00000        (center \u2014 should be strongly n)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L199",
-      "community": 72,
-      "norm_label": "code:block4 (y=0.0000: sdf=+0.00000        (center \u2014 should be strongly n)",
-      "id": "metashapes_screening_shape_lattice_codeblock_4"
-    },
-    {
-      "label": "High",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L239",
-      "community": 68,
-      "norm_label": "high",
-      "id": "metashapes_screening_shape_lattice_high"
-    },
-    {
-      "label": "S-04 \u2014 `min_feature_size` is silently lost through every transform and boolean",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L241",
-      "community": 68,
-      "norm_label": "s-04 \u2014 `min_feature_size` is silently lost through every transform and boolean",
-      "id": "metashapes_screening_shape_lattice_s_04_min_feature_size_is_silently_lost_through_every_transform_and_boolean"
-    },
-    {
-      "label": "code:block5 (Rectangle(size=[0.3, 0.8]).min_feature_size          -> 0.3)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L248",
-      "community": 68,
-      "norm_label": "code:block5 (rectangle(size=[0.3, 0.8]).min_feature_size          -> 0.3)",
-      "id": "metashapes_screening_shape_lattice_codeblock_5"
-    },
-    {
-      "label": "S-05 \u2014 `Rotate`/`Scale.from_parametric` crash when `origin` is omitted",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L287",
-      "community": 68,
-      "norm_label": "s-05 \u2014 `rotate`/`scale.from_parametric` crash when `origin` is omitted",
-      "id": "metashapes_screening_shape_lattice_s_05_rotate_scale_from_parametric_crash_when_origin_is_omitted"
-    },
-    {
-      "label": "code:python (Rotate.from_parametric({\"type\": \"Rotate\", \"shape\": ..., \"ang)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L292",
-      "community": 68,
-      "norm_label": "code:python (rotate.from_parametric({\"type\": \"rotate\", \"shape\": ..., \"ang)",
-      "id": "metashapes_screening_shape_lattice_codeblock_6"
-    },
-    {
-      "label": "S-06 \u2014 `Intersection.bounds()` returns an inverted box for disjoint shapes",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L310",
-      "community": 68,
-      "norm_label": "s-06 \u2014 `intersection.bounds()` returns an inverted box for disjoint shapes",
-      "id": "metashapes_screening_shape_lattice_s_06_intersection_bounds_returns_an_inverted_box_for_disjoint_shapes"
-    },
-    {
-      "label": "code:python (Intersection(Rectangle(center=[0,0], size=[1,1]), Rectangle()",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L315",
-      "community": 68,
-      "norm_label": "code:python (intersection(rectangle(center=[0,0], size=[1,1]), rectangle()",
-      "id": "metashapes_screening_shape_lattice_codeblock_7"
-    },
-    {
-      "label": "L-02 \u2014 `_ring_for` correctness currently depends on `0 \u00d7 inf \u2192 NaN`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L349",
-      "community": 68,
-      "norm_label": "l-02 \u2014 `_ring_for` correctness currently depends on `0 \u00d7 inf \u2192 nan`",
-      "id": "metashapes_screening_shape_lattice_l_02_ring_for_correctness_currently_depends_on_0_inf_nan"
-    },
-    {
-      "label": "code:block8 (f1 = [-inf, -inf, inf, inf])",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L358",
-      "community": 68,
-      "norm_label": "code:block8 (f1 = [-inf, -inf, inf, inf])",
-      "id": "metashapes_screening_shape_lattice_codeblock_8"
-    },
-    {
-      "label": "L-03 \u2014 `UnitCell.sdf` costs ~22\u00d7 a single shape evaluation for small shapes",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L406",
-      "community": 68,
-      "norm_label": "l-03 \u2014 `unitcell.sdf` costs ~22\u00d7 a single shape evaluation for small shapes",
-      "id": "metashapes_screening_shape_lattice_l_03_unitcell_sdf_costs_22_a_single_shape_evaluation_for_small_shapes"
-    },
-    {
-      "label": "code:block9 (_ring_for -> (2, 2)  =>  25 full scene.sdf() evaluations per)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L411",
-      "community": 68,
-      "norm_label": "code:block9 (_ring_for -> (2, 2)  =>  25 full scene.sdf() evaluations per)",
-      "id": "metashapes_screening_shape_lattice_codeblock_9"
-    },
-    {
-      "label": "Medium",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L452",
-      "community": 23,
-      "norm_label": "medium",
-      "id": "metashapes_screening_shape_lattice_medium"
-    },
-    {
-      "label": "S-07 \u2014 `torch.empty_like` + `torch.where` is a latent NaN-gradient hazard",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L454",
-      "community": 23,
-      "norm_label": "s-07 \u2014 `torch.empty_like` + `torch.where` is a latent nan-gradient hazard",
-      "id": "metashapes_screening_shape_lattice_s_07_torch_empty_like_torch_where_is_a_latent_nan_gradient_hazard"
-    },
-    {
-      "label": "code:python (a = torch.tensor([1.0], requires_grad=True))",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L468",
-      "community": 23,
-      "norm_label": "code:python (a = torch.tensor([1.0], requires_grad=true))",
-      "id": "metashapes_screening_shape_lattice_codeblock_10"
-    },
-    {
-      "label": "L-04 \u2014 Rasterize's two sampling paths use different conventions for the same `nx`/`ny`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L489",
-      "community": 23,
-      "norm_label": "l-04 \u2014 rasterize's two sampling paths use different conventions for the same `nx`/`ny`",
-      "id": "metashapes_screening_shape_lattice_l_04_rasterize_s_two_sampling_paths_use_different_conventions_for_the_same_nx_ny"
-    },
-    {
-      "label": "code:block11 (fractional_grid(4,4) row:              [0.0, 0.25, 0.5, 0.75)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L495",
-      "community": 23,
-      "norm_label": "code:block11 (fractional_grid(4,4) row:              [0.0, 0.25, 0.5, 0.75)",
-      "id": "metashapes_screening_shape_lattice_codeblock_11"
-    },
-    {
-      "label": "S-08 \u2014 Quilez ellipse-SDF solver duplicated ~100 lines between `Ellipse` and `Egg`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L521",
-      "community": 23,
-      "norm_label": "s-08 \u2014 quilez ellipse-sdf solver duplicated ~100 lines between `ellipse` and `egg`",
-      "id": "metashapes_screening_shape_lattice_s_08_quilez_ellipse_sdf_solver_duplicated_100_lines_between_ellipse_and_egg"
-    },
-    {
-      "label": "S-09 \u2014 Rounded-box SDF reimplemented four times",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L540",
-      "community": 23,
-      "norm_label": "s-09 \u2014 rounded-box sdf reimplemented four times",
-      "id": "metashapes_screening_shape_lattice_s_09_rounded_box_sdf_reimplemented_four_times"
-    },
-    {
-      "label": "S-10 \u2014 Data-dependent Python control flow inside `sdf()`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L567",
-      "community": 23,
-      "norm_label": "s-10 \u2014 data-dependent python control flow inside `sdf()`",
-      "id": "metashapes_screening_shape_lattice_s_10_data_dependent_python_control_flow_inside_sdf"
-    },
-    {
-      "label": "S-11 \u2014 No re-validation after construction; parameters can drift invalid during training",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L619",
-      "community": 23,
-      "norm_label": "s-11 \u2014 no re-validation after construction; parameters can drift invalid during training",
-      "id": "metashapes_screening_shape_lattice_s_11_no_re_validation_after_construction_parameters_can_drift_invalid_during_training"
-    },
-    {
-      "label": "S-12 \u2014 Inconsistent validation idiom risks a runtime crash on non-scalar parameters",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L643",
-      "community": 23,
-      "norm_label": "s-12 \u2014 inconsistent validation idiom risks a runtime crash on non-scalar parameters",
-      "id": "metashapes_screening_shape_lattice_s_12_inconsistent_validation_idiom_risks_a_runtime_crash_on_non_scalar_parameters"
-    },
-    {
-      "label": "L-05 \u2014 `lattice/__init__.py` is empty; `Lattice` isn't importable from the package",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L663",
-      "community": 23,
-      "norm_label": "l-05 \u2014 `lattice/__init__.py` is empty; `lattice` isn't importable from the package",
-      "id": "metashapes_screening_shape_lattice_l_05_lattice_init_py_is_empty_lattice_isn_t_importable_from_the_package"
-    },
-    {
-      "label": "code:python (from metashapes.lattice import Lattice   # ImportError)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L668",
-      "community": 23,
-      "norm_label": "code:python (from metashapes.lattice import lattice   # importerror)",
-      "id": "metashapes_screening_shape_lattice_codeblock_12"
-    },
-    {
-      "label": "S-13 \u2014 `Star`/`ConvexQuad.min_feature_size` are geometrically wrong",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L687",
-      "community": 23,
-      "norm_label": "s-13 \u2014 `star`/`convexquad.min_feature_size` are geometrically wrong",
-      "id": "metashapes_screening_shape_lattice_s_13_star_convexquad_min_feature_size_are_geometrically_wrong"
-    },
-    {
-      "label": "S-14 \u2014 float32 is hardcoded throughout",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L751",
-      "community": 23,
-      "norm_label": "s-14 \u2014 float32 is hardcoded throughout",
-      "id": "metashapes_screening_shape_lattice_s_14_float32_is_hardcoded_throughout"
-    },
-    {
-      "label": "S-15 \u2014 CSG min/max SDF is a bound, not exact, inside `Intersection`/`Difference`/`TShape`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L774",
-      "community": 23,
-      "norm_label": "s-15 \u2014 csg min/max sdf is a bound, not exact, inside `intersection`/`difference`/`tshape`",
-      "id": "metashapes_screening_shape_lattice_s_15_csg_min_max_sdf_is_a_bound_not_exact_inside_intersection_difference_tshape"
-    },
-    {
-      "label": "Low",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L810",
-      "community": 73,
-      "norm_label": "low",
-      "id": "metashapes_screening_shape_lattice_low"
-    },
-    {
-      "label": "L-06 \u2014 Stale docstring contradicts the code",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L812",
-      "community": 73,
-      "norm_label": "l-06 \u2014 stale docstring contradicts the code",
-      "id": "metashapes_screening_shape_lattice_l_06_stale_docstring_contradicts_the_code"
-    },
-    {
-      "label": "S-16 \u2014 Unused `BaseGeometry` import in `shape/base.py`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L825",
-      "community": 73,
-      "norm_label": "s-16 \u2014 unused `basegeometry` import in `shape/base.py`",
-      "id": "metashapes_screening_shape_lattice_s_16_unused_basegeometry_import_in_shape_base_py"
-    },
-    {
-      "label": "S-17 \u2014 `Shape(nn.Module)` never defines `forward()`",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L840",
-      "community": 73,
-      "norm_label": "s-17 \u2014 `shape(nn.module)` never defines `forward()`",
-      "id": "metashapes_screening_shape_lattice_s_17_shape_nn_module_never_defines_forward"
-    },
-    {
-      "label": "S-18 \u2014 `Star.sdf` recomputes `sin_beta` and shadows loop variables",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L857",
-      "community": 73,
-      "norm_label": "s-18 \u2014 `star.sdf` recomputes `sin_beta` and shadows loop variables",
-      "id": "metashapes_screening_shape_lattice_s_18_star_sdf_recomputes_sin_beta_and_shadows_loop_variables"
-    },
-    {
-      "label": "S-19 \u2014 `outer_corner_radius`/`inner_corner_radius` deviate from the `corner_radius` convention, undocumented as an exception",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L874",
-      "community": 73,
-      "norm_label": "s-19 \u2014 `outer_corner_radius`/`inner_corner_radius` deviate from the `corner_radius` convention, undocumented as an exception",
-      "id": "metashapes_screening_shape_lattice_s_19_outer_corner_radius_inner_corner_radius_deviate_from_the_corner_radius_convention_undocumented_as_an_exception"
-    },
-    {
-      "label": "S-20 \u2014 Inconsistent bounds tightness with no stated contract",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L891",
-      "community": 73,
-      "norm_label": "s-20 \u2014 inconsistent bounds tightness with no stated contract",
-      "id": "metashapes_screening_shape_lattice_s_20_inconsistent_bounds_tightness_with_no_stated_contract"
-    },
-    {
-      "label": "L-07 \u2014 `fractional_grid` is unreachable public API",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L909",
-      "community": 73,
-      "norm_label": "l-07 \u2014 `fractional_grid` is unreachable public api",
-      "id": "metashapes_screening_shape_lattice_l_07_fractional_grid_is_unreachable_public_api"
-    },
-    {
-      "label": "S-21 \u2014 `Cross` uses `>` where sibling `TShape` uses `>=` for an equivalent check",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L923",
-      "community": 73,
-      "norm_label": "s-21 \u2014 `cross` uses `>` where sibling `tshape` uses `>=` for an equivalent check",
-      "id": "metashapes_screening_shape_lattice_s_21_cross_uses_where_sibling_tshape_uses_for_an_equivalent_check"
-    },
-    {
-      "label": "Post-screening findings (from the dtype/device/gradient test pass)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L943",
-      "community": 84,
-      "norm_label": "post-screening findings (from the dtype/device/gradient test pass)",
-      "id": "metashapes_screening_shape_lattice_post_screening_findings_from_the_dtype_device_gradient_test_pass"
-    },
-    {
-      "label": "S-22 \u2014 `IsoscelesTrapezoid` never got the S-02 treatment \u2705 Fixed",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L949",
-      "community": 84,
-      "norm_label": "s-22 \u2014 `isoscelestrapezoid` never got the s-02 treatment \u2705 fixed",
-      "id": "metashapes_screening_shape_lattice_s_22_isoscelestrapezoid_never_got_the_s_02_treatment_fixed"
-    },
-    {
-      "label": "S-23 \u2014 `Ellipse`/`Egg`'s cubic-solve has a real cube-root gradient singularity \u2705 Fixed",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L973",
-      "community": 84,
-      "norm_label": "s-23 \u2014 `ellipse`/`egg`'s cubic-solve has a real cube-root gradient singularity \u2705 fixed",
-      "id": "metashapes_screening_shape_lattice_s_23_ellipse_egg_s_cubic_solve_has_a_real_cube_root_gradient_singularity_fixed"
-    },
-    {
-      "label": "S-24 \u2014 Branch-1 `acos(\u00b11)` gradient singularity on any on-axis query \u2705 Fixed",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L1013",
-      "community": 84,
-      "norm_label": "s-24 \u2014 branch-1 `acos(\u00b11)` gradient singularity on any on-axis query \u2705 fixed",
-      "id": "metashapes_screening_shape_lattice_s_24_branch_1_acos_1_gradient_singularity_on_any_on_axis_query_fixed"
-    },
-    {
-      "label": "S-25 \u2014 Near-circular ellipses overflow `c\u00b3` in float32, producing NaN *values* \u2705 Fixed",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L1040",
-      "community": 84,
-      "norm_label": "s-25 \u2014 near-circular ellipses overflow `c3` in float32, producing nan *values* \u2705 fixed",
-      "id": "metashapes_screening_shape_lattice_s_25_near_circular_ellipses_overflow_c3_in_float32_producing_nan_values_fixed"
-    },
-    {
-      "label": "Suggested fix order (P0 \u2192 P3)",
-      "file_type": "document",
-      "source_file": "screening_shape_lattice.md",
-      "source_location": "L1067",
-      "community": 85,
-      "norm_label": "suggested fix order (p0 \u2192 p3)",
-      "id": "metashapes_screening_shape_lattice_suggested_fix_order_p0_p3"
-    },
-    {
       "label": "Gradient flows from a point displaced by one lattice vector.",
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
@@ -11645,7 +11420,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L472",
-      "community": 27,
+      "community": 16,
       "norm_label": "sdf() after the l-02/l-03 rewrite must agree with a large brute-force     refere",
       "id": "lattice_test_unit_cell_rationale_472"
     },
@@ -11852,7 +11627,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L129",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic difference of two shapes: left - right.",
       "id": "shape_boolean_rationale_129"
     },
@@ -11879,7 +11654,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L164",
-      "community": 55,
+      "community": 70,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala",
       "id": "shape_base_rationale_164"
     },
@@ -11942,7 +11717,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L206",
-      "community": 0,
+      "community": 20,
       "norm_label": "rasterize the periodic structure into a mask. shape [ny\u00b7n2, nx\u00b7n1].          sof",
       "id": "lattice_unit_cell_rationale_206"
     },
@@ -11960,7 +11735,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L334",
-      "community": 0,
+      "community": 20,
       "norm_label": "axis-aligned cartesian bounding box of the supercell.          returns ``(xmin,",
       "id": "lattice_unit_cell_rationale_334"
     },
@@ -11969,7 +11744,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L368",
-      "community": 25,
+      "community": 30,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the",
       "id": "lattice_unit_cell_rationale_368"
     },
@@ -12014,7 +11789,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L453",
-      "community": 27,
+      "community": 16,
       "norm_label": "sdf() after the l-02/l-03 rewrite must agree with a large brute-force     refere",
       "id": "lattice_test_unit_cell_rationale_453"
     },
@@ -12032,7 +11807,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L18",
-      "community": 20,
+      "community": 30,
       "norm_label": "a periodic structure: one lattice + one shape (the scene).      the lattice owns",
       "id": "lattice_unit_cell_rationale_18"
     },
@@ -12059,7 +11834,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L90",
-      "community": 0,
+      "community": 20,
       "norm_label": "periodic sdf sampled over a supercell.          repeat=(n1, n2) \u2014 tile n1 cells",
       "id": "lattice_unit_cell_rationale_90"
     },
@@ -12068,7 +11843,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L132",
-      "community": 0,
+      "community": 20,
       "norm_label": "rasterize the periodic structure into a mask. shape [ny\u00b7n2, nx\u00b7n1].          sof",
       "id": "lattice_unit_cell_rationale_132"
     },
@@ -12086,7 +11861,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L260",
-      "community": 0,
+      "community": 20,
       "norm_label": "axis-aligned cartesian bounding box of the supercell.          returns ``(xmin,",
       "id": "lattice_unit_cell_rationale_260"
     },
@@ -12095,7 +11870,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L294",
-      "community": 25,
+      "community": 30,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the",
       "id": "lattice_unit_cell_rationale_294"
     },
@@ -12113,7 +11888,7 @@
       "file_type": "code",
       "source_file": "",
       "source_location": "",
-      "community": 15,
+      "community": 9,
       "norm_label": "shape",
       "id": "shape"
     },
@@ -12122,7 +11897,7 @@
       "file_type": "code",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L318",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_shape_outside_cell_is_empty()",
       "id": "lattice_test_unit_cell_testtoshapely_test_shape_outside_cell_is_empty"
     },
@@ -12131,7 +11906,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L62",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic intersection of two shapes.",
       "id": "shape_boolean_rationale_62"
     },
@@ -12140,7 +11915,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L109",
-      "community": 70,
+      "community": 2,
       "norm_label": "symbolic difference of two shapes: left - right.",
       "id": "shape_boolean_rationale_109"
     },
@@ -12149,7 +11924,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L56",
-      "community": 2,
+      "community": 0,
       "norm_label": "symbolic rotation of a shape.",
       "id": "shape_transforms_rationale_56"
     },
@@ -12158,7 +11933,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L119",
-      "community": 2,
+      "community": 0,
       "norm_label": "symbolic scaling of a shape.",
       "id": "shape_transforms_rationale_119"
     },
@@ -12185,7 +11960,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L139",
-      "community": 55,
+      "community": 70,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala",
       "id": "shape_base_rationale_139"
     },
@@ -12221,7 +11996,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/adapters/test_shapely.py",
       "source_location": "L195",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_stripe_x_height()",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stripe_x_height"
     },
@@ -12230,7 +12005,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/adapters/test_shapely.py",
       "source_location": "L204",
-      "community": 1,
+      "community": 27,
       "norm_label": ".test_stripe_y_width()",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stripe_y_width"
     },
@@ -12239,7 +12014,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L138",
-      "community": 2,
+      "community": 0,
       "norm_label": "teststripesafeextraction",
       "id": "adapters_test_shapely_safe_extraction_teststripesafeextraction"
     },
@@ -12257,7 +12032,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/test_unit_cell.py",
       "source_location": "L307",
-      "community": 29,
+      "community": 30,
       "norm_label": ".test_stripe_clips_to_cell()",
       "id": "lattice_test_unit_cell_testtoshapely_test_stripe_clips_to_cell"
     },
@@ -12374,7 +12149,7 @@
       "file_type": "code",
       "source_file": "metashapes/lattice/unit_cell.py",
       "source_location": "L1",
-      "community": 0,
+      "community": 3,
       "norm_label": "unit_cell.py",
       "id": "metashapes_lattice_unit_cell_py"
     },
@@ -12419,7 +12194,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/transforms.py",
       "source_location": "L1",
-      "community": 52,
+      "community": 70,
       "norm_label": "transforms.py",
       "id": "metashapes_shape_transforms_py"
     },
@@ -12437,7 +12212,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/utils.py",
       "source_location": "L1",
-      "community": 52,
+      "community": 70,
       "norm_label": "utils.py",
       "id": "metashapes_shape_utils_py"
     },
@@ -12446,7 +12221,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/registry.py",
       "source_location": "L1",
-      "community": 52,
+      "community": 70,
       "norm_label": "registry.py",
       "id": "metashapes_shape_registry_py"
     },
@@ -12527,7 +12302,7 @@
       "file_type": "code",
       "source_file": "metashapes/lattice/basis.py",
       "source_location": "L1",
-      "community": 0,
+      "community": 3,
       "norm_label": "basis.py",
       "id": "metashapes_lattice_basis_py"
     },
@@ -12536,7 +12311,7 @@
       "file_type": "code",
       "source_file": "metashapes/lattice/grid.py",
       "source_location": "L1",
-      "community": 0,
+      "community": 3,
       "norm_label": "grid.py",
       "id": "metashapes_lattice_grid_py"
     },
@@ -12563,7 +12338,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/__init__.py",
       "source_location": "L1",
-      "community": 1,
+      "community": 27,
       "norm_label": "__init__.py",
       "id": "metashapes_adapters_init_py"
     },
@@ -12626,7 +12401,7 @@
       "file_type": "code",
       "source_file": "metashapes/generators/validator.py",
       "source_location": "L1",
-      "community": 7,
+      "community": 11,
       "norm_label": "validator.py",
       "id": "metashapes_generators_validator_py"
     },
@@ -12742,7 +12517,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 35,
+      "community": 28,
       "norm_label": "sdf convention: negative inside, positive outside",
       "id": "concept_sdf_convention"
     },
@@ -12755,7 +12530,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 70,
+      "community": 2,
       "norm_label": "smooth boolean operations via polynomial blending",
       "id": "concept_smooth_boolean"
     },
@@ -12794,7 +12569,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 2,
+      "community": 0,
       "norm_label": "rotation guard for infinite-extent shapes",
       "id": "concept_infinite_shape_rotation_guard"
     },
@@ -12872,7 +12647,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 7,
+      "community": 11,
       "norm_label": "unitcellanalyzer.validate",
       "id": "analysis_unitcellanalyzer_validate"
     },
@@ -12989,7 +12764,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 3,
+      "community": 17,
       "norm_label": "isoscelestrapezoid",
       "id": "primitives_quads_isoscelestrap"
     },
@@ -13132,7 +12907,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 27,
       "norm_label": "shapely adapter pattern",
       "id": "shapely_adapter_pattern"
     },
@@ -19829,17 +19604,6 @@
       "target": "shape_utils_register"
     },
     {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L51",
-      "weight": 1.0,
-      "source": "lattice_basis_lattice_init",
-      "target": "shape_utils_register"
-    },
-    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/utils.py",
@@ -23222,17 +22986,6 @@
       "source_location": "L215",
       "weight": 1.0,
       "source": "lattice_test_unit_cell_testunitcellserialization_test_round_trip_preserves_lattice_vectors",
-      "target": "primitives_polygons_regularpolygon"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L309",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
       "target": "primitives_polygons_regularpolygon"
     },
     {
@@ -31179,16 +30932,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L10",
-      "weight": 1.0,
-      "source": "src_metashapes_lattice_basis_py",
-      "target": "lattice_basis_scalar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
       "source_location": "L7",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -31289,38 +31032,6 @@
       "target": "src_metashapes_lattice_basis_py"
     },
     {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L76",
-      "weight": 1.0,
-      "source": "lattice_basis_rectangular",
-      "target": "lattice_basis_scalar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L106",
-      "weight": 1.0,
-      "source": "lattice_basis_hexagonal",
-      "target": "lattice_basis_scalar",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L11",
-      "weight": 1.0,
-      "source": "lattice_basis_rationale_11",
-      "target": "lattice_basis_scalar",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "metashapes/lattice/basis.py",
@@ -31373,12 +31084,12 @@
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L36",
+      "source_file": "metashapes/lattice/basis.py",
+      "source_location": "L8",
       "weight": 1.0,
-      "source": "lattice_basis_rationale_36",
-      "target": "lattice_basis_lattice",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "lattice_basis_rationale_8",
+      "target": "lattice_basis_lattice"
     },
     {
       "relation": "imports",
@@ -31692,16 +31403,6 @@
       "confidence_score": 1.0,
       "source": "lattice_test_basis_testlatticeconstruction",
       "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L8",
-      "weight": 0.8,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_basis_lattice",
-      "confidence_score": 0.5
     },
     {
       "relation": "uses",
@@ -32174,93 +31875,6 @@
       "source_location": "L34",
       "weight": 1.0,
       "source": "lattice_test_basis_testlatticeconstruction_test_singular_raises",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L61",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeconstruction_test_wrong_shape_raises",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L73",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors_test_parameter_registers_as_parameter",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors_test_plain_value_registers_as_buffer",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors_test_state_dict_keys_unchanged_by_parameter_vs_buffer",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L89",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_cell_area",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L96",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_to_fractional",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L308",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
-      "target": "lattice_basis_lattice"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "metashapes/lattice/basis.py",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "lattice_basis_rationale_8",
       "target": "lattice_basis_lattice"
     },
     {
@@ -32754,16 +32368,6 @@
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L129",
-      "weight": 1.0,
-      "source": "lattice_basis_rationale_129",
-      "target": "lattice_basis_lattice_to_fractional",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
       "source_file": "metashapes/lattice/basis.py",
       "source_location": "L87",
       "weight": 1.0,
@@ -32774,32 +32378,12 @@
     {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L135",
-      "weight": 1.0,
-      "source": "lattice_basis_rationale_135",
-      "target": "lattice_basis_lattice_to_cartesian",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
       "source_file": "metashapes/lattice/basis.py",
       "source_location": "L93",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "lattice_basis_rationale_93",
       "target": "lattice_basis_lattice_to_cartesian"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/lattice/basis.py",
-      "source_location": "L142",
-      "weight": 1.0,
-      "source": "lattice_basis_rationale_142",
-      "target": "lattice_basis_lattice_offset",
-      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -33371,16 +32955,6 @@
       "source_file": "tests/lattice/test_basis.py",
       "source_location": "L18",
       "weight": 0.8,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_unit_cell_unitcell",
-      "confidence_score": 0.5
-    },
-    {
-      "relation": "uses",
-      "confidence": "INFERRED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L18",
-      "weight": 0.8,
       "confidence_score": 0.5,
       "source": "lattice_test_basis_testlatticeproperties",
       "target": "lattice_unit_cell_unitcell"
@@ -33890,17 +33464,6 @@
       "source_location": "L216",
       "weight": 1.0,
       "source": "lattice_test_unit_cell_testunitcellserialization_test_round_trip_preserves_lattice_vectors",
-      "target": "lattice_unit_cell_unitcell"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L310",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
       "target": "lattice_unit_cell_unitcell"
     },
     {
@@ -54923,16 +54486,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "tests_lattice_test_basis_py",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
       "source_location": "L37",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -55038,116 +54591,6 @@
       "confidence_score": 1.0,
       "source": "lattice_test_basis_testlatticeconstruction",
       "target": "lattice_test_basis_testlatticeconstruction_test_singular_raises"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeconstruction",
-      "target": "lattice_test_basis_testlatticeconstruction_test_wrong_shape_raises",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L71",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_parameter_registers_as_parameter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L77",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_plain_value_registers_as_buffer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L82",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_state_dict_keys_unchanged_by_parameter_vs_buffer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L87",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_cell_area",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L94",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_gradient_reaches_caller_parameter_via_to_fractional",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L101",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_rejects_parameter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L105",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_hexagonal_rejects_parameter",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L109",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_rejects_requires_grad_tensor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L113",
-      "weight": 1.0,
-      "source": "lattice_test_basis_testlatticeoptimizablevectors",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors_test_rectangular_accepts_plain_scalar_tensor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_basis.py",
-      "source_location": "L65",
-      "weight": 1.0,
-      "source": "lattice_test_basis_rationale_65",
-      "target": "lattice_test_basis_testlatticeoptimizablevectors",
-      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -56213,16 +55656,6 @@
       "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_side_length_nonzero_pixels"
     },
     {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L303",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_testunitcellgradients",
-      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -56282,9 +55715,9 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L276",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "lattice_test_unit_cell_rationale_276",
-      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_flows_through_periodicity"
+      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_flows_through_periodicity",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -56334,9 +55767,9 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L293",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "lattice_test_unit_cell_rationale_293",
-      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_side_length_nonzero_pixels"
+      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_side_length_nonzero_pixels",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -56368,16 +55801,6 @@
       "confidence_score": 1.0,
       "source": "lattice_test_unit_cell_rationale_275",
       "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_side_length_nonzero_pixels"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L304",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_rationale_304",
-      "target": "lattice_test_unit_cell_testunitcellgradients_test_grad_soft_mask_wrt_optimizable_lattice_vector",
-      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -56475,21 +55898,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L409",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_rationale_409",
-      "target": "lattice_test_unit_cell_brute_force_sdf",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L396",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "lattice_test_unit_cell_rationale_396",
-      "target": "lattice_test_unit_cell_brute_force_sdf"
+      "target": "lattice_test_unit_cell_brute_force_sdf",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -56555,21 +55968,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/lattice/test_unit_cell.py",
-      "source_location": "L481",
-      "weight": 1.0,
-      "source": "lattice_test_unit_cell_rationale_481",
-      "target": "lattice_test_unit_cell_testperiodicsdfmatchesbruteforce",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L468",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "lattice_test_unit_cell_rationale_468",
-      "target": "lattice_test_unit_cell_testperiodicsdfmatchesbruteforce"
+      "target": "lattice_test_unit_cell_testperiodicsdfmatchesbruteforce",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -60458,166 +59861,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "readme_md",
-      "target": "metashapes_readme_metashapes"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_features"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_installation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L23",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_quick_start"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L39",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_boolean_operations"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L54",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_random_generation"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L76",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_analysis"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L88",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_yaml_serialization"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L97",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_requirements"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L106",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_metashapes",
-      "target": "metashapes_readme_license"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L19",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_installation",
-      "target": "metashapes_readme_codeblock_1"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L25",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_quick_start",
-      "target": "metashapes_readme_codeblock_2"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L43",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_boolean_operations",
-      "target": "metashapes_readme_codeblock_3"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L56",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_random_generation",
-      "target": "metashapes_readme_codeblock_4"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L78",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_analysis",
-      "target": "metashapes_readme_codeblock_5"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "README.md",
-      "source_location": "L90",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "metashapes_readme_yaml_serialization",
-      "target": "metashapes_readme_codeblock_6"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "screening_shape_lattice.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -61144,6 +60387,166 @@
       "confidence_score": 1.0,
       "source": "metashapes_screening_shape_lattice_post_screening_findings_from_the_dtype_device_gradient_test_pass",
       "target": "metashapes_screening_shape_lattice_s_25_near_circular_ellipses_overflow_c3_in_float32_producing_nan_values_fixed"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "readme_md",
+      "target": "metashapes_readme_metashapes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_features"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_installation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_quick_start"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_boolean_operations"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_random_generation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_analysis"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L88",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_yaml_serialization"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L97",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_requirements"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_metashapes",
+      "target": "metashapes_readme_license"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_installation",
+      "target": "metashapes_readme_codeblock_1"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_quick_start",
+      "target": "metashapes_readme_codeblock_2"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L43",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_boolean_operations",
+      "target": "metashapes_readme_codeblock_3"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_random_generation",
+      "target": "metashapes_readme_codeblock_4"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_analysis",
+      "target": "metashapes_readme_codeblock_5"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "README.md",
+      "source_location": "L90",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "metashapes_readme_yaml_serialization",
+      "target": "metashapes_readme_codeblock_6"
     },
     {
       "relation": "rationale_for",
@@ -62040,5 +61443,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8c210b3d00e36f6fcc524e1b414039e692fbd392"
+  "built_at_commit": "3d69f65c473780295c788df50fa55a91244b03a2"
 }

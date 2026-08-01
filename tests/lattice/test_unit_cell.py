@@ -300,6 +300,19 @@ class TestUnitCellGradients:
             assert side_length.grad is not None
             assert side_length.grad.abs().item() > 0.0
 
+    def test_grad_soft_mask_wrt_optimizable_lattice_vector(self):
+        """A Lattice built with an nn.Parameter a1 is itself optimizable:
+        gradient from the soft mask must reach the caller's own tensor.
+        """
+        a1 = nn.Parameter(torch.tensor([2.0, 0.0]))
+        lattice = Lattice(a1=a1, a2=torch.tensor([0.0, 2.0]))
+        shape = RegularPolygon(center=(0.0, 0.0), n=4, side_length=0.5)
+        cell = UnitCell(lattice, shape)
+        m = cell.mask(32, 32, soft=True)
+        m.sum().backward()
+        assert a1.grad is not None
+        assert torch.isfinite(a1.grad).all()
+
 
 # ---------------------------------------------------------------------------
 # to_shapely tests

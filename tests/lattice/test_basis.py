@@ -3,6 +3,7 @@
 import math
 import pytest
 import torch
+import torch.nn as nn
 
 from metashapes.lattice.basis import Lattice
 
@@ -54,6 +55,65 @@ class TestLatticeConstruction:
     def test_singular_raises(self):
         with pytest.raises(ValueError):
             Lattice(a1=torch.tensor([1.0, 0.0]), a2=torch.tensor([2.0, 0.0]))
+
+    def test_wrong_shape_raises(self):
+        with pytest.raises(ValueError, match=r"shape \[2\]"):
+            Lattice(a1=1.0, a2=2.0)
+
+
+class TestLatticeOptimizableVectors:
+    """a1/a2 accept an nn.Parameter directly, becoming a real optimizable
+    parameter while keeping the caller's own object (so gradients reach
+    it). Plain values stay non-gradient buffers, matching every other
+    Shape primitive's `register()` convention.
+    """
+
+    def test_parameter_registers_as_parameter(self):
+        a1 = nn.Parameter(torch.tensor([2.0, 0.0]))
+        lat = Lattice(a1=a1, a2=torch.tensor([0.0, 3.0]))
+        assert dict(lat.named_parameters()).keys() == {"a1"}
+        assert lat.a1 is a1
+
+    def test_plain_value_registers_as_buffer(self):
+        lat = Lattice(a1=torch.tensor([2.0, 0.0]), a2=torch.tensor([0.0, 3.0]))
+        assert dict(lat.named_parameters()) == {}
+        assert dict(lat.named_buffers()).keys() == {"a1", "a2"}
+
+    def test_state_dict_keys_unchanged_by_parameter_vs_buffer(self):
+        lat = Lattice(a1=nn.Parameter(torch.tensor([2.0, 0.0])),
+                       a2=torch.tensor([0.0, 3.0]))
+        assert set(lat.state_dict().keys()) == {"a1", "a2"}
+
+    def test_gradient_reaches_caller_parameter_via_cell_area(self):
+        a1 = nn.Parameter(torch.tensor([2.0, 0.0]))
+        lat = Lattice(a1=a1, a2=torch.tensor([0.0, 3.0]))
+        lat.cell_area.backward()
+        assert a1.grad is not None
+        assert torch.allclose(a1.grad, torch.tensor([3.0, 0.0]))
+
+    def test_gradient_reaches_caller_parameter_via_to_fractional(self):
+        a1 = nn.Parameter(torch.tensor([2.0, 0.0]))
+        lat = Lattice(a1=a1, a2=torch.tensor([0.0, 3.0]))
+        f1, f2 = lat.to_fractional(torch.tensor(1.0), torch.tensor(1.0))
+        (f1 + f2).backward()
+        assert a1.grad is not None
+
+    def test_rectangular_rejects_parameter(self):
+        with pytest.raises(TypeError, match="Parameter"):
+            Lattice.rectangular(nn.Parameter(torch.tensor(2.0)), 3.0)
+
+    def test_hexagonal_rejects_parameter(self):
+        with pytest.raises(TypeError, match="Parameter"):
+            Lattice.hexagonal(nn.Parameter(torch.tensor(1.0)))
+
+    def test_rectangular_rejects_requires_grad_tensor(self):
+        with pytest.raises(TypeError, match="Parameter"):
+            Lattice.rectangular(torch.tensor(2.0, requires_grad=True), 3.0)
+
+    def test_rectangular_accepts_plain_scalar_tensor(self):
+        lat = Lattice.rectangular(torch.tensor(2.0), torch.tensor(3.0))
+        assert dict(lat.named_parameters()) == {}
+        assert torch.allclose(lat.a1, torch.tensor([2.0, 0.0]))
 
 
 class TestLatticeProperties:

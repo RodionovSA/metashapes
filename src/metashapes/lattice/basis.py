@@ -4,48 +4,92 @@ import math
 import torch
 import torch.nn as nn
 
+from metashapes.shape.utils import register
+
+
+def _scalar(name: str, value) -> float:
+    """Coerce a constructor scalar to float, refusing grad-carrying tensors.
+
+    ``rectangular``/``hexagonal`` derive a1/a2 from a scalar, and
+    ``nn.Parameter`` must be a leaf tensor -- so a Parameter passed here
+    can never stay connected to the stored lattice vectors regardless of
+    how it's wrapped. Rather than silently building a disconnected
+    Parameter (which optimizes nothing), reject it with a pointer to the
+    construction path that does work.
+    """
+    if isinstance(value, torch.Tensor):
+        if isinstance(value, nn.Parameter) or value.requires_grad:
+            raise TypeError(
+                f"{name} must be a plain scalar, not a Parameter or a "
+                f"grad-carrying tensor: a1/a2 are derived from {name}, and "
+                f"nn.Parameter must be a leaf tensor, so the connection to "
+                f"{name} would be silently severed. For an optimizable "
+                f"lattice, construct it directly: "
+                f"Lattice(a1=nn.Parameter(...), a2=nn.Parameter(...))."
+            )
+        if value.numel() != 1:
+            raise ValueError(f"{name} must be a scalar, got shape {tuple(value.shape)}")
+    return float(value)
+
+
 class Lattice(nn.Module):
-    """In-plane periodicity of the unit cell. Fixed (non-optimizable).
+    """In-plane periodicity of the unit cell.
     Defined by two lattice vectors. A rectangular lattice is the special
     case of axis-aligned vectors.
 
     Parameters
     ----------
-    a1 : Tensor
-        First lattice vector, shape [2].
-    a2 : Tensor
-        Second lattice vector, shape [2].
+    a1 : Tensor | nn.Parameter | sequence of 2 floats
+        First lattice vector, shape [2]. Stored as a buffer by default;
+        pass an ``nn.Parameter`` to make it optimizable -- the object is
+        stored as-is, so gradients reach the caller's own parameter.
+    a2 : Tensor | nn.Parameter | sequence of 2 floats
+        Second lattice vector, shape [2]. Same convention as ``a1``.
     """
     def __init__(self, a1, a2):
         super().__init__()
-        a1 = torch.as_tensor(a1, dtype=torch.float32)
-        a2 = torch.as_tensor(a2, dtype=torch.float32)
-        if torch.linalg.det(torch.stack([a1, a2], 1)).abs() <= 1e-12:
+        register(self, "a1", a1)
+        register(self, "a2", a2)
+        if self.a1.shape != (2,) or self.a2.shape != (2,):
+            raise ValueError(
+                f"a1 and a2 must have shape [2], got {tuple(self.a1.shape)} "
+                f"and {tuple(self.a2.shape)}"
+            )
+        if self.cell_area <= 1e-12:
             raise ValueError("a1, a2 must be linearly independent")
-        self.register_buffer("a1", a1)
-        self.register_buffer("a2", a2)
-        
+
     @property
     def device(self): return self.a1.device
     @property
     def dtype(self):  return self.a1.dtype
 
     @classmethod
-    def rectangular(cls, px: float, py: float) -> "Lattice":
-        """Build an axis-aligned rectangular lattice from two periods."""
-        return cls(
-            a1=torch.tensor([px, 0.0]),
-            a2=torch.tensor([0.0, py]),
-        )
+    def rectangular(cls, px, py) -> "Lattice":
+        """Build an axis-aligned rectangular lattice from two periods.
+
+        Parameters
+        ----------
+        px, py : float
+            Period along x and y. For an optimizable lattice, construct
+            it directly instead: ``Lattice(a1=nn.Parameter(...), a2=nn.Parameter(...))``.
+        """
+        px_v, py_v = _scalar("px", px), _scalar("py", py)
+        a1 = torch.tensor([px_v, 0.0])
+        a2 = torch.tensor([0.0, py_v])
+        return cls(a1=a1, a2=a2)
 
     @classmethod
-    def hexagonal(cls, a: float, *, orientation: str = "pointy") -> "Lattice":
+    def hexagonal(cls, a, *, orientation: str = "pointy") -> "Lattice":
         """Build a hexagonal (triangular) lattice from the lattice constant.
 
         Parameters
         ----------
         a : float
-            Nearest-neighbour distance (lattice constant).
+            Nearest-neighbour distance (lattice constant). For an
+            optimizable lattice, construct it directly instead:
+            ``Lattice(a1=nn.Parameter(...), a2=nn.Parameter(...))`` --
+            note that optimizing a1/a2 independently does not preserve
+            hexagonal symmetry.
         orientation : str
             ``"pointy"`` — Wigner-Seitz cell has vertices at top and bottom;
             lattice vectors at 0° and 60°::
@@ -59,18 +103,16 @@ class Lattice(nn.Module):
                 a1 = [a·√3/2,  a/2        ]
                 a2 = [0,       a           ]
         """
+        a_v = _scalar("a", a)
         if orientation == "pointy":
-            return cls(
-                a1=torch.tensor([a, 0.0]),
-                a2=torch.tensor([a / 2.0, a * math.sqrt(3) / 2.0]),
-            )
+            a1 = torch.tensor([a_v, 0.0])
+            a2 = torch.tensor([a_v / 2.0, a_v * math.sqrt(3) / 2.0])
         elif orientation == "flat":
-            return cls(
-                a1=torch.tensor([a * math.sqrt(3) / 2.0, a / 2.0]),
-                a2=torch.tensor([0.0, a]),
-            )
+            a1 = torch.tensor([a_v * math.sqrt(3) / 2.0, a_v / 2.0])
+            a2 = torch.tensor([0.0, a_v])
         else:
             raise ValueError(f"orientation must be 'pointy' or 'flat', got {orientation!r}")
+        return cls(a1=a1, a2=a2)
 
     # --- matrix form: columns are the lattice vectors ----------------
     @property
