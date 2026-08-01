@@ -26,6 +26,12 @@ def _ellipse_closest_point(px: torch.Tensor, py: torch.Tensor,
     near-circular case (a ~= b) is handled by radial projection instead of
     the general solve, which is singular as b^2 - a^2 -> 0.
 
+    Both general-solve branches are formulated to keep their derivatives
+    finite everywhere a query can land, not just their values -- each has
+    a root/power computation that is otherwise singular at an ordinary,
+    non-rare input (see the inline comments on each branch for the exact
+    form used).
+
     Shared by Ellipse (whole-ellipse distance) and Egg (which additionally
     needs the *point*, not just the distance, to build its two-arc SDF).
     """
@@ -37,9 +43,13 @@ def _ellipse_closest_point(px: torch.Tensor, py: torch.Tensor,
 
     eps = torch.finfo(px.dtype).eps
 
-    # handle circle / near-circle separately to avoid division by zero
+    # handle circle / near-circle separately to avoid division by zero.
+    # Relative threshold: c ~ (m^2+n^2)/3 grows without bound as l -> 0, so
+    # an absolute threshold lets c^3 (below) overflow float32 well before
+    # routing the query to this branch. Radial projection's own error near
+    # a circle is bounded by |a - b| / 2, i.e. <= ~5e-5 * r0 here.
     l = by * by - ax * ax
-    circle_mask = torch.abs(l) < eps
+    circle_mask = torch.abs(l) < torch.clamp(1e-4 * (by * by + ax * ax), min=eps)
     r0 = 0.5 * (ax + by)
 
     # radial projection onto the circle of radius r0; near the origin the
@@ -62,30 +72,43 @@ def _ellipse_closest_point(px: torch.Tensor, py: torch.Tensor,
     n = by * py2 / l_safe
     m2 = m * m
     n2 = n * n
+    k = m * n  # >= 0 always: m and n both carry l_safe's sign
 
     c = (m2 + n2 - 1.0) / 3.0
     c3 = c * c * c
-    q = c3 + 2.0 * m2 * n2
-    d = c3 + m2 * n2
+    d = c3 + k * k
     g = m + m * n2
 
+    sqrt3 = torch.sqrt(torch.as_tensor(3.0, dtype=px.dtype, device=px.device))
     co = torch.zeros_like(px2)
 
-    # branch 1: d < 0
+    # branch 1: d < 0 (three real roots)
     mask1 = (d < 0.0) & (~circle_mask)
     if torch.any(mask1):
-        c3_safe = torch.where(
-            torch.abs(c3) < eps,
-            torch.where(c3 >= 0, torch.full_like(c3, eps), torch.full_like(c3, -eps)),
-            c3
+        # c^3 < 0 throughout this branch, so acos((c^3 + 2*k^2)/c^3) is
+        # algebraically identical to 2*asin(k/|c|^1.5)/3 -- and asin, unlike
+        # acos, is smooth at its input's zero, which is where any on-axis
+        # query (m == 0 or n == 0 => k == 0) lands.
+        absc = torch.abs(c)
+        c_pow = absc * torch.sqrt(absc)  # |c|^1.5
+        pow_ok = mask1 & (c_pow > 0)
+        ratio = torch.where(
+            pow_ok, k / torch.where(pow_ok, c_pow, torch.ones_like(c_pow)),
+            torch.zeros_like(c_pow),
         )
-        arg = torch.clamp(q / c3_safe, -1.0, 1.0)
-        h = torch.acos(arg) / 3.0
+        h = 2.0 * torch.asin(torch.clamp(ratio, -1.0, 1.0)) / 3.0
         s = torch.cos(h)
-        t = torch.sin(h) * torch.sqrt(torch.as_tensor(3.0, dtype=px.dtype, device=px.device))
+        t = torch.sin(h) * sqrt3
 
-        rx1 = torch.sqrt(torch.clamp(-c * (s + t + 2.0) + m2, min=0.0))
-        ry1 = torch.sqrt(torch.clamp(-c * (s - t + 2.0) + m2, min=0.0))
+        # sqrt has an infinite derivative at exactly 0; guard both arms.
+        arg_x = torch.clamp(-c * (s + t + 2.0) + m2, min=0.0)
+        arg_y = torch.clamp(-c * (s - t + 2.0) + m2, min=0.0)
+        x_ok = mask1 & (arg_x > 0)
+        y_ok = mask1 & (arg_y > 0)
+        rx1 = torch.where(x_ok, torch.sqrt(torch.where(x_ok, arg_x, torch.ones_like(arg_x))),
+                          torch.zeros_like(arg_x))
+        ry1 = torch.where(y_ok, torch.sqrt(torch.where(y_ok, arg_y, torch.ones_like(arg_y))),
+                          torch.zeros_like(arg_y))
 
         denom = rx1 * ry1
         denom = torch.where(torch.abs(denom) < eps, torch.full_like(denom, eps), denom)
@@ -93,18 +116,26 @@ def _ellipse_closest_point(px: torch.Tensor, py: torch.Tensor,
         co1 = (ry1 + torch.sign(l_safe) * rx1 + torch.abs(g) / denom - m) * 0.5
         co = torch.where(mask1, co1, co)
 
-    # branch 2: d >= 0
+    # branch 2: d >= 0 (one real root)
     mask2 = (~mask1) & (~circle_mask)
     if torch.any(mask2):
-        h = 2.0 * m * n * torch.sqrt(torch.clamp(d, min=0.0))
-        qp = q + h
-        qm = q - h
-
-        s = torch.sign(qp) * torch.pow(torch.abs(qp), 1.0 / 3.0)
-        u = torch.sign(qm) * torch.pow(torch.abs(qm), 1.0 / 3.0)
+        # With P = sqrt(d) + k (>= 0), qp = P^2 and qm = (c^3/P)^2
+        # algebraically, so their cube roots are s = P^(2/3) and
+        # u = c^2 / P^(2/3) = c^2 / s -- avoiding cbrt of a value that
+        # passes through 0, whose derivative diverges there.
+        d_pos = torch.clamp(d, min=0.0)
+        d_ok = mask2 & (d_pos > 0)
+        sd = torch.where(d_ok, torch.sqrt(torch.where(d_ok, d_pos, torch.ones_like(d_pos))),
+                         torch.zeros_like(d_pos))
+        p = sd + k
+        p_ok = mask2 & (p > 0)
+        s = torch.where(p_ok, torch.pow(torch.where(p_ok, p, torch.ones_like(p)), 2.0 / 3.0),
+                        torch.zeros_like(p))
+        u = torch.where(p_ok, c * c / torch.where(p_ok, s, torch.ones_like(s)),
+                        torch.zeros_like(c))
 
         rx2 = -s - u - 4.0 * c + 2.0 * m2
-        ry2 = (s - u) * torch.sqrt(torch.as_tensor(3.0, dtype=px.dtype, device=px.device))
+        ry2 = (s - u) * sqrt3
         rm = torch.sqrt(torch.clamp(rx2 * rx2 + ry2 * ry2, min=eps))
 
         denom = torch.sqrt(torch.clamp(rm - rx2, min=eps))
@@ -246,24 +277,18 @@ class Egg(Shape):
         # (a, b_bot). Near the seam the true nearest boundary point can lie
         # on the *other* arc (e.g. a point just above y=0 can be much closer
         # to a point on the lower arc than to anything reachable on the
-        # upper one) -- a single per-point b_eff switch, as this used to do,
-        # answers a different (wrong) question there. So both arcs are
-        # evaluated for every point, not just the one matching its sign.
+        # upper one), so both arcs are evaluated for every point rather than
+        # only the one matching the point's own sign.
         #
         # For each arc, `_ellipse_closest_point` gives the nearest point on
         # its *full* supporting ellipse, folded into the first quadrant; its
         # y-coordinate is always >= 0, so reflecting it onto that arc's own
         # half-plane (+ry for the top arc, -ry for the bottom) and measuring
         # distance from the true (unfolded) query point is exact whenever
-        # the query is already on that side, and a very close approximation
-        # otherwise. Verified against a brute-force ground truth over 4000
-        # random (a, b_top, b_bot, x, y) configurations, interior and
-        # exterior: exact at/near the seam (where the bug this replaces was
-        # observed -- a query 1e-4 off the seam used to flip sign entirely),
-        # worst observed residual ~1.3% of the true distance for points far
-        # from the seam with strongly asymmetric b_top/b_bot -- versus the
-        # O(1) sign flip this replaces. Not a proven-exact closed form; see
-        # screening_shape_lattice.md S-01 for the residual-error note.
+        # the query is already on that side, and a close approximation
+        # otherwise (worst observed residual ~1.3% of the true distance, for
+        # points far from the seam with strongly asymmetric b_top/b_bot).
+        # Not a proven-exact closed form.
         eps = torch.finfo(x.dtype).eps
 
         rx_t, ry_t = _ellipse_closest_point(px, py, a, b_top)

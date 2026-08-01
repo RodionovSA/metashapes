@@ -58,10 +58,8 @@ class TestCross:
         assert_inside(c, [(0.0, 0.0)])
 
     def test_zero_inner_radius_sdf_finite_and_correct(self):
-        # Regression for S-10: sdf() used to short-circuit to d_base via
-        # `if torch.all(ri == 0): return d_base`. The patch is now always
-        # computed (a provable no-op at ri=0), so this pins the result
-        # against a wide grid rather than just the shortcut return.
+        # The patch is always computed, including at ri=0 where it's a
+        # provable no-op; pin the result against a wide grid.
         c = Cross(center=[0.05, -0.1], length=1.1, width=0.35, angle=15.0,
                   outer_corner_radius=0.02)
         x = torch.linspace(-1.0, 1.0, 60)
@@ -153,7 +151,7 @@ class TestTShape:
         assert_inside(t, [(0.0, 0.0)])
 
     def test_zero_inner_radius_sdf_finite_and_correct(self):
-        # Regression for S-10: same shortcut removal as Cross above.
+        # Same check as Cross above.
         t = TShape(center=[0.05, -0.1], length=1.1, width=0.35, angle=15.0,
                   outer_corner_radius=0.02)
         x = torch.linspace(-1.0, 1.0, 60)
@@ -185,12 +183,11 @@ class TestTShape:
 
 
 # ---------------------------------------------------------------------------
-# S-09: Cross/TShape delegate to the shared _sdf_rounded_box helper
+# Cross/TShape delegate to the shared _sdf_rounded_box helper
 # ---------------------------------------------------------------------------
 
 class TestSharedRoundedBoxHelper:
-    """Cross and TShape used to each carry their own inline copy of the
-    rounded-box SDF; both now call shape/utils.py's _sdf_rounded_box. These
+    """Cross and TShape both call shape/utils.py's _sdf_rounded_box. These
     checks pin the outer-box component (d_base's building blocks) to the
     shared helper directly, so a future edit that reintroduces a diverging
     inline copy would be caught here."""
@@ -211,8 +208,8 @@ class TestSharedRoundedBoxHelper:
         dv = _sdf_rounded_box(x_local, y_local, by, bx, c.outer_corner_radius)
         expected_d_base = torch.minimum(dh, dv)
 
-        # With inner_corner_radius=0 (default), sdf() is exactly d_base
-        # (verified redundant in the S-10 cleanup: the patch is a no-op).
+        # With inner_corner_radius=0 (default), the patch is a no-op, so
+        # sdf() should be exactly d_base.
         assert torch.equal(c.sdf(X, Y), expected_d_base)
 
     def test_tshape_outer_box_matches_shared_helper(self):
@@ -269,8 +266,8 @@ class TestCrossDtypeDeviceGrad:
         )
 
     def test_gradients_finite_at_zero_inner_corner_radius(self):
-        # S-10's always-compute-the-patch path (no more `if ri == 0:
-        # return d_base` shortcut) must not introduce a new NaN hazard.
+        # The always-compute-the-patch path must not introduce a NaN
+        # gradient at ri=0.
         c = Cross(
             center=torch.tensor([0.0, 0.0]),
             length=torch.tensor(1.0), width=torch.tensor(0.3),
@@ -279,7 +276,7 @@ class TestCrossDtypeDeviceGrad:
         assert_gradients_finite(c, ["inner_corner_radius"])
 
     def test_gradients_finite_at_width_equals_length(self):
-        # S-21's deliberately-permissive boundary: constructs and
+        # width == length is deliberately permissive; confirm it also
         # evaluates cleanly with finite gradients, not just "doesn't raise."
         c = Cross(
             center=torch.tensor([0.0, 0.0]),

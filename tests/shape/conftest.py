@@ -62,11 +62,10 @@ def assert_bounds_contain(shape, points):
 # dtype / device / gradient helpers
 # ---------------------------------------------------------------------------
 #
-# NOTE on scope: `Shape` construction always defaults to float32/CPU (S-14,
-# declared out of scope in screening_shape_lattice.md -- getting a different
-# dtype/device is the caller's job via `.to(...)`, same as any other
-# nn.Module). These helpers verify THAT story works correctly, not that
-# construction accepts an arbitrary dtype.
+# NOTE on scope: `Shape` construction always defaults to float32/CPU --
+# getting a different dtype/device is the caller's job via `.to(...)`,
+# same as any other nn.Module. These helpers verify THAT story works
+# correctly, not that construction accepts an arbitrary dtype.
 #
 # NOTE on mutation: `nn.Module.to()` converts parameters/buffers IN PLACE
 # and returns `self` (confirmed elsewhere in this codebase) -- these

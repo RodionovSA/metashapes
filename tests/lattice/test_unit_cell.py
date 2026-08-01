@@ -101,10 +101,9 @@ class TestUnitCellRasterize:
         assert out.shape == (12 * 3, 16 * 2)
 
     def test_rasterize_cartesian_matches_fractional_pixel_pitch(self):
-        # Regression for L-04: cartesian=True used to be endpoint-inclusive
-        # (torch.linspace) while cartesian=False was endpoint-excluded
-        # (fractional_grid), giving different pixel pitch and a duplicated
-        # boundary sample for the same nx/ny. Both should now agree.
+        # cartesian=True and cartesian=False should give the same pixel
+        # pitch for the same nx/ny -- both should be endpoint-excluded,
+        # not one inclusive and the other not.
         cell = _square_cell(px=1.0, py=1.0, side=0.2)
         d_false = cell.rasterize(16, 16, cartesian=False)
         d_true = cell.rasterize(16, 16, cartesian=True)
@@ -335,11 +334,11 @@ class TestToShapely:
         assert abs(geom.area - 2.0 * 1.0) < 0.01
 
     def test_shape_outside_cell_wraps_periodically(self):
-        # Regression for L-02/L-03: to_shapely() (and sdf()/mask()) are
-        # fully periodic, so a scene positioned far outside the cell still
-        # wraps back in -- it does not read as empty. A rect 50 cells away
-        # on a 2.0 lattice must give exactly the same geometry as the same
-        # rect placed at the cell origin.
+        # to_shapely() (and sdf()/mask()) are fully periodic, so a scene
+        # positioned far outside the cell still wraps back in -- it does
+        # not read as empty. A rect 50 cells away on a 2.0 lattice must
+        # give exactly the same geometry as the same rect placed at the
+        # cell origin.
         from metashapes.shape.primitives.quads import Rectangle
         lattice = Lattice.rectangular(2.0, 2.0)
         far = Rectangle(center=torch.tensor([100.3, 100.3]),
@@ -363,12 +362,10 @@ class TestToShapely:
         assert torch.equal(far_mask, near_mask)
 
     def test_area_matches_periodic_sdf_for_seam_straddling_shape(self):
-        # Regression for L-01: to_shapely() used to convert a single,
-        # un-translated copy of the scene and intersect with the cell --
-        # any shape crossing the boundary lost its wrapped-around part.
-        # A 0.4x0.4 rectangle straddling the x=0 seam on a 1x1 cell: the
-        # true (periodic) area is the full 0.4*0.4=0.16, not the 0.08 the
-        # old, non-periodic clip returned.
+        # to_shapely() must account for a shape's wrapped-around part when
+        # it crosses the cell boundary. A 0.4x0.4 rectangle straddling the
+        # x=0 seam on a 1x1 cell: the true (periodic) area is the full
+        # 0.4*0.4=0.16, not the 0.08 a non-periodic clip would give.
         from metashapes.shape.primitives.quads import Rectangle
         lattice = Lattice.rectangular(1.0, 1.0)
         shape = Rectangle(center=torch.tensor([0.0, 0.5]),
@@ -392,7 +389,7 @@ class TestToShapely:
 
 
 # ---------------------------------------------------------------------------
-# _offsets_for() / periodic copy search tests (L-02, L-03)
+# _offsets_for() / periodic copy search tests
 # ---------------------------------------------------------------------------
 
 def _brute_force_sdf(cell, x, y, ring=20):
@@ -413,10 +410,9 @@ def _brute_force_sdf(cell, x, y, ring=20):
 
 class TestOffsetsForRing:
     def test_bar_offsets_are_finite_not_nan(self):
-        # Regression for L-02: Bar's bbox has an infinite x-extent, and the
-        # old _ring_for mapped literal +/-inf bbox corners through
-        # to_fractional, hitting 0*inf -> NaN even in the finite (y)
-        # direction on some lattices.
+        # Bar's bbox has an infinite x-extent; the finite (y) direction's
+        # offsets must stay finite too, not get corrupted by mapping the
+        # literal +/-inf bbox corners through to_fractional.
         lattice = Lattice.rectangular(1.0, 1.0)
         bar = Bar(offset=torch.tensor(0.0), width=torch.tensor(0.3), axis="x")
         cell = UnitCell(lattice, bar)
@@ -431,10 +427,10 @@ class TestOffsetsForRing:
         assert all(math.isfinite(v) for v in (i0, i1, j0, j1))
 
     def test_mixed_infinite_and_wide_finite_union_covers_the_finite_branch(self):
-        # Regression for L-02's real failure mode: Union(Bar, wide Rectangle)
-        # used to collapse to ring (1, 1) because Union.bounds()'s
-        # componentwise min/max let the Bar's -inf/+inf x-extent swallow the
-        # Rectangle's own, finite, much wider extent.
+        # Union(Bar, wide Rectangle): Union.bounds()'s componentwise
+        # min/max could let the Bar's -inf/+inf x-extent swallow the
+        # Rectangle's own, finite, much wider extent -- confirm the offset
+        # range still covers the Rectangle.
         from metashapes.shape.primitives.quads import Rectangle
         from metashapes.shape.boolean import Union
 
@@ -469,9 +465,9 @@ class TestOffsetsForRing:
 
 
 class TestPeriodicSdfMatchesBruteForce:
-    """sdf() after the L-02/L-03 rewrite must agree with a large brute-force
-    reference search for a variety of lattices and shape placements --
-    not just be self-consistent with its own (tighter) offset range."""
+    """sdf() must agree with a large brute-force reference search for a
+    variety of lattices and shape placements -- not just be
+    self-consistent with its own (tighter) offset range."""
 
     @pytest.mark.parametrize("lattice_factory", [
         lambda: Lattice.rectangular(1.0, 1.0),
@@ -513,8 +509,8 @@ class TestPeriodicSdfMatchesBruteForce:
 
 class TestOffsetSearchOverhead:
     def test_centered_small_shape_uses_nine_copies(self):
-        # L-03: a small shape centred in the cell should need only ring-1
-        # (9 copies), not the old fixed ceil(extent)+1 >= 2 ring (25 copies).
+        # A small shape centred in the cell should need only ring-1
+        # (9 copies), not a wider search.
         from metashapes.shape.primitives.quads import Rectangle
 
         lattice = Lattice.rectangular(1.0, 1.0)

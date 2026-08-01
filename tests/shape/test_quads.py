@@ -76,13 +76,13 @@ class TestRectangle:
 
 
 # ---------------------------------------------------------------------------
-# _sdf_rounded_box (S-09: shared helper used by Rectangle, Cross, TShape)
+# _sdf_rounded_box (shared helper used by Rectangle, Cross, TShape)
 # ---------------------------------------------------------------------------
 
 class TestSdfRoundedBox:
     """Direct tests of the shared helper, plus a check that Rectangle's own
     sdf() actually delegates to it rather than keeping a parallel inline
-    copy that could drift out of sync (the original S-09 problem)."""
+    copy that could drift out of sync."""
 
     def test_zero_radius_matches_plain_box(self):
         from metashapes.shape.utils import _sdf_rounded_box
@@ -175,12 +175,9 @@ class TestConvexQuad:
         assert_round_trip(q)
 
     def test_oversized_corner_radius_raises_at_construction(self):
-        # Regression for S-02: on a unit-square quad (u=[1,0], v=[0,1],
-        # true inradius 1.0) the old check raised at rr=1.0 but silently
-        # accepted rr=1.1 and rr=1.5, returning wrong geometry (e.g.
-        # sdf(0,0) = -2.0 for a shape whose true inradius is 1.0). The
-        # bound must now reject every radius at or above the true inradius,
-        # at construction time, not just a knife-edge value.
+        # On a unit-square quad (u=[1,0], v=[0,1], true inradius 1.0),
+        # every radius at or above the true inradius must raise at
+        # construction time.
         for rr in (1.0, 1.05, 1.1, 1.5):
             with pytest.raises(ValueError):
                 ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=rr)
@@ -191,19 +188,15 @@ class TestConvexQuad:
         assert d == pytest.approx(-1.0, abs=1e-3)
 
     def test_corner_radius_bound_is_monotonic(self):
-        # Every radius above the analytic bound must raise -- guards
-        # against the old non-monotonic behavior (some larger radii were
-        # silently accepted after a smaller one had already been rejected).
+        # Every radius above the analytic bound must raise, with no gaps.
         for rr in torch.linspace(1.0, 2.0, 11).tolist():
             with pytest.raises(ValueError):
                 ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=rr)
 
     def test_zero_radius_sdf_matches_inset_at_zero(self):
-        # Regression for S-10: sdf() used to skip _inset_convex_polygon
-        # entirely via `if rr.item() > 0`. It's now called unconditionally
-        # (including at rr=0, where it's an exact identity), so this pins
-        # the result at rr=0 against a wide grid, well beyond what any
-        # single test point would catch.
+        # _inset_convex_polygon is called unconditionally, including at
+        # rr=0 where it's an exact identity; pin that result against a
+        # wide grid.
         q = ConvexQuad(center=[0.05, -0.1], u=[0.4, 0.05], v=[0.05, 0.35],
                         alpha=0.15, beta=0.1, angle=20.0, corner_radius=0.0)
         x = torch.linspace(-1.5, 1.5, 60)
@@ -217,11 +210,9 @@ class TestConvexQuad:
         assert_outside(q, [(2.0, 2.0)])
 
     def test_min_feature_size_is_polygon_width_not_edge_length(self):
-        # Regression for S-13: min_feature_size used to be the shortest
-        # edge length, unrelated to how thin the shape actually gets. A
-        # long, thin sliver quad has long edges but a near-zero waist --
-        # the true (rotating-calipers) width must be tiny here, not
-        # anywhere near the edge lengths.
+        # A long, thin sliver quad has long edges but a near-zero waist --
+        # min_feature_size must report the true (rotating-calipers) width,
+        # not anything close to the edge lengths.
         q = ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 0.02])
         edge_len = ((2 * 1.0) ** 2 + 0) ** 0.5  # long edges ~2.0
         assert q.min_feature_size < 0.1
@@ -269,11 +260,10 @@ class TestConvexQuad:
         assert q.min_feature_size == pytest.approx(best, rel=2e-3)
 
     def test_winding_correction_matches_for_both_orientations(self):
-        # Regression for S-10: the `if area2.item() < 0: swap` branch was
-        # replaced with a branch-free torch.where selection. Construct the
-        # same physical quad via u/v pairs that give area2 of each sign
-        # (swapping u and v flips the signed area) and check both produce
-        # the same SDF (up to which vertex pair was originally which).
+        # Construct the same physical quad via u/v pairs that give area2
+        # of each sign (swapping u and v flips the signed area) and check
+        # both produce the same SDF (up to which vertex pair was
+        # originally which).
         x = torch.linspace(-1.0, 1.0, 40)
         y = torch.linspace(-1.0, 1.0, 40)
         X, Y = torch.meshgrid(x, y, indexing="xy")
@@ -349,10 +339,8 @@ class TestIsoscelesTrapezoid:
         assert_round_trip(t)
 
     def test_oversized_corner_radius_raises_at_construction(self):
-        # Regression: IsoscelesTrapezoid never got the S-02 treatment --
-        # __init__ used to only check corner_radius >= 0, not against the
-        # trapezoid's actual bound, so this constructed fine and only
-        # raised the first time sdf() ran. Now raises here instead.
+        # corner_radius must be validated against the trapezoid's actual
+        # bound at construction time, not just checked >= 0.
         with pytest.raises(ValueError, match="corner_radius"):
             IsoscelesTrapezoid(center=[0.0, 0.0], bottom_width=0.5, top_width=0.3,
                               height=0.4, corner_radius=0.3)
@@ -499,8 +487,8 @@ class TestConvexQuadDtypeDeviceGrad:
         assert_gradients_finite(q, ["center", "u", "v", "alpha", "beta", "angle", "corner_radius"])
 
     def test_gradients_finite_at_zero_corner_radius(self):
-        # The S-10 always-inset path (corner_radius=0 is no longer
-        # short-circuited) must not introduce any new NaN-gradient hazard.
+        # The always-inset path must not introduce a NaN gradient at
+        # corner_radius=0.
         q = ConvexQuad(
             center=torch.nn.Parameter(torch.tensor([0.0, 0.0])),
             u=torch.nn.Parameter(torch.tensor([0.4, 0.05])),
@@ -518,9 +506,8 @@ class TestConvexQuadDtypeDeviceGrad:
         assert_gradients_finite(q, ["corner_radius"])
 
     def test_gradients_finite_for_both_winding_orientations(self):
-        # S-10's branch-free torch.where winding correction must give real,
-        # non-zero gradient w.r.t. u/v on *both* sides of area2's sign, not
-        # an accidentally-detached path on the branch not "originally taken".
+        # The branch-free winding correction must give real, non-zero
+        # gradient w.r.t. u/v on both sides of area2's sign.
         for u, v in [([0.4, 0.05], [0.05, 0.3]), ([0.05, 0.3], [0.4, 0.05])]:
             q = ConvexQuad(
                 center=torch.tensor([0.0, 0.0]),

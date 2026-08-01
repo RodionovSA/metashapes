@@ -1,6 +1,6 @@
 # tests/shape/test_boolean.py
-# Tests for Union, Intersection, Difference bounds() — in particular the
-# S-06 fix for Intersection.bounds() on disjoint operands.
+# Tests for Union, Intersection, Difference bounds(), in particular
+# Intersection.bounds() on disjoint operands.
 
 import math
 
@@ -34,8 +34,9 @@ class TestIsEmptyBounds:
 
 class TestIntersectionBounds:
     def test_disjoint_shapes_give_canonical_empty_bounds(self):
-        # Regression for S-06: naive max(mins)/min(maxs) used to invert to
-        # ((4.5, 4.5), (0.5, 0.5)) -- xmin > xmax, ymin > ymax.
+        # Naive max(mins)/min(maxs) inverts for disjoint operands
+        # (xmin > xmax, ymin > ymax); bounds() must return the canonical
+        # empty sentinel instead.
         i = Intersection(_rect(center=(0.0, 0.0)), _rect(center=(5.0, 5.0)))
         assert i.bounds() == EMPTY_BOUNDS
 

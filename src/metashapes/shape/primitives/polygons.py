@@ -225,9 +225,8 @@ class Triangle(Shape):
         # No `if rr > 0:` guard: _inset's displacement is rr/sin_t * (...),
         # which is exactly 0 when rr=0 (sin_t is bounded away from 0 by its
         # own clamp, so this is a true 0, not a 0/eps approximation) -- the
-        # inset is already an identity at rr=0, verified by dense-grid
-        # comparison against the old guarded version. Always insetting
-        # keeps this branch-free (S-10).
+        # inset is already an identity at rr=0. Always insetting keeps this
+        # branch-free.
         alpha = self.alpha
         beta = self.beta
         gamma = torch.as_tensor(180.0, dtype=alpha.dtype, device=alpha.device) - alpha - beta
@@ -404,7 +403,7 @@ class Star(Shape):
         # B_eff: B shifted outward along the bisector through B by ocr/sin(beta).
         # sin_beta, bis_x/bis_y and OB are the half-angle-at-the-valley
         # geometry shared by both the outer-tip and inner-valley rounding
-        # below (S-18: previously recomputed identically a second time).
+        # below.
         sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
         bis_x = torch.cos(an)
         bis_y = torch.sin(an)
@@ -452,8 +451,7 @@ class Star(Shape):
         # cross_z > 0 is polygon interior; we want cross_z < 0 (valley side) to
         # be inside the half-kite, so the signed distance is -cross_z / edge_len.
         # (wx, wy reused from the d_sector computation above -- both are
-        # p_x - A_eff_x, p_y - A_eff_y; S-18: previously recomputed
-        # identically under the same names, shadowing rather than reusing.)
+        # p_x - A_eff_x, p_y - A_eff_y.)
         cross_edge = edge_dx * wy - edge_dy * wx
         d_half1 = cross_edge / edge_len
 
@@ -504,10 +502,10 @@ class Star(Shape):
     def min_feature_size(self) -> float:
         """Narrowest place the star gets: the width of a spike's tip.
 
-        Previously `2 * inner_radius` -- the diameter across valleys, which
-        has no relationship to how thin a spike actually gets (a star's
-        material is one simply-connected region; the valleys are concave
-        boundary notches, not a "neck" pinching the shape in two).
+        Not `2 * inner_radius` -- the diameter across valleys has no
+        relationship to how thin a spike actually gets (a star's material
+        is one simply-connected region; the valleys are concave boundary
+        notches, not a "neck" pinching the shape in two).
 
         The tip is where a spike actually gets thin: it's rounded to an
         exact circular arc of radius `outer_corner_radius` (by construction

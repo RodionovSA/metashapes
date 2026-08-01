@@ -187,12 +187,11 @@ class TestMetrics:
         assert m.min_feature_size is None
 
     def test_min_feature_size_survives_centering(self):
-        # Regression for S-04: _leaf_shapes() re-wraps each leaf in its
-        # enclosing Translate/Rotate (so leaf positions stay correct), and
-        # before Translate/Rotate forwarded min_feature_size, that re-wrap
-        # silently turned every leaf's min_feature_size into None --
-        # meaning UnitCell.center_scene() (Translate(Union(...))) disabled
-        # the min_feature_size check for every centered cell.
+        # _leaf_shapes() re-wraps each leaf in its enclosing
+        # Translate/Rotate (so leaf positions stay correct); confirm that
+        # doesn't lose min_feature_size along the way, since
+        # UnitCell.center_scene() (Translate(Union(...))) relies on it
+        # surviving for every centered cell.
         a = _rect(cx=0.2, cy=0.2, w=0.3, h=0.8)
         b = _rect(cx=1.2, cy=1.2, w=0.4, h=0.4)
         cell = _cell(a | b, px=2.0, py=2.0)

@@ -76,18 +76,14 @@ class TestEllipse:
         assert_round_trip(e)
 
     def test_center_value_matches_semi_minor_axis(self):
-        # Regression for S-03: the old `sign(py2 - ry)` proxy returned 0.0
-        # at the exact center of a non-circular ellipse instead of
-        # -min(semi_a, semi_b).
+        # At the exact center of a non-circular ellipse the sdf should
+        # equal -min(semi_a, semi_b).
         e = Ellipse(center=[0.0, 0.0], axes=[2.0, 4.0])  # semi-axes 1.0, 2.0
         d = sdf_at(e, 0.0, 0.0)
         assert d == pytest.approx(-1.0, abs=5e-4)
 
     def test_no_interior_sign_flip(self):
-        # Regression for S-03: the proxy sign test misclassified some
-        # interior points near the minor-axis region (e.g. sdf(0, 1e-4)
-        # used to read +1.0 for axes=[2, 4] -- outside, deep inside the
-        # shape). Sweep the interior and check every sample against the
+        # Sweep the interior and check every sample's sign against the
         # exact implicit inside/outside test.
         a, b = 1.0, 2.0  # semi-axes
         e = Ellipse(center=[0.0, 0.0], axes=[2 * a, 2 * b])
@@ -99,6 +95,59 @@ class TestEllipse:
         assert not torch.any(truth_inside & (d > 0)), (
             "found interior point(s) with positive (outside) SDF"
         )
+
+    @pytest.mark.parametrize("a,b,px,py", [
+        (1.0, 0.5, 0.9, 0.7),     # exterior, generic aspect
+        (1.0, 0.5, 0.2, 0.1),     # interior, generic aspect
+        (1.8, 0.08, 1.0, 0.05),   # extreme aspect ratio
+        (0.5, 0.5000001, 0.42, 0.33),  # near-circular (circle_mask branch)
+    ])
+    def test_matches_brute_force_nearest_point(self, a, b, px, py):
+        # Checks sdf() accuracy against a dense brute-force scan of the
+        # parametric ellipse boundary (float64), independent of the
+        # closed-form solve. Points are chosen with true distance well
+        # clear of sqrt(eps) (~3.5e-4) -- sdf()'s own `+ eps` inside its
+        # magnitude sqrt floors sub-eps true distances and would otherwise
+        # swamp this comparison.
+        e = Ellipse(center=[0.0, 0.0], axes=[2 * a, 2 * b])
+        d = sdf_at(e, px, py)
+
+        t = torch.linspace(0, math.pi / 2, 400_001, dtype=torch.float64)
+        ex, ey = a * torch.cos(t), b * torch.sin(t)
+        dist = ((ex - px) ** 2 + (ey - py) ** 2).sqrt().min().item()
+        sign = 1.0 if (px / a) ** 2 + (py / b) ** 2 > 1.0 else -1.0
+
+        assert d == pytest.approx(sign * dist, abs=1e-5)
+
+    def test_near_circular_sdf_is_finite(self):
+        # An aspect ratio this close to 1 should route to the
+        # near-circular radial-projection branch and stay finite.
+        e = Ellipse(center=[0.0, 0.0], axes=[1.0, 1.0000005])
+        xs = torch.linspace(-0.6, 0.6, 25)
+        X, Y = torch.meshgrid(xs, xs, indexing="xy")
+        d = e.sdf(X, Y)
+        assert torch.isfinite(d).all(), "near-circular sdf produced non-finite values"
+        # matches the radius-0.5 circle closely, since axes are ~equal
+        # (float32 grid precision near axis boundaries needs a slightly
+        # looser tolerance than the interior)
+        expected = torch.sqrt(X ** 2 + Y ** 2) - 0.5
+        assert torch.allclose(d, expected, atol=5e-4)
+
+    def test_sdf_continuous_across_circle_mask_threshold(self):
+        # The sdf shouldn't jump as an ellipse's aspect ratio crosses the
+        # circle_mask threshold, i.e. as evaluation switches between
+        # radial projection and the general cubic solve.
+        a = 0.5
+        ratios = torch.linspace(1.0 + 1e-6, 1.0 + 1e-3, 25)
+        px, py = 0.35, 0.2
+        vals = []
+        for r in ratios:
+            e = Ellipse(center=[0.0, 0.0], axes=[2 * a, 2 * a * r.item()])
+            vals.append(sdf_at(e, px, py))
+        vals = torch.tensor(vals)
+        assert torch.isfinite(vals).all()
+        max_jump = (vals[1:] - vals[:-1]).abs().max().item()
+        assert max_jump < 1e-3, f"sdf jumped by {max_jump} across circle_mask threshold"
 
 
 class TestEgg:
@@ -194,9 +243,8 @@ class TestEgg:
         assert_round_trip(e)
 
     def test_no_sign_flip_at_seam(self):
-        # Regression for S-01: a query 1e-4 above the seam used to read
-        # +1.0 (outside) while the mirrored point 1e-4 below read ~-0.5
-        # (inside) -- an O(1) discontinuity exactly at the reported bug.
+        # Points just above and below the seam should both read inside,
+        # with closely matching sdf values -- no sign discontinuity there.
         e = Egg(center=[0.0, 0.0], width=2.0, height=2.5, skew=0.6)
         d_above = sdf_at(e, 0.0, 1e-4)
         d_below = sdf_at(e, 0.0, -1e-4)
@@ -205,8 +253,8 @@ class TestEgg:
         assert d_above == pytest.approx(d_below, abs=1e-2)
 
     def test_continuity_across_seam(self):
-        # The old per-point b_eff switch produced a jump of up to ~1.5 at
-        # x=0; check it stays small at several x across the seam.
+        # sdf should stay close on either side of the seam at several x
+        # positions, not just at x=0.
         e = Egg(center=[0.0, 0.0], width=2.0, height=2.5, skew=0.6)
         for xv in (0.0, 0.2, 0.4, 0.6, 0.8):
             d_above = sdf_at(e, xv, 1e-4)
@@ -215,10 +263,21 @@ class TestEgg:
                 f"seam jump at x={xv}: {d_above} vs {d_below}"
             )
 
+    def test_continuity_across_seam_at_tighter_scale(self):
+        # Same check as test_continuity_across_seam, an order of magnitude
+        # closer to the seam.
+        e = Egg(center=[0.0, 0.0], width=2.0, height=2.5, skew=0.6)
+        for xv in (0.0, 0.2, 0.4, 0.6, 0.8):
+            d_above = sdf_at(e, xv, 1e-6)
+            d_below = sdf_at(e, xv, -1e-6)
+            assert abs(d_above - d_below) < 5e-3, (
+                f"seam jump at x={xv}: {d_above} vs {d_below}"
+            )
+
     def test_no_sign_flip_grid_scan(self):
-        # Same regression as Ellipse's, but for Egg's asymmetric two-arc
+        # Same check as Ellipse's, but for Egg's asymmetric two-arc
         # boundary (b_top != b_bot), across the full shape including the
-        # seam region where the original bug lived.
+        # seam region.
         e = Egg(center=[0.0, 0.0], width=2.0, height=2.5, skew=0.6)
         a, b_top, b_bot = 1.0, 2.0, 0.5
         xs = torch.linspace(-0.999, 0.999, 41)
@@ -332,11 +391,6 @@ class TestEllipseDtypeDeviceGrad:
             e.sdf(torch.tensor(0), torch.tensor(0))
 
     def test_gradients_finite_generic_point(self):
-        # A single, deliberately chosen safe point -- NOT a dense grid.
-        # See test_gradient_nan_at_cube_root_singularity below: a plain
-        # 40x40 grid over this same shape hits the solver's derivative
-        # singularity at ~3.5% of points, so a grid here would be flaky by
-        # construction, not a meaningful "generic point" check.
         e = Ellipse(
             center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
             axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])),
@@ -344,31 +398,69 @@ class TestEllipseDtypeDeviceGrad:
         )
         assert_gradients_finite_at(e, ["center", "axes", "angle"], 0.35, 0.15)
 
-    def test_gradient_nan_at_cube_root_singularity(self):
-        # KNOWN, UNFIXED ISSUE (found by this test pass; documented, not
-        # fixed -- see screening_shape_lattice.md). _ellipse_closest_point's
-        # branch-2 cubic solve computes u = sign(qm) * |qm|**(1/3), where
-        # qm is algebraically (sqrt(d) - m*n)**2 -- always >= 0, and
-        # (numerically) at or near 0 whenever sqrt(d) ~= m*n. That's a
-        # real, non-rare configuration: a plain 40x40 grid of query points
-        # over this exact shape hit it at 56/1600 points. The forward
-        # value at qm=0 is correct (0), but d/dqm(|qm|**(1/3)) diverges as
-        # |qm| -> 0, poisoning the whole gradient with NaN -- the same
-        # *class* of hazard as S-07 (a discarded/near-singular branch
-        # corrupting the selected gradient), but from an inherent
-        # derivative singularity in the closed-form solver itself, not a
-        # memory-initialization issue. A real fix needs a numerically
-        # stable reformulation of this cube-root step; out of scope here.
+    def test_gradients_finite_dense_grid(self):
+        # A dense grid exercises _ellipse_closest_point's branches across
+        # many (m, n) configurations, including several points near each
+        # branch's own degenerate inputs.
+        e = Ellipse(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])),
+            angle=torch.nn.Parameter(torch.tensor(15.0)),
+        )
+        assert_gradients_finite(e, ["center", "axes", "angle"])
+
+    def test_gradients_finite_extreme_aspect_dense_grid(self):
+        # Same grid regression, but with a much larger aspect ratio, to
+        # exercise the general solve over a wider (m, n) range.
+        e = Ellipse(
+            center=torch.tensor([0.0, 0.0]),
+            axes=torch.nn.Parameter(torch.tensor([1.8, 0.08])),
+            angle=torch.tensor(37.0),
+        )
+        assert_gradients_finite(e, ["axes"])
+
+    def test_gradients_finite_at_cube_root_degeneracy(self):
+        # This point lands _ellipse_closest_point's branch-2 solve at
+        # qm ~= 0, where a naive cube root has an infinite derivative;
+        # confirm the gradient stays finite there.
         e = Ellipse(center=torch.tensor([0.1, -0.1]),
                    axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])),
                    angle=torch.tensor(15.0))
         d = e.sdf(torch.tensor(0.12820512), torch.tensor(-0.84615386))
         d.backward()
-        assert torch.isnan(e.axes.grad).any(), (
-            "expected the known cube-root gradient singularity to still reproduce here; "
-            "if this now passes, the solver may have been fixed -- update this test to "
-            "document that instead of asserting NaN"
-        )
+        assert torch.isfinite(e.axes.grad).all(), f"got {e.axes.grad}"
+
+    def test_gradients_finite_on_axis(self):
+        # Any on-axis query (px == 0 or py == 0) drives m*n == 0 in
+        # branch 1; confirm the gradient stays finite there, inside and
+        # outside the ellipse on both axes.
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])))
+        # on the x-axis, inside and outside
+        assert_gradients_finite_at(e, ["axes"], 0.3, 0.0)
+        assert_gradients_finite_at(e, ["axes"], 0.9, 0.0)
+        # on the y-axis, inside and outside
+        assert_gradients_finite_at(e, ["axes"], 0.0, 0.1)
+        assert_gradients_finite_at(e, ["axes"], 0.0, 0.6)
+
+    def test_gradients_finite_at_evolute_cusp(self):
+        # (0, (b^2 - a^2)/b) is the evolute cusp of an axis-aligned
+        # ellipse -- the point where branch 2's P = sqrt(d) + m*n vanishes,
+        # hitting the solve's own zero-guards.
+        a, b = 1.0, 0.5
+        cusp_y = (b * b - a * a) / b
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([2 * a, 2 * b])))
+        assert_gradients_finite_at(e, ["axes"], 0.0, abs(cusp_y))
+
+    def test_gradients_finite_at_branch_boundary(self):
+        # d == 0 is the boundary between branch 1 (three real roots) and
+        # branch 2 (one real root), where sqrt(d) has an infinite
+        # derivative. Point located by bisecting py at fixed px=0.3 until
+        # d crosses zero.
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])))
+        assert_gradients_finite_at(e, ["axes"], 0.3, 0.03854308373662893)
 
     def test_gradients_finite_at_swap_boundary(self):
         # _ellipse_closest_point's `swap = px > py` branch selects
@@ -430,10 +522,6 @@ class TestEggDtypeDeviceGrad:
             e.sdf(torch.tensor(0), torch.tensor(0))
 
     def test_gradients_finite_generic_point(self):
-        # A single, deliberately chosen safe point -- see
-        # TestEllipseDtypeDeviceGrad.test_gradient_nan_at_cube_root_singularity;
-        # Egg shares the same underlying solver, so the same caveat about
-        # grids being flaky by construction applies here.
         e = Egg(
             center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
             width=torch.nn.Parameter(torch.tensor(0.6)),
@@ -443,33 +531,38 @@ class TestEggDtypeDeviceGrad:
         )
         assert_gradients_finite_at(e, ["center", "width", "height", "skew", "angle"], 0.15, 0.3)
 
+    def test_gradients_finite_dense_grid(self):
+        # Egg calls the same shared _ellipse_closest_point solver twice per
+        # point (once per arc); sweep it across a dense grid.
+        e = Egg(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            width=torch.nn.Parameter(torch.tensor(0.6)),
+            height=torch.nn.Parameter(torch.tensor(0.8)),
+            skew=torch.nn.Parameter(torch.tensor(0.2)),
+            angle=torch.nn.Parameter(torch.tensor(15.0)),
+        )
+        assert_gradients_finite(e, ["center", "width", "height", "skew", "angle"])
+
     def test_gradients_finite_off_seam(self):
-        # Once clearly off the exact seam (not within the same solver's
-        # singular band -- see below), gradients are finite.
+        # Once clearly off the exact seam, gradients are finite.
         e = Egg(center=torch.tensor([0.0, 0.0]), width=torch.tensor(0.6),
                height=torch.tensor(0.8), skew=torch.nn.Parameter(torch.tensor(0.6)))
         assert_gradients_finite_at(e, ["skew"], 0.2, 0.002)
 
-    def test_gradient_nan_very_close_to_seam(self):
-        # KNOWN, UNFIXED ISSUE (same root cause as Ellipse's
-        # test_gradient_nan_at_cube_root_singularity -- Egg calls the same
-        # shared _ellipse_closest_point solver twice per point, once per
-        # arc). Found while probing near the seam (S-01's original bug
-        # location): within 1e-4 of y_local=0 for this shape, the query
-        # lands in the solver's qm~=0 derivative-singularity band and the
-        # gradient w.r.t. skew is NaN, even though the *value* there is
-        # correct (S-01 fixed value-continuity at the seam, not gradient
-        # smoothness -- these are different properties). Not fixed here;
-        # see screening_shape_lattice.md.
+    def test_gradients_finite_very_close_to_seam(self):
+        # Within 1e-4 of y_local=0, both arcs' queries are on-axis
+        # (m*n ~= 0); confirm the gradient stays finite there and closer
+        # in, even though the sdf *value* is already correct at the seam.
         e = Egg(center=torch.tensor([0.0, 0.0]), width=torch.tensor(0.6),
                height=torch.tensor(0.8), skew=torch.nn.Parameter(torch.tensor(0.6)))
-        d = e.sdf(torch.tensor(0.1), torch.tensor(1e-4))
-        d.backward()
-        assert torch.isnan(e.skew.grad), (
-            "expected the known near-seam gradient singularity to still reproduce here; "
-            "if this now passes, the solver may have been fixed -- update this test to "
-            "document that instead of asserting NaN"
-        )
+        for y in (1e-4, -1e-4, 1e-6, -1e-6):
+            e.skew.grad = None
+            d = e.sdf(torch.tensor(0.1), torch.tensor(y))
+            d.backward()
+            assert torch.isfinite(e.skew.grad), (
+                f"the near-seam gradient singularity at y={y} should be fixed; "
+                f"got {e.skew.grad}"
+            )
 
     def test_gradients_finite_near_skew_boundary(self):
         # skew is validated strictly inside (-1, 1) at construction; confirm

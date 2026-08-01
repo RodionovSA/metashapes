@@ -103,7 +103,7 @@ class UnitCell(nn.Module):
         computed here directly rather than by mapping the box's four
         corners through `to_fractional` and filtering non-finite results:
         that approach hits `0 * inf -> NaN` whenever any bbox coordinate
-        is infinite, corrupting even a genuinely finite direction (L-02).
+        is infinite, corrupting even a genuinely finite direction.
         Here a zero coefficient against an infinite side simply
         contributes nothing, which is exact, not a fallback.
 

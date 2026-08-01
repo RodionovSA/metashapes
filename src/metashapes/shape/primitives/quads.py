@@ -182,9 +182,6 @@ class ConvexQuad(Shape):
         The construction stays valid for every edge only while the two
         endpoints' advances don't together exceed the edge's own length --
         `rr_max` is the tightest (minimum) such bound over all edges.
-        Verified against a brute-force inset-area check over thousands of
-        random convex quads: never unsound (never permits a radius that
-        actually produces a degenerate/negative-area inset).
         """
         n = len(verts)
         eps = 1e-9
@@ -241,19 +238,18 @@ class ConvexQuad(Shape):
         # rather than trusting stale __init__-time state.
         area2 = ConvexQuad._signed_area2(verts)
         if area2.abs().item() <= 1e-12:
-            # Kept as an .item()-based raise (not branch-free, S-10's
-            # documented exception): this validates degeneracy and must
-            # raise a clear error, not silently select a NaN-producing
-            # branch. __init__ already guarantees this is unreachable for
-            # any valid construction; this is a live safety net, not a
-            # per-point SDF decision.
+            # An .item()-based raise is fine here even though sdf() must
+            # otherwise stay branch-free: this validates degeneracy and
+            # must raise a clear error, not silently select a
+            # NaN-producing branch. __init__ already guarantees this is
+            # unreachable for any valid construction; this is a live
+            # safety net, not a per-point SDF decision.
             raise ValueError("Degenerate quadrilateral")
 
-        # Branch-free winding correction (S-10): swap v1<->v3 by masked
+        # Winding correction stays branch-free: swap v1<->v3 by masked
         # selection rather than an `if area2.item() < 0:` -- safe because
         # both orderings are already-finite affine rearrangements of the
-        # same computed vertices (no division, so no NaN-producing branch
-        # like S-07's hazard class).
+        # same computed vertices.
         flip = area2 < 0
         v0, v1, v2, v3 = verts
 
@@ -270,10 +266,9 @@ class ConvexQuad(Shape):
         def _line_intersection(px, py, rx, ry, qx, qy, sx, sy):
             det = rx * sy - ry * sx
             if det.abs().item() <= 1e-12:
-                # Also kept as-is: __init__ already proves this can't
-                # trigger for a valid quad (see _max_corner_radius); this
-                # raise is a defensive safety net, not a data-dependent SDF
-                # branch, so it's outside S-10's scope (see comment above).
+                # __init__ already proves this can't trigger for a valid
+                # quad (see _max_corner_radius); this raise is a defensive
+                # safety net, not a data-dependent SDF branch.
                 raise ValueError("Degenerate inset polygon")
             t = ((qx - px) * sy - (qy - py) * sx) / det
             return px + t * rx, py + t * ry
@@ -305,19 +300,14 @@ class ConvexQuad(Shape):
                 out.append((ix, iy))
 
             # No degeneracy check here: __init__ already guarantees
-            # corner_radius < the exact bound for which this construction
-            # stays valid (see _max_corner_radius) -- unlike the area-sign
-            # check this replaced, which was non-monotonic in rr and
-            # silently accepted some invalid radii past a certain point
-            # (see screening_shape_lattice.md S-02).
+            # corner_radius stays under the exact bound for which this
+            # construction is valid (see _max_corner_radius).
             return out
 
-        # No `if rr.item() > 0:` guard (S-10): offsetting each edge by 0
+        # No `if rr.item() > 0:` guard: offsetting each edge by 0
         # reconstructs the original vertices exactly (the line-intersection
         # of two unmoved adjacent edges is the original shared vertex), so
-        # the inset is already an identity at rr=0 -- verified by
-        # dense-grid comparison against the old guarded version (diff on
-        # the order of float32 round-off, ~5e-7). Always insetting keeps
+        # the inset is already an identity at rr=0. Always insetting keeps
         # this branch-free.
         verts = _inset_convex_polygon(verts, rr)
 
@@ -390,9 +380,9 @@ class ConvexQuad(Shape):
         This is the polygon's *width* (the rotating-calipers quantity: for
         each edge, the perpendicular distance from the farthest other
         vertex to that edge's line; the width is the minimum of those over
-        all edges) -- not the shortest edge length used previously, which
-        has no relationship to how thin the shape actually gets (a long,
-        thin sliver quad can have long edges but a near-zero waist).
+        all edges) -- the shortest edge length has no relationship to how
+        thin the shape actually gets (a long, thin sliver quad can have
+        long edges but a near-zero waist).
         Rotation-invariant, so this uses the unrotated frame directly, like
         `_max_corner_radius` in `__init__`. Rounding erodes a convex
         shape's width by exactly `2 * corner_radius` in every direction.
@@ -471,12 +461,7 @@ class IsoscelesTrapezoid(Shape):
         # once here rather than being (re-)discovered inside sdf() on every
         # call. Same bound sdf()'s own inset construction below uses,
         # solved for the radius at which each of r1, r2, he first reaches
-        # zero (verified sound and tight against 20,000 random trapezoids
-        # before shipping) -- previously this was unchecked here entirely,
-        # so an oversized radius would construct fine and only fail the
-        # first time sdf() ran (or mid-training if it drifted there via a
-        # gradient step), the same crash-mid-training-loop hazard S-02
-        # fixed for ConvexQuad (see screening_shape_lattice.md).
+        # zero.
         r1_0 = 0.5 * self.bottom_width.item()
         r2_0 = 0.5 * self.top_width.item()
         he_0 = 0.5 * self.height.item()

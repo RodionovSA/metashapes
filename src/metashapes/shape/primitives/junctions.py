@@ -53,8 +53,7 @@ class Cross(Shape):
         # the crossbar) is intentionally allowed -- it's a valid degenerate
         # case, just not a very cross/T-like one. This is deliberately
         # looser than the outer_corner_radius check below, which does
-        # forbid the equivalent equality (see screening_shape_lattice.md
-        # S-21).
+        # forbid the equivalent equality.
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -86,11 +85,10 @@ class Cross(Shape):
         # No `if ri == 0: return d_base` shortcut: the patch computed below
         # reduces to an exact d_patch >= d_base everywhere when ri=0 (the
         # square/circle both collapse to the same single-point distance),
-        # so torch.minimum(d_base, d_patch) is already a no-op in that case
-        # -- verified against the old branch by dense-grid comparison
-        # (max diff 0.0 across randomized parameters). Always computing it
-        # keeps this branch-free (S-10: no .item()/tensor-truthiness inside
-        # the differentiable forward path).
+        # so torch.minimum(d_base, d_patch) is already a no-op in that
+        # case. Always computing it keeps this branch-free (no
+        # .item()/tensor-truthiness inside the differentiable forward
+        # path).
         u = torch.abs(x_local)
         v = torch.abs(y_local)
 
@@ -169,8 +167,7 @@ class TShape(Shape):
         # the crossbar) is intentionally allowed -- it's a valid degenerate
         # case, just not a very cross/T-like one. This is deliberately
         # looser than the outer_corner_radius check below, which does
-        # forbid the equivalent equality (see screening_shape_lattice.md
-        # S-21).
+        # forbid the equivalent equality.
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -217,9 +214,8 @@ class TShape(Shape):
         d_base = torch.minimum(d_top_half, d_stem)
 
         # No `if ri == 0: return d_base` shortcut -- same reasoning as
-        # Cross.sdf(): the patch is a provable no-op at ri=0 (verified by
-        # dense-grid comparison), so always computing it keeps this
-        # branch-free (S-10).
+        # Cross.sdf(): the patch is a provable no-op at ri=0, so always
+        # computing it keeps this branch-free.
         # add two concave patches under the top bar
         qx = torch.abs(x_local) - by
         qy = (bx - 2.0 * by) - y_local

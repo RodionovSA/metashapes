@@ -1,6 +1,6 @@
 # tests/shape/test_transforms.py
-# Tests for Translate, Rotate, Scale: min_feature_size propagation (S-04),
-# from_parametric origin defaults (S-05), and empty-bounds handling (S-06).
+# Tests for Translate, Rotate, Scale: min_feature_size propagation,
+# from_parametric origin defaults, and empty-bounds handling.
 
 import math
 
@@ -24,7 +24,7 @@ def _disjoint_intersection():
 
 
 # ---------------------------------------------------------------------------
-# S-04: min_feature_size propagation through rigid/uniform-scale transforms
+# min_feature_size propagation through rigid/uniform-scale transforms
 # ---------------------------------------------------------------------------
 
 class TestMinFeatureSizePropagation:
@@ -62,8 +62,7 @@ class TestMinFeatureSizePropagation:
 class TestMinFeatureSizeBooleansStayUnknown:
     """Union/Intersection/Difference deliberately return None: combining
     shapes can create a feature thinner than either operand's own value, so
-    there is no safe way to propagate a number (see user decision recorded
-    in screening_shape_lattice.md, S-04)."""
+    there is no safe way to propagate a number."""
 
     def test_union_of_two_finite_children_is_none(self):
         a = _rect(size=(0.3, 0.8))
@@ -78,7 +77,7 @@ class TestMinFeatureSizeBooleansStayUnknown:
 
 
 # ---------------------------------------------------------------------------
-# S-05: Rotate/Scale.from_parametric default origin
+# Rotate/Scale.from_parametric default origin
 # ---------------------------------------------------------------------------
 
 class TestFromParametricOriginDefault:
@@ -111,7 +110,7 @@ class TestFromParametricOriginDefault:
 
 
 # ---------------------------------------------------------------------------
-# S-06: empty bounds propagate correctly through transforms
+# empty bounds propagate correctly through transforms
 # ---------------------------------------------------------------------------
 
 class TestEmptyBoundsThroughTransforms:

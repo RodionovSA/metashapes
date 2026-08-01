@@ -35,8 +35,7 @@ def _sdf_rounded_box(
 
     r=0 (the default) reduces exactly to a plain sharp-cornered box -- no
     separate "unrounded" formula is needed. Shared by Rectangle, Cross, and
-    TShape (S-09: this was three independently-maintained inline copies of
-    the same Quilez rounded-box trick).
+    TShape.
     """
     qx = torch.abs(x_local) - (hx - r)
     qy = torch.abs(y_local) - (hy - r)

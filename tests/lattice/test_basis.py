@@ -9,10 +9,9 @@ from metashapes.lattice.basis import Lattice
 
 class TestLatticePackageExports:
     def test_lattice_and_unit_cell_importable_from_package(self):
-        # Regression for L-05: lattice/__init__.py used to be empty, so
-        # `from metashapes.lattice import Lattice` raised ImportError even
-        # though the sibling `metashapes.shape` package does export its
-        # main class this way.
+        # `Lattice`/`UnitCell` should be importable directly from the
+        # `metashapes.lattice` package, matching how the sibling
+        # `metashapes.shape` package exports its main class.
         from metashapes.lattice import Lattice as PackageLattice
         from metashapes.lattice import UnitCell as PackageUnitCell
         from metashapes.lattice.unit_cell import UnitCell
@@ -21,7 +20,8 @@ class TestLatticePackageExports:
         assert PackageUnitCell is UnitCell
 
     def test_grid_helpers_importable_from_package(self):
-        # Regression for L-07: fractional_grid was unreachable public API.
+        # fractional_grid and cartesian_grid should both be reachable as
+        # public API from the package.
         from metashapes.lattice import fractional_grid, cartesian_grid
 
         f1, f2 = fractional_grid(4, 4)

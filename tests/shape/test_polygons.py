@@ -161,10 +161,9 @@ class TestTriangle:
             Triangle(center=[0.0, 0.0], base=1.0, alpha=60.0, beta=60.0, corner_radius=0.5)
 
     def test_zero_radius_sdf_finite_and_correct(self):
-        # Regression for S-10: sdf() used to skip the corner-inset block
-        # entirely via `if rr > 0`. It's now called unconditionally
-        # (including at rr=0, where it's an exact identity), so this pins
-        # the result at rr=0 against a wide grid.
+        # The corner-inset block is called unconditionally, including at
+        # rr=0 where it's an exact identity; pin that result against a
+        # wide grid.
         t = Triangle(center=[0.05, -0.1], base=1.3, alpha=50.0, beta=65.0,
                      angle=15.0, corner_radius=0.0)
         x = torch.linspace(-1.5, 1.5, 60)
@@ -355,12 +354,11 @@ class TestStar:
         assert_round_trip(s)
 
     def test_min_feature_size_is_twice_outer_corner_radius(self):
-        # Regression for S-13: min_feature_size used to be 2*inner_radius
-        # -- the diameter across valleys, unrelated to the spike's own
-        # thinness. The tip is where a spike actually gets thin: it's an
-        # exact circular arc of outer_corner_radius by construction of the
-        # SDF, so its own width (through the arc's center) is exactly
-        # 2*outer_corner_radius.
+        # The tip is where a spike actually gets thin: it's an exact
+        # circular arc of outer_corner_radius by construction of the SDF,
+        # so its own width (through the arc's center) is exactly
+        # 2*outer_corner_radius -- not 2*inner_radius (the diameter across
+        # valleys, unrelated to the spike's own thinness).
         s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
                  outer_corner_radius=0.08)
         assert s.min_feature_size == pytest.approx(0.16, abs=1e-6)
@@ -445,11 +443,12 @@ class TestRegularPolygonDtypeDeviceGrad:
             assert torch.isfinite(p.sdf(X, Y)).all()
 
     def test_corner_radius_drift_past_bound_is_silent_not_crashing(self):
-        # S-11 category (declared out of scope, but worth one pinned test):
-        # unlike the old IsoscelesTrapezoid, this does NOT crash inside
-        # sdf() when corner_radius drifts past its construction-time bound
-        # -- it silently produces a geometrically inverted inset instead
-        # (rho_in/R_in go negative). Documents the actual current behavior.
+        # Parameters aren't re-validated after construction (the caller's
+        # responsibility to keep in range during optimization). If
+        # corner_radius drifts past its construction-time bound, sdf()
+        # should not crash -- it silently produces a geometrically
+        # inverted inset instead (rho_in/R_in go negative). Documents the
+        # actual current behavior.
         rr = torch.nn.Parameter(torch.tensor(0.1))
         p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=torch.tensor(0.5),
                            corner_radius=rr)
