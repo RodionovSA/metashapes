@@ -5,7 +5,11 @@ import pytest
 import torch
 from metashapes.shape import Shape
 from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
-from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
+from .conftest import (
+    assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at,
+    assert_dtype_device_flow, assert_direct_call_dtype_promotion,
+    assert_gradients_finite, assert_gradients_finite_at,
+)
 
 
 class TestEllipse:
@@ -301,3 +305,230 @@ class TestStadium:
     def test_round_trip(self):
         s = Stadium(center=[0.2, -0.1], length=1.8, width=0.6, angle=20.0)
         assert_round_trip(s)
+
+
+# ---------------------------------------------------------------------------
+# dtype / device / gradient flow
+# ---------------------------------------------------------------------------
+
+class TestEllipseDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        e = Ellipse(center=[0.1, -0.1], axes=[1.0, 0.5], angle=15.0)
+        assert_dtype_device_flow(e)
+
+    def test_direct_call_dtype_promotion(self):
+        e = Ellipse(center=[0.0, 0.0], axes=[1.0, 0.5])
+        assert_direct_call_dtype_promotion(e)
+
+    def test_integer_query_raises_typeerror(self):
+        # Ellipse (and Egg, Stadium below) use torch.finfo(x.dtype).eps,
+        # which requires a floating-point dtype -- unlike Rectangle/
+        # ConvexQuad/etc, which use only plain arithmetic and tolerate
+        # integer query points. This inconsistency across primitives is
+        # real (confirmed for all 12); pinned here as Ellipse's actual
+        # current behavior, not silently worked around.
+        e = Ellipse(center=[0.0, 0.0], axes=[1.0, 0.5])
+        with pytest.raises(TypeError, match="finfo"):
+            e.sdf(torch.tensor(0), torch.tensor(0))
+
+    def test_gradients_finite_generic_point(self):
+        # A single, deliberately chosen safe point -- NOT a dense grid.
+        # See test_gradient_nan_at_cube_root_singularity below: a plain
+        # 40x40 grid over this same shape hits the solver's derivative
+        # singularity at ~3.5% of points, so a grid here would be flaky by
+        # construction, not a meaningful "generic point" check.
+        e = Ellipse(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])),
+            angle=torch.nn.Parameter(torch.tensor(15.0)),
+        )
+        assert_gradients_finite_at(e, ["center", "axes", "angle"], 0.35, 0.15)
+
+    def test_gradient_nan_at_cube_root_singularity(self):
+        # KNOWN, UNFIXED ISSUE (found by this test pass; documented, not
+        # fixed -- see screening_shape_lattice.md). _ellipse_closest_point's
+        # branch-2 cubic solve computes u = sign(qm) * |qm|**(1/3), where
+        # qm is algebraically (sqrt(d) - m*n)**2 -- always >= 0, and
+        # (numerically) at or near 0 whenever sqrt(d) ~= m*n. That's a
+        # real, non-rare configuration: a plain 40x40 grid of query points
+        # over this exact shape hit it at 56/1600 points. The forward
+        # value at qm=0 is correct (0), but d/dqm(|qm|**(1/3)) diverges as
+        # |qm| -> 0, poisoning the whole gradient with NaN -- the same
+        # *class* of hazard as S-07 (a discarded/near-singular branch
+        # corrupting the selected gradient), but from an inherent
+        # derivative singularity in the closed-form solver itself, not a
+        # memory-initialization issue. A real fix needs a numerically
+        # stable reformulation of this cube-root step; out of scope here.
+        e = Ellipse(center=torch.tensor([0.1, -0.1]),
+                   axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])),
+                   angle=torch.tensor(15.0))
+        d = e.sdf(torch.tensor(0.12820512), torch.tensor(-0.84615386))
+        d.backward()
+        assert torch.isnan(e.axes.grad).any(), (
+            "expected the known cube-root gradient singularity to still reproduce here; "
+            "if this now passes, the solver may have been fixed -- update this test to "
+            "document that instead of asserting NaN"
+        )
+
+    def test_gradients_finite_at_swap_boundary(self):
+        # _ellipse_closest_point's `swap = px > py` branch selects
+        # differently on either side of the px == py tie -- confirm no
+        # gradient discontinuity/NaN right at it.
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])))
+        assert_gradients_finite_at(e, ["axes"], 0.3, 0.3)
+
+    def test_gradients_finite_near_circular(self):
+        # a ~= b exercises _ellipse_closest_point's circle_mask branch
+        # (radial projection), specifically chosen to avoid the general
+        # cubic-solve path, which is singular as b^2 - a^2 -> 0.
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([0.5, 0.5000001])))
+        assert_gradients_finite_at(e, ["axes"], 0.1, 0.05)
+
+    def test_gradients_finite_at_degenerate_center(self):
+        # Querying exactly at the ellipse's own center hits
+        # _ellipse_closest_point's degenerate_center fallback (the radial
+        # direction (px,py)/r is undefined at the origin).
+        e = Ellipse(center=torch.nn.Parameter(torch.tensor([0.0, 0.0])),
+                   axes=torch.tensor([0.5, 0.5]))
+        assert_gradients_finite_at(e, ["center"], 0.0, 0.0)
+
+    def test_sign_zero_gradient_does_not_zero_out_magnitude_gradient(self):
+        # torch.sign(...) (used for the inside/outside classification) has
+        # zero gradient almost everywhere by construction -- confirm this
+        # doesn't zero out the *magnitude* term's real gradient via product
+        # rule (it shouldn't: d(sign*mag)/dp = sign * d(mag)/dp when
+        # d(sign)/dp = 0), rather than trusting that reasoning unverified.
+        e = Ellipse(center=torch.tensor([0.0, 0.0]),
+                   axes=torch.nn.Parameter(torch.tensor([1.0, 0.5])))
+        d = e.sdf(torch.tensor(0.6), torch.tensor(0.05))  # clearly outside
+        d.backward()
+        assert torch.isfinite(e.axes.grad).all()
+        assert e.axes.grad.abs().sum() > 0, "gradient unexpectedly zeroed out"
+
+    def test_broadcast_x_y_different_shapes(self):
+        e = Ellipse(center=[0.0, 0.0], axes=[1.0, 0.5])
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = e.sdf(x, y)
+        assert out.shape == (7, 5)
+
+
+class TestEggDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        e = Egg(center=[0.1, -0.1], width=0.6, height=0.8, skew=0.2, angle=15.0)
+        assert_dtype_device_flow(e)
+
+    def test_direct_call_dtype_promotion(self):
+        e = Egg(center=[0.0, 0.0], width=0.6, height=0.8, skew=0.2)
+        assert_direct_call_dtype_promotion(e)
+
+    def test_integer_query_raises_typeerror(self):
+        e = Egg(center=[0.0, 0.0], width=0.6, height=0.8, skew=0.2)
+        with pytest.raises(TypeError, match="finfo"):
+            e.sdf(torch.tensor(0), torch.tensor(0))
+
+    def test_gradients_finite_generic_point(self):
+        # A single, deliberately chosen safe point -- see
+        # TestEllipseDtypeDeviceGrad.test_gradient_nan_at_cube_root_singularity;
+        # Egg shares the same underlying solver, so the same caveat about
+        # grids being flaky by construction applies here.
+        e = Egg(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            width=torch.nn.Parameter(torch.tensor(0.6)),
+            height=torch.nn.Parameter(torch.tensor(0.8)),
+            skew=torch.nn.Parameter(torch.tensor(0.2)),
+            angle=torch.nn.Parameter(torch.tensor(15.0)),
+        )
+        assert_gradients_finite_at(e, ["center", "width", "height", "skew", "angle"], 0.15, 0.3)
+
+    def test_gradients_finite_off_seam(self):
+        # Once clearly off the exact seam (not within the same solver's
+        # singular band -- see below), gradients are finite.
+        e = Egg(center=torch.tensor([0.0, 0.0]), width=torch.tensor(0.6),
+               height=torch.tensor(0.8), skew=torch.nn.Parameter(torch.tensor(0.6)))
+        assert_gradients_finite_at(e, ["skew"], 0.2, 0.002)
+
+    def test_gradient_nan_very_close_to_seam(self):
+        # KNOWN, UNFIXED ISSUE (same root cause as Ellipse's
+        # test_gradient_nan_at_cube_root_singularity -- Egg calls the same
+        # shared _ellipse_closest_point solver twice per point, once per
+        # arc). Found while probing near the seam (S-01's original bug
+        # location): within 1e-4 of y_local=0 for this shape, the query
+        # lands in the solver's qm~=0 derivative-singularity band and the
+        # gradient w.r.t. skew is NaN, even though the *value* there is
+        # correct (S-01 fixed value-continuity at the seam, not gradient
+        # smoothness -- these are different properties). Not fixed here;
+        # see screening_shape_lattice.md.
+        e = Egg(center=torch.tensor([0.0, 0.0]), width=torch.tensor(0.6),
+               height=torch.tensor(0.8), skew=torch.nn.Parameter(torch.tensor(0.6)))
+        d = e.sdf(torch.tensor(0.1), torch.tensor(1e-4))
+        d.backward()
+        assert torch.isnan(e.skew.grad), (
+            "expected the known near-seam gradient singularity to still reproduce here; "
+            "if this now passes, the solver may have been fixed -- update this test to "
+            "document that instead of asserting NaN"
+        )
+
+    def test_gradients_finite_near_skew_boundary(self):
+        # skew is validated strictly inside (-1, 1) at construction; confirm
+        # approaching that boundary doesn't blow up b_bot/b_top's gradient.
+        e = Egg(center=torch.tensor([0.0, 0.0]), width=torch.tensor(0.6),
+               height=torch.tensor(0.8), skew=torch.nn.Parameter(torch.tensor(0.99)))
+        assert_gradients_finite_at(e, ["skew"], 0.1, 0.1)
+
+    def test_broadcast_x_y_different_shapes(self):
+        e = Egg(center=[0.0, 0.0], width=0.6, height=0.8, skew=0.2)
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = e.sdf(x, y)
+        assert out.shape == (7, 5)
+
+
+class TestStadiumDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        s = Stadium(center=[0.1, -0.1], length=1.5, width=0.6, angle=15.0)
+        assert_dtype_device_flow(s)
+
+    def test_direct_call_dtype_promotion(self):
+        s = Stadium(center=[0.0, 0.0], length=1.5, width=0.6)
+        assert_direct_call_dtype_promotion(s)
+
+    def test_integer_query_raises_typeerror(self):
+        s = Stadium(center=[0.0, 0.0], length=1.5, width=0.6)
+        with pytest.raises(TypeError, match="finfo"):
+            s.sdf(torch.tensor(0), torch.tensor(0))
+
+    def test_gradients_finite_generic_point(self):
+        s = Stadium(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            length=torch.nn.Parameter(torch.tensor(1.5)),
+            width=torch.nn.Parameter(torch.tensor(0.6)),
+            angle=torch.nn.Parameter(torch.tensor(15.0)),
+        )
+        assert_gradients_finite(s, ["center", "length", "width", "angle"])
+
+    def test_gradients_finite_at_length_equals_width(self):
+        # A pure circle -- the validated edge of length >= width. half_span
+        # clamps to exactly 0 here; confirm that doesn't introduce a
+        # gradient hazard.
+        s = Stadium(center=torch.tensor([0.0, 0.0]),
+                   length=torch.nn.Parameter(torch.tensor(0.6)),
+                   width=torch.nn.Parameter(torch.tensor(0.6)))
+        assert_gradients_finite_at(s, ["length", "width"], 0.2, 0.1)
+
+    def test_gradients_finite_on_cap_axis(self):
+        # Directly along the capsule's long axis (y_local=0): dx's clamp
+        # boundary (|x_local| == half_span) is where the flat-side and
+        # rounded-cap regions meet.
+        s = Stadium(center=torch.tensor([0.0, 0.0]), length=torch.tensor(1.5),
+                   width=torch.nn.Parameter(torch.tensor(0.6)))
+        assert_gradients_finite_at(s, ["width"], 0.75, 0.0)
+
+    def test_broadcast_x_y_different_shapes(self):
+        s = Stadium(center=[0.0, 0.0], length=1.5, width=0.6)
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = s.sdf(x, y)
+        assert out.shape == (7, 5)

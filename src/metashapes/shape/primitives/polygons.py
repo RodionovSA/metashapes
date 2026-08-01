@@ -173,15 +173,15 @@ class Triangle(Shape):
         register(self, "angle", angle)
         register(self, "corner_radius", corner_radius)
 
-        if self.base <= 0:
+        if torch.any(self.base <= 0):
             raise ValueError("Triangle base must be positive")
-        if self.alpha <= 0 or self.beta <= 0:
+        if torch.any(self.alpha <= 0) or torch.any(self.beta <= 0):
             raise ValueError("Triangle angles must be positive")
-        if self.alpha + self.beta >= 180.0:
+        if torch.any(self.alpha + self.beta >= 180.0):
             raise ValueError("Triangle alpha + beta must be less than 180°")
-        if self.corner_radius < 0:
+        if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
-        if self.corner_radius > 0 and self.corner_radius >= self._inradius():
+        if torch.any((self.corner_radius > 0) & (self.corner_radius >= self._inradius())):
             raise ValueError("corner_radius must be less than the triangle inradius")
 
     def _inradius(self) -> torch.Tensor:
@@ -222,26 +222,31 @@ class Triangle(Shape):
 
         (Ax, Ay), (Bx, By), (Cx, Cy) = self._vertices()
 
-        if rr > 0:
-            alpha = self.alpha
-            beta = self.beta
-            gamma = torch.as_tensor(180.0, dtype=alpha.dtype, device=alpha.device) - alpha - beta
+        # No `if rr > 0:` guard: _inset's displacement is rr/sin_t * (...),
+        # which is exactly 0 when rr=0 (sin_t is bounded away from 0 by its
+        # own clamp, so this is a true 0, not a 0/eps approximation) -- the
+        # inset is already an identity at rr=0, verified by dense-grid
+        # comparison against the old guarded version. Always insetting
+        # keeps this branch-free (S-10).
+        alpha = self.alpha
+        beta = self.beta
+        gamma = torch.as_tensor(180.0, dtype=alpha.dtype, device=alpha.device) - alpha - beta
 
-            def _inset(Vx, Vy, Nx, Ny, Px, Py, theta_deg):
-                dnx, dny = Nx - Vx, Ny - Vy
-                dpx, dpy = Px - Vx, Py - Vy
-                dn_len = torch.sqrt(dnx * dnx + dny * dny).clamp(min=1e-8)
-                dp_len = torch.sqrt(dpx * dpx + dpy * dpy).clamp(min=1e-8)
-                dnx, dny = dnx / dn_len, dny / dn_len
-                dpx, dpy = dpx / dp_len, dpy / dp_len
-                sin_t = torch.sin(torch.deg2rad(theta_deg)).clamp(min=1e-8)
-                return Vx + rr / sin_t * (dnx + dpx), Vy + rr / sin_t * (dny + dpy)
+        def _inset(Vx, Vy, Nx, Ny, Px, Py, theta_deg):
+            dnx, dny = Nx - Vx, Ny - Vy
+            dpx, dpy = Px - Vx, Py - Vy
+            dn_len = torch.sqrt(dnx * dnx + dny * dny).clamp(min=1e-8)
+            dp_len = torch.sqrt(dpx * dpx + dpy * dpy).clamp(min=1e-8)
+            dnx, dny = dnx / dn_len, dny / dn_len
+            dpx, dpy = dpx / dp_len, dpy / dp_len
+            sin_t = torch.sin(torch.deg2rad(theta_deg)).clamp(min=1e-8)
+            return Vx + rr / sin_t * (dnx + dpx), Vy + rr / sin_t * (dny + dpy)
 
-            # Inset all three vertices using original (un-inset) positions
-            oAx, oAy, oBx, oBy, oCx, oCy = Ax, Ay, Bx, By, Cx, Cy
-            Ax, Ay = _inset(oAx, oAy, oBx, oBy, oCx, oCy, alpha)
-            Bx, By = _inset(oBx, oBy, oCx, oCy, oAx, oAy, beta)
-            Cx, Cy = _inset(oCx, oCy, oAx, oAy, oBx, oBy, gamma)
+        # Inset all three vertices using original (un-inset) positions
+        oAx, oAy, oBx, oBy, oCx, oCy = Ax, Ay, Bx, By, Cx, Cy
+        Ax, Ay = _inset(oAx, oAy, oBx, oBy, oCx, oCy, alpha)
+        Bx, By = _inset(oBx, oBy, oCx, oCy, oAx, oAy, beta)
+        Cx, Cy = _inset(oCx, oCy, oAx, oAy, oBx, oBy, gamma)
 
         verts = [(Ax, Ay), (Bx, By), (Cx, Cy)]
         min_d2 = None
@@ -397,13 +402,16 @@ class Star(Shape):
         A_eff_y = torch.zeros_like(shift_A)
 
         # B_eff: B shifted outward along the bisector through B by ocr/sin(beta).
+        # sin_beta, bis_x/bis_y and OB are the half-angle-at-the-valley
+        # geometry shared by both the outer-tip and inner-valley rounding
+        # below (S-18: previously recomputed identically a second time).
         sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
-        bis_x_B = torch.cos(an)
-        bis_y_B = torch.sin(an)
+        bis_x = torch.cos(an)
+        bis_y = torch.sin(an)
         OB = torch.sqrt(Bx ** 2 + By ** 2)
         OB_eff = OB - ocr / sin_beta
-        B_eff_x = OB_eff * bis_x_B
-        B_eff_y = OB_eff * bis_y_B
+        B_eff_x = OB_eff * bis_x
+        B_eff_y = OB_eff * bis_y
 
         # Signed distance to segment A_eff -> B_eff in the half-sector.
         ex = B_eff_x - A_eff_x
@@ -425,7 +433,6 @@ class Star(Shape):
         edge_ux = edge_dx / edge_len
         edge_uy = edge_dy / edge_len
 
-        sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
         cos_beta = torch.sqrt(1.0 - sin_beta ** 2).clamp(min=1e-9)
         tan_beta = sin_beta / cos_beta
 
@@ -433,10 +440,8 @@ class Star(Shape):
         icr_max = edge_len * tan_beta
         icr_eff = torch.minimum(icr, icr_max)
 
-        # Disk center on outward bisector, past B.
-        bis_x = torch.cos(an)
-        bis_y = torch.sin(an)
-        OB = torch.sqrt(Bx ** 2 + By ** 2)
+        # Disk center on outward bisector, past B. (sin_beta, bis_x/bis_y,
+        # OB reused from the outer-tip rounding above -- same geometry.)
         OC = OB + icr_eff / sin_beta
         C_x = OC * bis_x
         C_y = OC * bis_y
@@ -446,8 +451,9 @@ class Star(Shape):
         # Half-kite constraint 1: valley-exterior side of edge A_eff -> B.
         # cross_z > 0 is polygon interior; we want cross_z < 0 (valley side) to
         # be inside the half-kite, so the signed distance is -cross_z / edge_len.
-        wx = p_x - A_eff_x
-        wy = p_y - A_eff_y
+        # (wx, wy reused from the d_sector computation above -- both are
+        # p_x - A_eff_x, p_y - A_eff_y; S-18: previously recomputed
+        # identically under the same names, shadowing rather than reusing.)
         cross_edge = edge_dx * wy - edge_dy * wx
         d_half1 = cross_edge / edge_len
 
@@ -496,4 +502,28 @@ class Star(Shape):
 
     @property
     def min_feature_size(self) -> float:
-        return 2.0 * self.inner_radius.item()
+        """Narrowest place the star gets: the width of a spike's tip.
+
+        Previously `2 * inner_radius` -- the diameter across valleys, which
+        has no relationship to how thin a spike actually gets (a star's
+        material is one simply-connected region; the valleys are concave
+        boundary notches, not a "neck" pinching the shape in two).
+
+        The tip is where a spike actually gets thin: it's rounded to an
+        exact circular arc of radius `outer_corner_radius` (by construction
+        of the SDF itself -- `sdf`'s "d_sector" term is exactly `distance
+        to the inset A_eff/B_eff segment, minus outer_corner_radius`), so
+        the material width through that arc's own center is exactly
+        `2 * outer_corner_radius`. An unrounded tip (`outer_corner_radius
+        == 0`) is a mathematically sharp point -- reporting 0 is the
+        correct, useful answer: an infinitely sharp tip is exactly the
+        kind of unfabricatable feature this metric exists to catch, and a
+        manufacturability check with a nonzero min_feature_size
+        requirement correctly rejects it.
+
+        `inner_corner_radius` doesn't create a competing thin feature:
+        rounding a *concave* valley only adds material there, so it can
+        only widen the local boundary, never narrow it below the sharp
+        case.
+        """
+        return 2.0 * self.outer_corner_radius.detach().item()

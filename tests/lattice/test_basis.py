@@ -7,6 +7,28 @@ import torch
 from metashapes.lattice.basis import Lattice
 
 
+class TestLatticePackageExports:
+    def test_lattice_and_unit_cell_importable_from_package(self):
+        # Regression for L-05: lattice/__init__.py used to be empty, so
+        # `from metashapes.lattice import Lattice` raised ImportError even
+        # though the sibling `metashapes.shape` package does export its
+        # main class this way.
+        from metashapes.lattice import Lattice as PackageLattice
+        from metashapes.lattice import UnitCell as PackageUnitCell
+        from metashapes.lattice.unit_cell import UnitCell
+
+        assert PackageLattice is Lattice
+        assert PackageUnitCell is UnitCell
+
+    def test_grid_helpers_importable_from_package(self):
+        # Regression for L-07: fractional_grid was unreachable public API.
+        from metashapes.lattice import fractional_grid, cartesian_grid
+
+        f1, f2 = fractional_grid(4, 4)
+        assert f1.shape == (4, 4)
+        assert f2.shape == (4, 4)
+
+
 class TestLatticeConstruction:
     def test_rectangular_vectors(self):
         lat = Lattice.rectangular(3.0, 5.0)

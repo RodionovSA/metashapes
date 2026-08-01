@@ -100,6 +100,25 @@ class TestUnitCellRasterize:
         out = cell.rasterize(16, 12, repeat=(2, 3), cartesian=True)
         assert out.shape == (12 * 3, 16 * 2)
 
+    def test_rasterize_cartesian_matches_fractional_pixel_pitch(self):
+        # Regression for L-04: cartesian=True used to be endpoint-inclusive
+        # (torch.linspace) while cartesian=False was endpoint-excluded
+        # (fractional_grid), giving different pixel pitch and a duplicated
+        # boundary sample for the same nx/ny. Both should now agree.
+        cell = _square_cell(px=1.0, py=1.0, side=0.2)
+        d_false = cell.rasterize(16, 16, cartesian=False)
+        d_true = cell.rasterize(16, 16, cartesian=True)
+        assert torch.allclose(d_false, d_true, atol=1e-4)
+
+    def test_rasterize_cartesian_repeat_has_no_duplicate_seam(self):
+        # A repeated cartesian=True raster must tile seamlessly: the last
+        # row/col of one cell and the first row/col of the next must not be
+        # identical duplicates of the same boundary sample.
+        cell = _square_cell(px=1.0, py=1.0, side=0.2)
+        out = cell.rasterize(4, 4, cartesian=True, repeat=(2, 2))
+        assert not torch.allclose(out[3], out[4])
+        assert not torch.allclose(out[:, 3], out[:, 4])
+
     def test_rasterize_values_finite(self):
         cell = _square_cell()
         out = cell.rasterize(32, 32)

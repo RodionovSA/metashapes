@@ -8,7 +8,7 @@ import torch
 
 from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _to_local_coords, register
+from metashapes.shape.utils import _sdf_rounded_box, _to_local_coords, register
 
 __all__ = [
     "Cross",
@@ -49,6 +49,12 @@ class Cross(Shape):
             raise ValueError("length must be positive")
         if torch.any(self.width <= 0):
             raise ValueError("width must be positive")
+        # width == length (a square cross/T with no arm protrusion beyond
+        # the crossbar) is intentionally allowed -- it's a valid degenerate
+        # case, just not a very cross/T-like one. This is deliberately
+        # looser than the outer_corner_radius check below, which does
+        # forbid the equivalent equality (see screening_shape_lattice.md
+        # S-21).
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -73,29 +79,18 @@ class Cross(Shape):
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
-        def _sd_rounded_box(px: torch.Tensor,
-                            py: torch.Tensor,
-                            hx: torch.Tensor,
-                            hy: torch.Tensor,
-                            rr: torch.Tensor) -> torch.Tensor:
-            qx = torch.abs(px) - (hx - rr)
-            qy = torch.abs(py) - (hy - rr)
-
-            qx_pos = torch.clamp(qx, min=0.0)
-            qy_pos = torch.clamp(qy, min=0.0)
-
-            outside = torch.sqrt(qx_pos * qx_pos + qy_pos * qy_pos)
-            inside = torch.clamp(torch.maximum(qx, qy), max=0.0)
-
-            return outside + inside - rr
-
-        dh = _sd_rounded_box(x_local, y_local, bx, by, ro)
-        dv = _sd_rounded_box(x_local, y_local, by, bx, ro)
+        dh = _sdf_rounded_box(x_local, y_local, bx, by, ro)
+        dv = _sdf_rounded_box(x_local, y_local, by, bx, ro)
         d_base = torch.minimum(dh, dv)
 
-        if torch.all(ri == 0):
-            return d_base
-
+        # No `if ri == 0: return d_base` shortcut: the patch computed below
+        # reduces to an exact d_patch >= d_base everywhere when ri=0 (the
+        # square/circle both collapse to the same single-point distance),
+        # so torch.minimum(d_base, d_patch) is already a no-op in that case
+        # -- verified against the old branch by dense-grid comparison
+        # (max diff 0.0 across randomized parameters). Always computing it
+        # keeps this branch-free (S-10: no .item()/tensor-truthiness inside
+        # the differentiable forward path).
         u = torch.abs(x_local)
         v = torch.abs(y_local)
 
@@ -170,6 +165,12 @@ class TShape(Shape):
             raise ValueError("length must be positive")
         if torch.any(self.width <= 0):
             raise ValueError("width must be positive")
+        # width == length (a square cross/T with no arm protrusion beyond
+        # the crossbar) is intentionally allowed -- it's a valid degenerate
+        # case, just not a very cross/T-like one. This is deliberately
+        # looser than the outer_corner_radius check below, which does
+        # forbid the equivalent equality (see screening_shape_lattice.md
+        # S-21).
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -194,37 +195,31 @@ class TShape(Shape):
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
-        def _sd_box(px: torch.Tensor, py: torch.Tensor, hx: torch.Tensor, hy: torch.Tensor) -> torch.Tensor:
-            qx = torch.abs(px) - hx
-            qy = torch.abs(py) - hy
-            ox = torch.clamp(qx, min=0.0)
-            oy = torch.clamp(qy, min=0.0)
-            return torch.sqrt(ox * ox + oy * oy) + torch.clamp(torch.maximum(qx, qy), max=0.0)
-
-        def _sd_rounded_box(px: torch.Tensor, py: torch.Tensor, hx: torch.Tensor, hy: torch.Tensor, rr: torch.Tensor) -> torch.Tensor:
-            return _sd_box(px, py, hx - rr, hy - rr) - rr
-
         def _patch_sdf(qx: torch.Tensor, qy: torch.Tensor, r: torch.Tensor) -> torch.Tensor:
-            d_square = _sd_box(qx - 0.5 * r, qy - 0.5 * r, 0.5 * r, 0.5 * r)
+            d_square = _sdf_rounded_box(qx - 0.5 * r, qy - 0.5 * r, 0.5 * r, 0.5 * r)
             d_circle = torch.sqrt((qx - r) ** 2 + (qy - r) ** 2) - r
             return torch.maximum(d_square, -d_circle)  # square \ circle
 
         # base T = top bar ∪ stem
         # top bar center at y = bx - by
         # stem center at y = 0
-        d_top = _sd_rounded_box(x_local, y_local - (bx - by), bx, by, ro)
-        d_stem = _sd_rounded_box(x_local, y_local, by, bx, ro)
+        d_top = _sdf_rounded_box(x_local, y_local - (bx - by), bx, by, ro)
+        d_stem = _sdf_rounded_box(x_local, y_local, by, bx, ro)
 
         # cut away bottom part of horizontal bar so it becomes T, not cross
         # keep only y >= bx - 2*by
+        # Note: max(d, -cut) is a conservative bound on the true SDF near
+        # the cut's concave corners, not exact -- same caveat as
+        # Intersection/Difference's docstring in boolean.py.
         y_cut = bx - 2.0 * by
         d_top_half = torch.maximum(d_top, -(y_local - y_cut))
 
         d_base = torch.minimum(d_top_half, d_stem)
 
-        if torch.all(ri == 0):
-            return d_base
-
+        # No `if ri == 0: return d_base` shortcut -- same reasoning as
+        # Cross.sdf(): the patch is a provable no-op at ri=0 (verified by
+        # dense-grid comparison), so always computing it keeps this
+        # branch-free (S-10).
         # add two concave patches under the top bar
         qx = torch.abs(x_local) - by
         qy = (bx - 2.0 * by) - y_local

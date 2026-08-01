@@ -23,6 +23,29 @@ def _to_local_coords(
     y_local = -s * xr + c * yr
     return x_local, y_local
 
+def _sdf_rounded_box(
+    x_local: torch.Tensor,
+    y_local: torch.Tensor,
+    hx: torch.Tensor,
+    hy: torch.Tensor,
+    r: torch.Tensor | float = 0.0,
+) -> torch.Tensor:
+    """SDF of an axis-aligned box of half-extents (hx, hy) with corners
+    rounded by radius r, evaluated at already-recentered local coordinates.
+
+    r=0 (the default) reduces exactly to a plain sharp-cornered box -- no
+    separate "unrounded" formula is needed. Shared by Rectangle, Cross, and
+    TShape (S-09: this was three independently-maintained inline copies of
+    the same Quilez rounded-box trick).
+    """
+    qx = torch.abs(x_local) - (hx - r)
+    qy = torch.abs(y_local) - (hy - r)
+
+    outside = torch.sqrt(torch.clamp(qx, min=0.0) ** 2 + torch.clamp(qy, min=0.0) ** 2)
+    inside = torch.clamp(torch.maximum(qx, qy), max=0.0)
+
+    return outside + inside - r
+
 def register(module, name, value, dtype=torch.float32):
     """Register `value` on `module` under `name`.
 

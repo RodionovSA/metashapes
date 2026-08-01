@@ -67,8 +67,8 @@ class UnitCell(nn.Module):
 
     def __init__(self, lattice: Lattice, scene: Shape):
         super().__init__()
-        self.lattice = lattice          # frozen dataclass, not a submodule
-        self.scene = scene              # nn.Module -> auto-registered
+        self.lattice = lattice          # nn.Module -> auto-registered submodule
+        self.scene = scene              # nn.Module -> auto-registered submodule
 
     # --- periodic copy search ------------------------------------------
     def _offsets_for(self, shape: Shape) -> tuple[tuple[int, int], tuple[int, int]]:
@@ -181,6 +181,10 @@ class UnitCell(nn.Module):
             `sdf()` itself folds query points back into the unit cell via
             fractional modulo, so the copy search stays valid regardless
             of repeat size.
+            Endpoint-excluded, same convention as the cartesian=False path
+            (`fractional_grid`): the last sample stops one pixel short of
+            xmax/ymax rather than landing exactly on it, so repeat=(n1, n2)
+            tiles seamlessly with no duplicated boundary row/column.
         """
         n1, n2 = repeat
 
@@ -193,10 +197,11 @@ class UnitCell(nn.Module):
         # Cartesian bounding box of the n1×n2 supercell
         xmin, xmax, ymin, ymax = self.extent(repeat=repeat)
 
-        xs = torch.linspace(xmin, xmax, nx * n1,
-                            dtype=self.lattice.dtype, device=self.lattice.device)
-        ys = torch.linspace(ymin, ymax, ny * n2,
-                            dtype=self.lattice.dtype, device=self.lattice.device)
+        nx_total, ny_total = nx * n1, ny * n2
+        fx = torch.arange(nx_total, dtype=self.lattice.dtype, device=self.lattice.device) / nx_total
+        fy = torch.arange(ny_total, dtype=self.lattice.dtype, device=self.lattice.device) / ny_total
+        xs = xmin + fx * (xmax - xmin)
+        ys = ymin + fy * (ymax - ymin)
         X, Y = torch.meshgrid(xs, ys, indexing="xy")
         return self.sdf(X, Y)
 
@@ -206,8 +211,18 @@ class UnitCell(nn.Module):
         """Rasterize the periodic structure into a mask. Shape [ny·n2, nx·n1].
 
         soft=False      -> hard binary mask (non-differentiable, for inference).
+                           Uses only the SDF's sign, so it is exact even for
+                           Intersection/Difference/TShape-style compositions
+                           (see below).
         soft=True       -> differentiable sigmoid mask; `softness` is the edge
                            scale in world units, defaulting to one pixel.
+                           Uses SDF *magnitude*: for scenes containing an
+                           Intersection, Difference, or TShape (whose SDFs are
+                           a conservative bound near concave corners, not
+                           exact -- see their docstrings), the edge falloff
+                           near those corners is correspondingly approximate,
+                           though the zero-crossing (and hence the hard mask
+                           above) is unaffected.
         repeat=(n1, n2) -> tile n1 cells along a1 and n2 cells along a2.
         cartesian=True  -> sample on an axis-aligned Cartesian grid so the
                            result displays correctly with imshow for any

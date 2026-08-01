@@ -4,7 +4,11 @@ import math
 import pytest
 import torch
 from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
-from .conftest import assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at
+from .conftest import (
+    assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at,
+    assert_dtype_device_flow, assert_direct_call_dtype_promotion,
+    assert_gradients_finite, assert_gradients_finite_at,
+)
 
 
 class TestRegularPolygon:
@@ -155,6 +159,21 @@ class TestTriangle:
         # inradius of equilateral with base=1: r = base / (2*sqrt(3)) ≈ 0.289
         with pytest.raises(ValueError):
             Triangle(center=[0.0, 0.0], base=1.0, alpha=60.0, beta=60.0, corner_radius=0.5)
+
+    def test_zero_radius_sdf_finite_and_correct(self):
+        # Regression for S-10: sdf() used to skip the corner-inset block
+        # entirely via `if rr > 0`. It's now called unconditionally
+        # (including at rr=0, where it's an exact identity), so this pins
+        # the result at rr=0 against a wide grid.
+        t = Triangle(center=[0.05, -0.1], base=1.3, alpha=50.0, beta=65.0,
+                     angle=15.0, corner_radius=0.0)
+        x = torch.linspace(-1.5, 1.5, 60)
+        y = torch.linspace(-1.5, 1.5, 60)
+        X, Y = torch.meshgrid(x, y, indexing="xy")
+        d = t.sdf(X, Y)
+        assert torch.isfinite(d).all()
+        assert_inside(t, [(0.05, -0.1)])
+        assert_outside(t, [(3.0, 3.0)])
 
     def test_bounds_contain_centroid(self):
         t = Triangle(center=[0.5, -0.3], base=1.5, alpha=45.0, beta=70.0, angle=30.0)
@@ -334,3 +353,256 @@ class TestStar:
         s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2,
                  outer_corner_radius=0.04, inner_corner_radius=0.03)
         assert_round_trip(s)
+
+    def test_min_feature_size_is_twice_outer_corner_radius(self):
+        # Regression for S-13: min_feature_size used to be 2*inner_radius
+        # -- the diameter across valleys, unrelated to the spike's own
+        # thinness. The tip is where a spike actually gets thin: it's an
+        # exact circular arc of outer_corner_radius by construction of the
+        # SDF, so its own width (through the arc's center) is exactly
+        # 2*outer_corner_radius.
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
+                 outer_corner_radius=0.08)
+        assert s.min_feature_size == pytest.approx(0.16, abs=1e-6)
+
+    def test_min_feature_size_zero_for_sharp_tip(self):
+        # An unrounded tip is mathematically a sharp point -- zero is the
+        # correct, useful answer (an infinitely sharp feature should fail
+        # any nonzero min_feature_size manufacturability check), not
+        # 2*inner_radius (which was always large and never caught this).
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4)
+        assert s.min_feature_size == pytest.approx(0.0, abs=1e-9)
+
+    def test_min_feature_size_independent_of_inner_radius(self):
+        # The old formula (2*inner_radius) varied with inner_radius even
+        # though it has no bearing on how thin the tip is; the new one
+        # must not, for a fixed outer_corner_radius.
+        s1 = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.2,
+                  outer_corner_radius=0.05)
+        s2 = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.6,
+                  outer_corner_radius=0.05)
+        assert s1.min_feature_size == pytest.approx(s2.min_feature_size, abs=1e-9)
+        assert s1.min_feature_size == pytest.approx(0.10, abs=1e-6)
+
+    def test_min_feature_size_updates_with_current_parameter_value(self):
+        # min_feature_size must be computed fresh from the current
+        # parameter value (matters if outer_corner_radius is an
+        # nn.Parameter being optimized), not cached at construction.
+        ocr = torch.nn.Parameter(torch.tensor(0.03))
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
+                 outer_corner_radius=ocr)
+        assert s.min_feature_size == pytest.approx(0.06, abs=1e-6)
+        with torch.no_grad():
+            ocr.copy_(torch.tensor(0.07))
+        assert s.min_feature_size == pytest.approx(0.14, abs=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# dtype / device / gradient flow
+# ---------------------------------------------------------------------------
+
+class TestRegularPolygonDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        p = RegularPolygon(center=[0.1, -0.1], n=5, side_length=0.5, angle=10.0,
+                           corner_radius=0.05)
+        assert_dtype_device_flow(p)
+
+    def test_direct_call_dtype_promotion(self):
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=0.5)
+        assert_direct_call_dtype_promotion(p)
+
+    def test_integer_query_does_not_crash(self):
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=0.5)
+        out = p.sdf(torch.tensor(0), torch.tensor(0))
+        assert torch.isfinite(out)
+
+    def test_gradients_finite_generic_point(self):
+        p = RegularPolygon(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            n=5,
+            side_length=torch.nn.Parameter(torch.tensor(0.5)),
+            angle=torch.nn.Parameter(torch.tensor(10.0)),
+            corner_radius=torch.nn.Parameter(torch.tensor(0.05)),
+        )
+        assert_gradients_finite(p, ["center", "side_length", "angle", "corner_radius"])
+
+    def test_gradients_finite_at_zero_and_near_bound_corner_radius(self):
+        for rr in (0.0, 0.34):  # rho (rr_max) ~= 0.3441 for n=5, side_length=0.5
+            p = RegularPolygon(center=torch.tensor([0.0, 0.0]), n=5,
+                               side_length=torch.tensor(0.5),
+                               corner_radius=torch.nn.Parameter(torch.tensor(rr)))
+            assert_gradients_finite(p, ["corner_radius"])
+
+    def test_n_extremes(self):
+        # Minimum valid n and a large n, for correctness and no perf/NaN
+        # surprise (not part of screening, but cheap to pin).
+        for n in (3, 64):
+            p = RegularPolygon(center=[0.0, 0.0], n=n, side_length=0.3)
+            d = p.sdf(torch.tensor(0.0), torch.tensor(0.0))
+            assert d.item() < 0
+            xs = torch.linspace(-1, 1, 20)
+            X, Y = torch.meshgrid(xs, xs, indexing="xy")
+            assert torch.isfinite(p.sdf(X, Y)).all()
+
+    def test_corner_radius_drift_past_bound_is_silent_not_crashing(self):
+        # S-11 category (declared out of scope, but worth one pinned test):
+        # unlike the old IsoscelesTrapezoid, this does NOT crash inside
+        # sdf() when corner_radius drifts past its construction-time bound
+        # -- it silently produces a geometrically inverted inset instead
+        # (rho_in/R_in go negative). Documents the actual current behavior.
+        rr = torch.nn.Parameter(torch.tensor(0.1))
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=torch.tensor(0.5),
+                           corner_radius=rr)
+        with torch.no_grad():
+            rr.copy_(torch.tensor(0.5))  # past rho ~= 0.3441, never re-validated
+        d = p.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(d)  # doesn't crash or NaN -- just silently wrong
+
+    def test_broadcast_x_y_different_shapes(self):
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=0.5)
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = p.sdf(x, y)
+        assert out.shape == (7, 5)
+
+
+class TestTriangleDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        t = Triangle(center=[0.1, -0.1], base=0.8, alpha=50.0, beta=65.0, angle=10.0,
+                    corner_radius=0.05)
+        assert_dtype_device_flow(t)
+
+    def test_direct_call_dtype_promotion(self):
+        t = Triangle(center=[0.0, 0.0], base=0.8, alpha=60.0, beta=60.0)
+        assert_direct_call_dtype_promotion(t)
+
+    def test_integer_query_does_not_crash(self):
+        t = Triangle(center=[0.0, 0.0], base=0.8, alpha=60.0, beta=60.0)
+        out = t.sdf(torch.tensor(0), torch.tensor(0))
+        assert torch.isfinite(out)
+
+    def test_gradients_finite_generic_point(self):
+        t = Triangle(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
+            base=torch.nn.Parameter(torch.tensor(0.8)),
+            alpha=torch.nn.Parameter(torch.tensor(50.0)),
+            beta=torch.nn.Parameter(torch.tensor(65.0)),
+            angle=torch.nn.Parameter(torch.tensor(10.0)),
+            corner_radius=torch.nn.Parameter(torch.tensor(0.05)),
+        )
+        assert_gradients_finite(t, ["center", "base", "alpha", "beta", "angle", "corner_radius"])
+
+    def test_gradients_finite_at_zero_and_near_inradius_corner_radius(self):
+        for rr in (0.0, 0.23):  # inradius ~= 0.2309 for base=0.8, alpha=beta=60
+            t = Triangle(center=torch.tensor([0.0, 0.0]), base=torch.tensor(0.8),
+                        alpha=torch.tensor(60.0), beta=torch.tensor(60.0),
+                        corner_radius=torch.nn.Parameter(torch.tensor(rr)))
+            assert_gradients_finite(t, ["corner_radius"])
+
+    def test_gradients_finite_right_angle(self):
+        # A single off-grid point, not the default dense grid: this
+        # right-angle triangle's leg happens to be exactly vertical (at
+        # x=-1/3 for base=1.0), which lands exactly on a linspace(-1,1,40)
+        # grid column -- points exactly ON an edge hit the same benign
+        # sqrt(0)-at-zero-distance gradient singularity as the Rectangle
+        # exact-corner case (see TestRectangleDtypeDeviceGrad), just along
+        # a whole edge instead of one corner because of the grid alignment
+        # coincidence. Confirmed by direct reproduction, not a new hazard.
+        t = Triangle(
+            center=torch.tensor([0.0, 0.0]),
+            base=torch.nn.Parameter(torch.tensor(1.0)),
+            alpha=torch.nn.Parameter(torch.tensor(90.0)),
+            beta=torch.nn.Parameter(torch.tensor(45.0)),
+        )
+        assert_gradients_finite_at(t, ["base", "alpha", "beta"], 0.05, 0.05)
+
+    def test_gradients_finite_near_degenerate_angle_sum(self):
+        # alpha + beta -> 180 (validated strictly less than 180 at
+        # construction) is a near-degenerate, very "flat" triangle.
+        t = Triangle(
+            center=torch.tensor([0.0, 0.0]),
+            base=torch.nn.Parameter(torch.tensor(1.0)),
+            alpha=torch.nn.Parameter(torch.tensor(89.0)),
+            beta=torch.nn.Parameter(torch.tensor(89.0)),
+        )
+        assert_gradients_finite(t, ["base", "alpha", "beta"])
+
+    def test_broadcast_x_y_different_shapes(self):
+        t = Triangle(center=[0.0, 0.0], base=0.8, alpha=60.0, beta=60.0)
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = t.sdf(x, y)
+        assert out.shape == (7, 5)
+
+
+class TestStarDtypeDeviceGrad:
+    def test_dtype_device_flow(self):
+        s = Star(center=[0.1, -0.1], n=5, outer_radius=0.5, inner_radius=0.2,
+                 angle=10.0, outer_corner_radius=0.02, inner_corner_radius=0.02)
+        assert_dtype_device_flow(s)
+
+    def test_direct_call_dtype_promotion(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        assert_direct_call_dtype_promotion(s)
+
+    def test_integer_query_does_not_crash(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        out = s.sdf(torch.tensor(0), torch.tensor(0))
+        assert torch.isfinite(out)
+
+    def test_gradients_finite_generic_point(self):
+        s = Star(
+            center=torch.nn.Parameter(torch.tensor([0.1, -0.1])), n=5,
+            outer_radius=torch.nn.Parameter(torch.tensor(0.5)),
+            inner_radius=torch.nn.Parameter(torch.tensor(0.2)),
+            angle=torch.nn.Parameter(torch.tensor(10.0)),
+            outer_corner_radius=torch.nn.Parameter(torch.tensor(0.02)),
+            inner_corner_radius=torch.nn.Parameter(torch.tensor(0.02)),
+        )
+        assert_gradients_finite(
+            s, ["center", "outer_radius", "inner_radius", "angle",
+                "outer_corner_radius", "inner_corner_radius"]
+        )
+
+    def test_gradients_finite_exactly_at_sector_seam(self):
+        # bn (from atan2 + remainder folding) is a genuinely discontinuous
+        # reparameterization at each sector seam by construction. Confirm
+        # this doesn't produce a NaN gradient right at one (existing tests
+        # already cover the SDF *value* staying continuous there).
+        n = 5
+        an = math.pi / n
+        r = 0.3
+        x = r * math.sin(an)
+        y = r * math.cos(an)
+        s = Star(center=torch.tensor([0.0, 0.0]), n=n,
+                 outer_radius=torch.nn.Parameter(torch.tensor(0.5)),
+                 inner_radius=torch.nn.Parameter(torch.tensor(0.2)))
+        assert_gradients_finite_at(s, ["outer_radius", "inner_radius"], x, y)
+
+    def test_gradients_finite_at_zero_and_near_bound_corner_radii(self):
+        # ocr_max ~= 0.1245, icr_max ~= 0.5145 for n=5, R=0.5, r=0.2 --
+        # but Star also enforces a *joint* bound (ocr/tan_alpha +
+        # icr/tan_beta < L), so both individually near their own max
+        # simultaneously is itself invalid; tested one at a time instead.
+        for ocr, icr in [(0.0, 0.0), (0.12, 0.0), (0.0, 0.51)]:
+            s = Star(center=torch.tensor([0.0, 0.0]), n=5,
+                     outer_radius=torch.tensor(0.5), inner_radius=torch.tensor(0.2),
+                     outer_corner_radius=torch.nn.Parameter(torch.tensor(ocr)),
+                     inner_corner_radius=torch.nn.Parameter(torch.tensor(icr)))
+            assert_gradients_finite(s, ["outer_corner_radius", "inner_corner_radius"])
+
+    def test_n_extremes(self):
+        for n in (3, 64):
+            s = Star(center=[0.0, 0.0], n=n, outer_radius=0.5, inner_radius=0.2)
+            d = s.sdf(torch.tensor(0.0), torch.tensor(0.0))
+            assert d.item() < 0
+            xs = torch.linspace(-1, 1, 20)
+            X, Y = torch.meshgrid(xs, xs, indexing="xy")
+            assert torch.isfinite(s.sdf(X, Y)).all()
+
+    def test_broadcast_x_y_different_shapes(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
+        x = torch.linspace(-1, 1, 5).reshape(1, 5)
+        y = torch.linspace(-1, 1, 7).reshape(7, 1)
+        out = s.sdf(x, y)
+        assert out.shape == (7, 5)

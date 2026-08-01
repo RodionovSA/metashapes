@@ -223,11 +223,11 @@ class Egg(Shape):
         register(self, "skew", skew)
         register(self, "angle", angle)
 
-        if self.width <= 0:
+        if torch.any(self.width <= 0):
             raise ValueError("Egg width must be positive")
-        if self.height <= 0:
+        if torch.any(self.height <= 0):
             raise ValueError("Egg height must be positive")
-        if torch.abs(self.skew) >= 1.0:
+        if torch.any(torch.abs(self.skew) >= 1.0):
             raise ValueError("Egg skew must be in (-1, 1)")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
@@ -326,11 +326,11 @@ class Stadium(Shape):
         register(self, "width", width)
         register(self, "angle", angle)
 
-        if self.length <= 0:
+        if torch.any(self.length <= 0):
             raise ValueError("Stadium length must be positive")
-        if self.width <= 0:
+        if torch.any(self.width <= 0):
             raise ValueError("Stadium width must be positive")
-        if self.length < self.width:
+        if torch.any(self.length < self.width):
             raise ValueError("Stadium length must be >= width")
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:

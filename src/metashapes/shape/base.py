@@ -41,7 +41,12 @@ class Shape(nn.Module):
         Returns tensor of same broadcasted shape.
         """
         raise NotImplementedError
-    
+
+    def forward(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        """Alias for `sdf`, so a Shape can be called directly (`shape(x, y)`)
+        following the usual nn.Module calling convention."""
+        return self.sdf(x, y)
+
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
         """Axis-aligned bounding box of the shape, in world coordinates.
 
@@ -52,6 +57,10 @@ class Shape(nn.Module):
         UnitCell uses this only to size the periodic-copy search, so an
         infinite extent simply means "one copy is enough in that
         direction" — the copies there are identical.
+
+        Not guaranteed tight: some shapes return a conservative
+        over-approximation rather than the exact rotated AABB. Callers
+        needing an exact bounding box must not assume tightness.
         """
         raise NotImplementedError(
             f"{type(self).__name__} must implement bounds()")

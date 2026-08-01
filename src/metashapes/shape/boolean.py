@@ -70,18 +70,27 @@ class Union(Shape):
 class Intersection(Shape):
     """
     Symbolic intersection of two shapes.
+
+    Note: `max(d1, d2)` is the standard CSG intersection SDF, but unlike
+    `Union`'s `min` (which is exact), it is only a conservative *bound* on
+    the true Euclidean distance -- exact near the dominant surface, looser
+    near concave corners where both operands' distances are comparable.
+    The sign (and hence the hard mask) is still always correct; only the
+    magnitude near concave features is approximate. This matters for
+    anything reading SDF magnitude rather than sign -- gap distance,
+    feature-size estimates, `UnitCell.mask(soft=True)`'s sigmoid edge width.
     """
-    def __init__(self, 
-                 left: Shape, 
-                 right: Shape, 
-                 smooth: bool = False, 
+    def __init__(self,
+                 left: Shape,
+                 right: Shape,
+                 smooth: bool = False,
                  k: float | torch.Tensor = 1.0):
         super().__init__()
         self.left = left
         self.right = right
         self.smooth = smooth
         register(self, "k", k)
-    
+
     def sdf(self, x, y):
         d1 = self.left.sdf(x, y)
         d2 = self.right.sdf(x, y)
@@ -128,8 +137,13 @@ class Intersection(Shape):
 class Difference(Shape):
     """
     Symbolic difference of two shapes: left - right.
+
+    Note: like `Intersection`, `max(d1, -d2)` is a conservative bound on
+    the true SDF magnitude near concave corners of the cut, not exact --
+    see `Intersection`'s docstring for what that means for consumers of
+    SDF magnitude.
     """
-    def __init__(self, 
+    def __init__(self,
                  left: Shape, 
                  right: Shape, 
                  smooth: bool = False, 
