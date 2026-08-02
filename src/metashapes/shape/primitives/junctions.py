@@ -8,7 +8,8 @@ import torch
 
 from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _sdf_rounded_box, _to_local_coords, register
+from metashapes.shape.utils import _to_local_coords, register
+from sdflib.junctions import CrossSDF, TShapeSDF
 
 __all__ = [
     "Cross",
@@ -49,11 +50,6 @@ class Cross(Shape):
             raise ValueError("length must be positive")
         if torch.any(self.width <= 0):
             raise ValueError("width must be positive")
-        # width == length (a square cross/T with no arm protrusion beyond
-        # the crossbar) is intentionally allowed -- it's a valid degenerate
-        # case, just not a very cross/T-like one. This is deliberately
-        # looser than the outer_corner_radius check below, which does
-        # forbid the equivalent equality.
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -65,56 +61,32 @@ class Cross(Shape):
         if torch.any(self.inner_corner_radius > (0.5 * self.length - 0.5 * self.width - self.outer_corner_radius)):
             raise ValueError("inner_corner_radius is too large")
 
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx, cy = self.center[0], self.center[1]
-        length = self.length
-        width  = self.width
-        angle  = self.angle
-        ro     = self.outer_corner_radius
-        ri     = self.inner_corner_radius
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap length/width/outer_corner_radius/inner_corner_radius back
+        into their valid ranges in place."""
+        self.length.clamp_(min=self._MIN_SIZE)
+        self.width.clamp_(min=self._MIN_SIZE, max=self.length.detach())
+        self.outer_corner_radius.clamp_(min=0.0, max=0.5 * self.width * self._MAX_RADIUS_FRACTION)
+        self.inner_corner_radius.clamp_(
+            min=0.0,
+            max=(0.5 * self.length - 0.5 * self.width - self.outer_corner_radius).clamp_min(0.0),
+        )
 
-        bx = 0.5 * length
-        by = 0.5 * width
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
+        cx, cy = self.center[0], self.center[1]
+        angle  = self.angle
+
+        bx = 0.5 * self.length
+        by = 0.5 * self.width
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
-        dh = _sdf_rounded_box(x_local, y_local, bx, by, ro)
-        dv = _sdf_rounded_box(x_local, y_local, by, bx, ro)
-        d_base = torch.minimum(dh, dv)
-
-        # No `if ri == 0: return d_base` shortcut: the patch computed below
-        # reduces to an exact d_patch >= d_base everywhere when ri=0 (the
-        # square/circle both collapse to the same single-point distance),
-        # so torch.minimum(d_base, d_patch) is already a no-op in that
-        # case. Always computing it keeps this branch-free (no
-        # .item()/tensor-truthiness inside the differentiable forward
-        # path).
-        u = torch.abs(x_local)
-        v = torch.abs(y_local)
-
-        qx = u - by
-        qy = v - by
-
-        # square [0, ri] x [0, ri]
-        sx = qx - 0.5 * ri
-        sy = qy - 0.5 * ri
-        ax = torch.abs(sx) - 0.5 * ri
-        ay = torch.abs(sy) - 0.5 * ri
-
-        ax_pos = torch.clamp(ax, min=0.0)
-        ay_pos = torch.clamp(ay, min=0.0)
-        d_square = torch.sqrt(ax_pos * ax_pos + ay_pos * ay_pos) + torch.clamp(torch.maximum(ax, ay), max=0.0)
-
-        # circle centered at (ri, ri)
-        d_circle = torch.sqrt((qx - ri) ** 2 + (qy - ri) ** 2) - ri
-
-        # correct patch: square \ circle
-        d_patch = torch.maximum(d_square, -d_circle)
-
-        # add patch to the base cross
-        return torch.minimum(d_base, d_patch)
+        return CrossSDF(bx, by, self.outer_corner_radius, self.inner_corner_radius)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         length = self.length.detach().item()
         angle = self.angle.detach().item()
@@ -128,6 +100,7 @@ class Cross(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return self.width.detach().item()
 
 
@@ -163,11 +136,6 @@ class TShape(Shape):
             raise ValueError("length must be positive")
         if torch.any(self.width <= 0):
             raise ValueError("width must be positive")
-        # width == length (a square cross/T with no arm protrusion beyond
-        # the crossbar) is intentionally allowed -- it's a valid degenerate
-        # case, just not a very cross/T-like one. This is deliberately
-        # looser than the outer_corner_radius check below, which does
-        # forbid the equivalent equality.
         if torch.any(self.width > self.length):
             raise ValueError("width must be less than or equal to length")
         if torch.any(self.outer_corner_radius < 0):
@@ -179,51 +147,32 @@ class TShape(Shape):
         if torch.any(self.inner_corner_radius > (0.5 * self.length - 0.5 * self.width - self.outer_corner_radius)):
             raise ValueError("inner_corner_radius is too large")
 
-    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        cx, cy = self.center[0], self.center[1]
-        length = self.length
-        width  = self.width
-        angle  = self.angle
-        ro     = self.outer_corner_radius
-        ri     = self.inner_corner_radius
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap length/width/outer_corner_radius/inner_corner_radius back
+        into their valid ranges in place."""
+        self.length.clamp_(min=self._MIN_SIZE)
+        self.width.clamp_(min=self._MIN_SIZE, max=self.length.detach())
+        self.outer_corner_radius.clamp_(min=0.0, max=0.5 * self.width * self._MAX_RADIUS_FRACTION)
+        self.inner_corner_radius.clamp_(
+            min=0.0,
+            max=(0.5 * self.length - 0.5 * self.width - self.outer_corner_radius).clamp_min(0.0),
+        )
 
-        bx = 0.5 * length
-        by = 0.5 * width
+    def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
+        cx, cy = self.center[0], self.center[1]
+        angle  = self.angle
+
+        bx = 0.5 * self.length
+        by = 0.5 * self.width
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
-        def _patch_sdf(qx: torch.Tensor, qy: torch.Tensor, r: torch.Tensor) -> torch.Tensor:
-            d_square = _sdf_rounded_box(qx - 0.5 * r, qy - 0.5 * r, 0.5 * r, 0.5 * r)
-            d_circle = torch.sqrt((qx - r) ** 2 + (qy - r) ** 2) - r
-            return torch.maximum(d_square, -d_circle)  # square \ circle
-
-        # base T = top bar ∪ stem
-        # top bar center at y = bx - by
-        # stem center at y = 0
-        d_top = _sdf_rounded_box(x_local, y_local - (bx - by), bx, by, ro)
-        d_stem = _sdf_rounded_box(x_local, y_local, by, bx, ro)
-
-        # cut away bottom part of horizontal bar so it becomes T, not cross
-        # keep only y >= bx - 2*by
-        # Note: max(d, -cut) is a conservative bound on the true SDF near
-        # the cut's concave corners, not exact -- same caveat as
-        # Intersection/Difference's docstring in boolean.py.
-        y_cut = bx - 2.0 * by
-        d_top_half = torch.maximum(d_top, -(y_local - y_cut))
-
-        d_base = torch.minimum(d_top_half, d_stem)
-
-        # No `if ri == 0: return d_base` shortcut -- same reasoning as
-        # Cross.sdf(): the patch is a provable no-op at ri=0, so always
-        # computing it keeps this branch-free.
-        # add two concave patches under the top bar
-        qx = torch.abs(x_local) - by
-        qy = (bx - 2.0 * by) - y_local
-        d_patch = _patch_sdf(qx, qy, ri)
-
-        return torch.minimum(d_base, d_patch)
+        return TShapeSDF(bx, by, self.outer_corner_radius, self.inner_corner_radius)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         length = self.length.detach().item()
         angle = self.angle.detach().item()
@@ -237,4 +186,5 @@ class TShape(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return self.width.detach().item()

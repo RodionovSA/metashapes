@@ -4,6 +4,8 @@
 import torch
 from typing import Callable
 
+from .polygons import _inset_convex, _PolygonSDF
+
 def RectangleSDF(hx, hy, r) -> Callable:
     """ 
     SDF for a rectangle. 
@@ -105,56 +107,7 @@ def ConvexQuadSDF(u, v, alpha, beta, r) -> Callable:
         (-au * ux + bv * vx, -au * uy + bv * vy),
     ]
 
-    # The frame winds CCW or CW depending on the sign of u x v. Rather than
-    # reordering the corners, carry the winding as a sign and apply it to
-    # both the inward normals and the inside test below.
-    area2 = 0.0
-    for i in range(4):
-        x1, y1 = corners[i]
-        x2, y2 = corners[(i + 1) % 4]
-        area2 = area2 + x1 * y2 - x2 * y1
-    orient = area2 / abs(area2)          # +1 if CCW, -1 if CW
-
     # Inset every edge by r, then round by r, so the outer support lines stay
     # exactly where the caller put them (same convention as RectangleSDF).
-    # Each inset corner is where two adjacent offset edge-lines cross; at
-    # r = 0 the lines never move, so this reproduces the original corners.
-    offset = []
-    for i in range(4):
-        ax, ay = corners[i]
-        bx, by = corners[(i + 1) % 4]
-        ex, ey = bx - ax, by - ay
-        elen = (ex * ex + ey * ey) ** 0.5
-        nx, ny = -orient * ey / elen, orient * ex / elen   # inward unit normal
-        offset.append((ax + r * nx, ay + r * ny, ex, ey))
-
-    verts = []
-    for i in range(4):
-        px, py, dx, dy = offset[i - 1]
-        qx, qy, gx, gy = offset[i]
-        t = ((qx - px) * gy - (qy - py) * gx) / (dx * gy - dy * gx)
-        verts.append((px + t * dx, py + t * dy))
-
-    def f(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
-        d2 = None
-        inside = torch.ones_like(x, dtype=torch.bool)
-
-        for i in range(4):
-            ax, ay = verts[i]
-            bx, by = verts[(i + 1) % 4]
-            ex, ey = bx - ax, by - ay
-            wx, wy = x - ax, y - ay
-
-            # nearest point on this edge segment, via clamped projection
-            t = torch.clamp((wx * ex + wy * ey) / (ex * ex + ey * ey), 0.0, 1.0)
-            sx = wx - t * ex
-            sy = wy - t * ey
-            e2 = sx * sx + sy * sy
-            d2 = e2 if d2 is None else torch.minimum(d2, e2)
-
-            # inside iff the query sits on the inward side of every edge
-            inside = inside & (orient * (ex * wy - ey * wx) >= 0)
-
-        d = torch.sqrt(d2.clamp_min(torch.finfo(d2.dtype).tiny))
-        return torch.where(inside, -d, d) - r
-    return f
+    verts = _inset_convex(corners, r)
+    return _PolygonSDF(verts, r)

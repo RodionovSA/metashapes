@@ -34,8 +34,10 @@ def _sdf_rounded_box(
     rounded by radius r, evaluated at already-recentered local coordinates.
 
     r=0 (the default) reduces exactly to a plain sharp-cornered box -- no
-    separate "unrounded" formula is needed. Shared by Rectangle, Cross, and
-    TShape.
+    separate "unrounded" formula is needed. Rectangle, Cross, and TShape
+    now delegate to sdflib's RectangleSDF/CrossSDF/TShapeSDF instead of
+    calling this directly; it stays here as the independent reference
+    implementation the tests cross-check those against.
     """
     qx = torch.abs(x_local) - (hx - r)
     qy = torch.abs(y_local) - (hy - r)

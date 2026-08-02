@@ -10,6 +10,7 @@ import numpy as np
 from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
 from metashapes.shape.utils import _to_local_coords, register
+from sdflib.polygons import RegularPolygonSDF, TriangleSDF, StarSDF
 
 __all__ = [
     "RegularPolygon",
@@ -54,67 +55,23 @@ class RegularPolygon(Shape):
         if torch.any(self.corner_radius >= rho):
             raise ValueError("corner_radius is too large")
 
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap side_length/corner_radius back into their valid ranges."""
+        self.side_length.clamp_(min=self._MIN_SIZE)
+        rho = self.side_length / (2.0 * math.tan(math.pi / self.n))  # apothem
+        self.corner_radius.clamp_(min=0.0, max=rho * self._MAX_RADIUS_FRACTION)
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
-        s  = self.side_length
-        rr = self.corner_radius
-        n  = self.n
+        R = self.side_length / (2.0 * math.sin(math.pi / self.n))  # circumradius
 
-        pi = torch.as_tensor(np.pi, dtype=x.dtype, device=x.device)
-        angle = self.angle
-
-        # original polygon radii
-        n_t = torch.as_tensor(float(n), dtype=x.dtype, device=x.device)
-        an = pi / n_t
-        R = s / (2.0 * torch.sin(an))     # circumradius
-        rho = R * torch.cos(an)           # apothem
-
-        # inset polygon: preserve outer support lines after rounding
-        rho_in = rho - rr
-        R_in = rho_in / torch.cos(an)
-
-        # local coords
-        x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
-
-        # inset polygon vertices, same convention as shapely
-        phi0 = pi / 2.0
-        verts = []
-        for k in range(n):
-            th = 2.0 * pi * k / n_t + phi0
-            vx = R_in * torch.cos(th)
-            vy = R_in * torch.sin(th)
-            verts.append((vx, vy))
-
-        min_d2 = None
-        inside = torch.ones_like(x_local, dtype=torch.bool)
-
-        for k in range(n):
-            ax, ay = verts[k]
-            bx, by = verts[(k + 1) % n]
-
-            ex = bx - ax
-            ey = by - ay
-            wx = x_local - ax
-            wy = y_local - ay
-
-            ee = ex * ex + ey * ey
-            t = torch.clamp((wx * ex + wy * ey) / ee, 0.0, 1.0)
-
-            px = ax + t * ex
-            py = ay + t * ey
-
-            d2 = (x_local - px) ** 2 + (y_local - py) ** 2
-            min_d2 = d2 if min_d2 is None else torch.minimum(min_d2, d2)
-
-            cross = ex * (y_local - ay) - ey * (x_local - ax)
-            inside = inside & (cross >= 0)
-
-        d_in = torch.sqrt(torch.clamp(min_d2, min=0.0))
-        d_in = torch.where(inside, -d_in, d_in)
-
-        return d_in - rr
+        x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
+        return RegularPolygonSDF(self.n, R, self.corner_radius)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         s = self.side_length.detach().item()
         angle = self.angle.detach().item()
@@ -135,6 +92,7 @@ class RegularPolygon(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         pi = np.pi
         R = self.side_length.detach().item() / (2.0 * np.sin(pi / self.n))
         a = R * np.cos(pi / self.n)
@@ -158,6 +116,11 @@ class Triangle(Shape):
         angle: counter-clockwise rotation in degrees
         corner_radius: optional corner smoothing; must be < inradius
     """
+    # Floor kept alpha/beta land on during _project(): small enough to be
+    # geometrically negligible, large enough that 180 - _MIN_ANGLE_DEG - 2 *
+    # _MIN_ANGLE_DEG margin used by the sum cap stays comfortably positive.
+    _MIN_ANGLE_DEG = 1e-3
+
     def __init__(self,
                  center: torch.Tensor,
                  base: torch.Tensor,
@@ -214,69 +177,32 @@ class Triangle(Shape):
         Cy = cy_apex - gcy
         return (Ax, Ay), (Bx, By), (Cx, Cy)
 
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap base/alpha/beta/corner_radius back into their valid ranges."""
+        self.base.clamp_(min=self._MIN_SIZE)
+        self.alpha.clamp_(min=self._MIN_ANGLE_DEG)
+        self.beta.clamp_(min=self._MIN_ANGLE_DEG)
+        # Scale alpha/beta down together (preserving their ratio) if their
+        # sum leaves no room for gamma -- clamp(max=1.0) keeps this a no-op
+        # whenever the sum is already safely under 180.
+        cap = 180.0 - self._MIN_ANGLE_DEG
+        scale = (cap / (self.alpha + self.beta)).clamp(max=1.0)
+        self.alpha.mul_(scale)
+        self.beta.mul_(scale)
+        self.corner_radius.clamp_(min=0.0, max=self._inradius() * self._MAX_RADIUS_FRACTION)
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
         rr = self.corner_radius
 
         x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
-
-        (Ax, Ay), (Bx, By), (Cx, Cy) = self._vertices()
-
-        # No `if rr > 0:` guard: _inset's displacement is rr/sin_t * (...),
-        # which is exactly 0 when rr=0 (sin_t is bounded away from 0 by its
-        # own clamp, so this is a true 0, not a 0/eps approximation) -- the
-        # inset is already an identity at rr=0. Always insetting keeps this
-        # branch-free.
-        alpha = self.alpha
-        beta = self.beta
-        gamma = torch.as_tensor(180.0, dtype=alpha.dtype, device=alpha.device) - alpha - beta
-
-        def _inset(Vx, Vy, Nx, Ny, Px, Py, theta_deg):
-            dnx, dny = Nx - Vx, Ny - Vy
-            dpx, dpy = Px - Vx, Py - Vy
-            dn_len = torch.sqrt(dnx * dnx + dny * dny).clamp(min=1e-8)
-            dp_len = torch.sqrt(dpx * dpx + dpy * dpy).clamp(min=1e-8)
-            dnx, dny = dnx / dn_len, dny / dn_len
-            dpx, dpy = dpx / dp_len, dpy / dp_len
-            sin_t = torch.sin(torch.deg2rad(theta_deg)).clamp(min=1e-8)
-            return Vx + rr / sin_t * (dnx + dpx), Vy + rr / sin_t * (dny + dpy)
-
-        # Inset all three vertices using original (un-inset) positions
-        oAx, oAy, oBx, oBy, oCx, oCy = Ax, Ay, Bx, By, Cx, Cy
-        Ax, Ay = _inset(oAx, oAy, oBx, oBy, oCx, oCy, alpha)
-        Bx, By = _inset(oBx, oBy, oCx, oCy, oAx, oAy, beta)
-        Cx, Cy = _inset(oCx, oCy, oAx, oAy, oBx, oBy, gamma)
-
-        verts = [(Ax, Ay), (Bx, By), (Cx, Cy)]
-        min_d2 = None
-        inside = torch.ones_like(x_local, dtype=torch.bool)
-
-        for k in range(3):
-            vax, vay = verts[k]
-            vbx, vby = verts[(k + 1) % 3]
-
-            ex = vbx - vax
-            ey = vby - vay
-            wx = x_local - vax
-            wy = y_local - vay
-
-            ee = ex * ex + ey * ey
-            t = torch.clamp((wx * ex + wy * ey) / ee, 0.0, 1.0)
-
-            cpx = vax + t * ex
-            cpy = vay + t * ey
-
-            d2 = (x_local - cpx) ** 2 + (y_local - cpy) ** 2
-            min_d2 = d2 if min_d2 is None else torch.minimum(min_d2, d2)
-
-            cross = ex * (y_local - vay) - ey * (x_local - vax)
-            inside = inside & (cross >= 0)
-
-        d_in = torch.sqrt(torch.clamp(min_d2, min=0.0))
-        d_in = torch.where(inside, -d_in, d_in)
-        return d_in - rr
+        A, B, C = self._vertices()
+        return TriangleSDF(A, B, C, rr)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         theta = math.radians(self.angle.detach().item())
         c_t, s_t = math.cos(theta), math.sin(theta)
@@ -294,6 +220,7 @@ class Triangle(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return 2.0 * self._inradius().item()
 
 
@@ -369,110 +296,40 @@ class Star(Shape):
                 "their tangent points would overlap"
             )
 
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap outer_radius/inner_radius/outer_corner_radius/
+        inner_corner_radius back into their valid ranges, using the same
+        geometry as __init__'s bound checks (as tensor ops, so it tracks
+        the current parameter values rather than the ones at construction)."""
+        self.outer_radius.clamp_(min=self._MIN_SIZE)
+        self.inner_radius.clamp_(min=self._MIN_SIZE, max=self.outer_radius * self._MAX_RADIUS_FRACTION)
+
+        an = math.pi / self.n
+        R, r = self.outer_radius, self.inner_radius
+        L = torch.sqrt((R * R + r * r - 2.0 * R * r * math.cos(an)).clamp_min(torch.finfo(R.dtype).tiny))
+        sin_alpha = (r * math.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
+        sin_beta = (R * math.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
+        tan_alpha = sin_alpha / torch.sqrt((1.0 - sin_alpha * sin_alpha).clamp_min(torch.finfo(R.dtype).tiny))
+        tan_beta = sin_beta / torch.sqrt((1.0 - sin_beta * sin_beta).clamp_min(torch.finfo(R.dtype).tiny))
+
+        self.outer_corner_radius.clamp_(min=0.0, max=L * tan_alpha * self._MAX_RADIUS_FRACTION)
+        # icr_max already accounts for the joint ocr/icr edge-length bound
+        # (__init__'s third check) once ocr is clamped above.
+        icr_max = ((L - self.outer_corner_radius / tan_alpha) * tan_beta).clamp_min(0.0)
+        self.inner_corner_radius.clamp_(min=0.0, max=icr_max * self._MAX_RADIUS_FRACTION)
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
-        R = self.outer_radius
-        r = self.inner_radius
-        ocr = self.outer_corner_radius
-        icr = self.inner_corner_radius
-
-        pi = torch.as_tensor(math.pi, dtype=x.dtype, device=x.device)
-        n_t = torch.as_tensor(float(self.n), dtype=x.dtype, device=x.device)
-        an = pi / n_t  # half-sector angle at the origin
-
         x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
-
-        # Fold into canonical half-sector with outer tip A on +x axis,
-        # valley vertex B at angle an. Reflect across the bisector so p_y >= 0.
-        r_point = torch.sqrt(x_local ** 2 + y_local ** 2).clamp(min=1e-9)
-        theta = torch.atan2(x_local, y_local)  # first tip at +y in local frame
-        bn = torch.remainder(theta + an, 2.0 * an) - an
-        p_x = r_point * torch.cos(bn)
-        p_y = r_point * torch.abs(torch.sin(bn))
-
-        Bx = r * torch.cos(an)
-        By = r * torch.sin(an)
-        L = torch.sqrt(R ** 2 + r ** 2 - 2.0 * R * r * torch.cos(an))
-
-        # ---- Outer tip rounding ----
-        denom_outer = (r * torch.sin(an)).clamp(min=1e-9)
-        shift_A = ocr * L / denom_outer
-        A_eff_x = R - shift_A
-        A_eff_y = torch.zeros_like(shift_A)
-
-        # B_eff: B shifted outward along the bisector through B by ocr/sin(beta).
-        # sin_beta, bis_x/bis_y and OB are the half-angle-at-the-valley
-        # geometry shared by both the outer-tip and inner-valley rounding
-        # below.
-        sin_beta = (R * torch.sin(an) / L).clamp(min=1e-7, max=1.0 - 1e-7)
-        bis_x = torch.cos(an)
-        bis_y = torch.sin(an)
-        OB = torch.sqrt(Bx ** 2 + By ** 2)
-        OB_eff = OB - ocr / sin_beta
-        B_eff_x = OB_eff * bis_x
-        B_eff_y = OB_eff * bis_y
-
-        # Signed distance to segment A_eff -> B_eff in the half-sector.
-        ex = B_eff_x - A_eff_x
-        ey = B_eff_y - A_eff_y
-        wx = p_x - A_eff_x
-        wy = p_y - A_eff_y
-        ee = (ex * ex + ey * ey).clamp(min=1e-18)
-        t = torch.clamp((wx * ex + wy * ey) / ee, 0.0, 1.0)
-        nearest_x = A_eff_x + t * ex
-        nearest_y = A_eff_y + t * ey
-        dist_seg = torch.sqrt((p_x - nearest_x) ** 2 + (p_y - nearest_y) ** 2)
-        cross_z = ex * wy - ey * wx
-        d_sector = torch.where(cross_z >= 0, -dist_seg, dist_seg) - ocr
-
-        # ---- Inner valley rounding ----
-        edge_dx = Bx - A_eff_x   # NOTE: edge direction from A_eff to B
-        edge_dy = By - A_eff_y   # (matches ex, ey from d_sector computation)
-        edge_len = torch.sqrt(edge_dx ** 2 + edge_dy ** 2).clamp(min=1e-9)
-        edge_ux = edge_dx / edge_len
-        edge_uy = edge_dy / edge_len
-
-        cos_beta = torch.sqrt(1.0 - sin_beta ** 2).clamp(min=1e-9)
-        tan_beta = sin_beta / cos_beta
-
-        # Clamp icr so tangent points stay on the edges.
-        icr_max = edge_len * tan_beta
-        icr_eff = torch.minimum(icr, icr_max)
-
-        # Disk center on outward bisector, past B. (sin_beta, bis_x/bis_y,
-        # OB reused from the outer-tip rounding above -- same geometry.)
-        OC = OB + icr_eff / sin_beta
-        C_x = OC * bis_x
-        C_y = OC * bis_y
-
-        d_disk = torch.sqrt((p_x - C_x) ** 2 + (p_y - C_y) ** 2) - icr_eff
-
-        # Half-kite constraint 1: valley-exterior side of edge A_eff -> B.
-        # cross_z > 0 is polygon interior; we want cross_z < 0 (valley side) to
-        # be inside the half-kite, so the signed distance is -cross_z / edge_len.
-        # (wx, wy reused from the d_sector computation above -- both are
-        # p_x - A_eff_x, p_y - A_eff_y.)
-        cross_edge = edge_dx * wy - edge_dy * wx
-        d_half1 = cross_edge / edge_len
-
-        # Half-kite constraint 2: B side of the perpendicular through T1.
-        # T1 is on the edge at distance (edge_len - icr_eff/tan(beta)) from A_eff.
-        # Projection of (p - A_eff) onto edge direction: proj = w . edge_unit.
-        # B side is where proj > T1_proj, i.e. (T1_proj - proj) < 0 is inside.
-        proj = wx * edge_ux + wy * edge_uy
-        T1_proj = edge_len - icr_eff / tan_beta
-        d_half2 = T1_proj - proj
-
-        # Half-kite (in folded coords, the part of the kite with p_y >= 0).
-        d_half_kite = torch.maximum(d_half1, d_half2)
-
-        # Patch: half-kite minus disk.
-        d_patch = torch.maximum(d_half_kite, -d_disk)
-
-        # Union with sharp star.
-        return torch.minimum(d_sector, d_patch)
+        return StarSDF(
+            self.n, self.outer_radius, self.inner_radius,
+            self.outer_corner_radius, self.inner_corner_radius,
+        )(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         R = self.outer_radius.item()
         r = self.inner_radius.item()
@@ -500,28 +357,6 @@ class Star(Shape):
 
     @property
     def min_feature_size(self) -> float:
-        """Narrowest place the star gets: the width of a spike's tip.
-
-        Not `2 * inner_radius` -- the diameter across valleys has no
-        relationship to how thin a spike actually gets (a star's material
-        is one simply-connected region; the valleys are concave boundary
-        notches, not a "neck" pinching the shape in two).
-
-        The tip is where a spike actually gets thin: it's rounded to an
-        exact circular arc of radius `outer_corner_radius` (by construction
-        of the SDF itself -- `sdf`'s "d_sector" term is exactly `distance
-        to the inset A_eff/B_eff segment, minus outer_corner_radius`), so
-        the material width through that arc's own center is exactly
-        `2 * outer_corner_radius`. An unrounded tip (`outer_corner_radius
-        == 0`) is a mathematically sharp point -- reporting 0 is the
-        correct, useful answer: an infinitely sharp tip is exactly the
-        kind of unfabricatable feature this metric exists to catch, and a
-        manufacturability check with a nonzero min_feature_size
-        requirement correctly rejects it.
-
-        `inner_corner_radius` doesn't create a competing thin feature:
-        rounding a *concave* valley only adds material there, so it can
-        only widen the local boundary, never narrow it below the sharp
-        case.
-        """
+        """Narrowest place the star gets: the width of a spike's tip."""
+        self._project()
         return 2.0 * self.outer_corner_radius.detach().item()

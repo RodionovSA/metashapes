@@ -442,20 +442,38 @@ class TestRegularPolygonDtypeDeviceGrad:
             X, Y = torch.meshgrid(xs, xs, indexing="xy")
             assert torch.isfinite(p.sdf(X, Y)).all()
 
-    def test_corner_radius_drift_past_bound_is_silent_not_crashing(self):
-        # Parameters aren't re-validated after construction (the caller's
-        # responsibility to keep in range during optimization). If
-        # corner_radius drifts past its construction-time bound, sdf()
-        # should not crash -- it silently produces a geometrically
-        # inverted inset instead (rho_in/R_in go negative). Documents the
-        # actual current behavior.
+    def test_corner_radius_drift_past_bound_is_clamped_by_project(self):
+        # Parameters aren't re-validated at construction time against a
+        # later in-place update, but sdf()/bounds()/min_feature_size all
+        # call _project() first, which clamps corner_radius back under the
+        # apothem instead of letting it produce inverted geometry.
         rr = torch.nn.Parameter(torch.tensor(0.1))
         p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=torch.tensor(0.5),
                            corner_radius=rr)
         with torch.no_grad():
-            rr.copy_(torch.tensor(0.5))  # past rho ~= 0.3441, never re-validated
+            rr.copy_(torch.tensor(0.5))  # past rho ~= 0.3441
         d = p.sdf(torch.tensor(0.0), torch.tensor(0.0))
-        assert torch.isfinite(d)  # doesn't crash or NaN -- just silently wrong
+        assert torch.isfinite(d)
+        rho = 0.5 / (2.0 * math.tan(math.pi / 5))
+        assert rr.item() < rho
+        assert d.item() < 0  # center is still comfortably inside
+
+    def test_gradients_finite_exactly_at_vertex(self):
+        # min_d2 is exactly 0.0 at a vertex of the (r=0) polygon -- the
+        # same sqrt(0) singularity as Rectangle's sharp-corner case (see
+        # TestRectangleDtypeDeviceGrad). RegularPolygonSDF routes through
+        # _PolygonSDF's clamp_min-before-sqrt, so this must stay finite.
+        n, s = 4, 1.0
+        p = RegularPolygon(
+            center=torch.tensor([0.0, 0.0]), n=n,
+            side_length=torch.nn.Parameter(torch.tensor(s)),
+        )
+        R = s / (2.0 * math.sin(math.pi / n))
+        vx, vy = 0.0, R  # first vertex, at phi0 = pi/2
+        d = p.sdf(torch.tensor(vx), torch.tensor(vy))
+        assert d.item() == pytest.approx(0.0, abs=1e-6)
+        d.backward()
+        assert torch.isfinite(p.side_length.grad).all()
 
     def test_broadcast_x_y_different_shapes(self):
         p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=0.5)
@@ -463,6 +481,36 @@ class TestRegularPolygonDtypeDeviceGrad:
         y = torch.linspace(-1, 1, 7).reshape(7, 1)
         out = p.sdf(x, y)
         assert out.shape == (7, 5)
+
+
+class TestRegularPolygonProject:
+    def test_clamps_side_length_and_corner_radius(self):
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=torch.tensor(0.5),
+                           corner_radius=torch.tensor(0.05))
+        with torch.no_grad():
+            p.side_length.fill_(-1.0)
+            p.corner_radius.fill_(10.0)
+
+        p._project()
+
+        # float32 storage of 1e-6 rounds down very slightly on this
+        # hardware, so compare with a tolerance rather than >=.
+        assert p.side_length.item() == pytest.approx(p._MIN_SIZE, abs=1e-9)
+        rho = p.side_length.item() / (2.0 * math.tan(math.pi / 5))
+        assert p.corner_radius.item() < rho
+        out = p.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+
+    def test_sdf_bounds_and_min_feature_size_self_project(self):
+        p = RegularPolygon(center=[0.0, 0.0], n=5, side_length=torch.tensor(0.5),
+                           corner_radius=torch.tensor(0.05))
+        with torch.no_grad():
+            p.corner_radius.fill_(10.0)
+
+        out = p.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+        p.bounds()  # must not raise
+        assert p.min_feature_size > 0
 
 
 class TestTriangleDtypeDeviceGrad:
@@ -499,14 +547,6 @@ class TestTriangleDtypeDeviceGrad:
             assert_gradients_finite(t, ["corner_radius"])
 
     def test_gradients_finite_right_angle(self):
-        # A single off-grid point, not the default dense grid: this
-        # right-angle triangle's leg happens to be exactly vertical (at
-        # x=-1/3 for base=1.0), which lands exactly on a linspace(-1,1,40)
-        # grid column -- points exactly ON an edge hit the same benign
-        # sqrt(0)-at-zero-distance gradient singularity as the Rectangle
-        # exact-corner case (see TestRectangleDtypeDeviceGrad), just along
-        # a whole edge instead of one corner because of the grid alignment
-        # coincidence. Confirmed by direct reproduction, not a new hazard.
         t = Triangle(
             center=torch.tensor([0.0, 0.0]),
             base=torch.nn.Parameter(torch.tensor(1.0)),
@@ -514,6 +554,25 @@ class TestTriangleDtypeDeviceGrad:
             beta=torch.nn.Parameter(torch.tensor(45.0)),
         )
         assert_gradients_finite_at(t, ["base", "alpha", "beta"], 0.05, 0.05)
+
+    def test_gradients_finite_exactly_on_vertical_leg(self):
+        # This right-angle triangle's leg happens to be exactly vertical
+        # (at x=-1/3 for base=1.0), which used to land exactly on a
+        # linspace(-1,1,40) grid column in the generic-point gradient
+        # test above -- i.e. an on-edge point was already being hit
+        # incidentally. TriangleSDF now clamps the sqrt argument (not the
+        # result), so query it deliberately instead of relying on
+        # coincidence.
+        t = Triangle(
+            center=torch.tensor([0.0, 0.0]),
+            base=torch.nn.Parameter(torch.tensor(1.0)),
+            alpha=torch.nn.Parameter(torch.tensor(90.0)),
+            beta=torch.nn.Parameter(torch.tensor(45.0)),
+        )
+        (Ax, Ay), (Bx, By), (Cx, Cy) = t._vertices()
+        x_on_edge = Ax.item()
+        y_on_edge = 0.5 * (Ay.item() + Cy.item())  # midpoint of the A-C leg
+        assert_gradients_finite_at(t, ["base", "alpha", "beta"], x_on_edge, y_on_edge)
 
     def test_gradients_finite_near_degenerate_angle_sum(self):
         # alpha + beta -> 180 (validated strictly less than 180 at
@@ -532,6 +591,59 @@ class TestTriangleDtypeDeviceGrad:
         y = torch.linspace(-1, 1, 7).reshape(7, 1)
         out = t.sdf(x, y)
         assert out.shape == (7, 5)
+
+
+class TestTriangleProject:
+    def test_clamps_base_corner_radius_and_angle_sum(self):
+        t = Triangle(center=[0.0, 0.0], base=torch.tensor(0.8),
+                    alpha=torch.tensor(60.0), beta=torch.tensor(60.0),
+                    corner_radius=torch.tensor(0.05))
+        with torch.no_grad():
+            t.base.fill_(-1.0)
+            t.alpha.fill_(-10.0)
+            t.beta.fill_(-10.0)
+            t.corner_radius.fill_(10.0)
+
+        t._project()
+
+        # float32 storage of 1e-6 rounds down very slightly on this
+        # hardware, so compare with a tolerance rather than >=.
+        assert t.base.item() == pytest.approx(t._MIN_SIZE, abs=1e-9)
+        assert t.alpha.item() >= t._MIN_ANGLE_DEG
+        assert t.beta.item() >= t._MIN_ANGLE_DEG
+        assert t.alpha.item() + t.beta.item() < 180.0
+        assert t.corner_radius.item() < t._inradius().item()
+        out = t.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+
+    def test_clamps_coupled_angle_sum_preserving_ratio(self):
+        # alpha, beta drift to a sum >= 180 -- _project scales both down
+        # together rather than picking one arbitrarily, so their ratio
+        # survives.
+        t = Triangle(center=[0.0, 0.0], base=torch.tensor(0.8),
+                    alpha=torch.tensor(60.0), beta=torch.tensor(30.0))
+        ratio_before = t.alpha.item() / t.beta.item()
+        with torch.no_grad():
+            t.alpha.fill_(140.0)
+            t.beta.fill_(70.0)  # sum = 210 > 180, ratio unchanged (2:1)
+
+        t._project()
+
+        assert t.alpha.item() + t.beta.item() < 180.0
+        ratio_after = t.alpha.item() / t.beta.item()
+        assert ratio_after == pytest.approx(ratio_before, rel=1e-4)
+
+    def test_sdf_bounds_and_min_feature_size_self_project(self):
+        t = Triangle(center=[0.0, 0.0], base=torch.tensor(0.8),
+                    alpha=torch.tensor(60.0), beta=torch.tensor(60.0))
+        with torch.no_grad():
+            t.alpha.fill_(179.0)
+            t.beta.fill_(179.0)
+
+        out = t.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+        t.bounds()  # must not raise
+        assert t.min_feature_size > 0
 
 
 class TestStarDtypeDeviceGrad:
@@ -599,9 +711,69 @@ class TestStarDtypeDeviceGrad:
             X, Y = torch.meshgrid(xs, xs, indexing="xy")
             assert torch.isfinite(s.sdf(X, Y)).all()
 
+    def test_gradients_finite_exactly_at_origin(self):
+        # (0, 0) -- the star's own center -- is the single most likely
+        # point anyone samples. r_point = sqrt(x^2+y^2) is exactly 0 there;
+        # StarSDF clamps that sqrt's argument (not its result), so this
+        # must stay finite.
+        s = Star(
+            center=torch.tensor([0.0, 0.0]), n=5,
+            outer_radius=torch.nn.Parameter(torch.tensor(0.5)),
+            inner_radius=torch.nn.Parameter(torch.tensor(0.2)),
+        )
+        assert_gradients_finite_at(s, ["outer_radius", "inner_radius"], 0.0, 0.0)
+
+    def test_gradients_finite_exactly_at_tip(self):
+        # The outer tip (first tip at +y, unrounded) is another exact
+        # zero-distance point for the same class of singularity.
+        s = Star(
+            center=torch.tensor([0.0, 0.0]), n=5,
+            outer_radius=torch.nn.Parameter(torch.tensor(0.5)),
+            inner_radius=torch.nn.Parameter(torch.tensor(0.2)),
+        )
+        assert_gradients_finite_at(s, ["outer_radius", "inner_radius"], 0.0, 0.5)
+
     def test_broadcast_x_y_different_shapes(self):
         s = Star(center=[0.0, 0.0], n=5, outer_radius=0.5, inner_radius=0.2)
         x = torch.linspace(-1, 1, 5).reshape(1, 5)
         y = torch.linspace(-1, 1, 7).reshape(7, 1)
         out = s.sdf(x, y)
         assert out.shape == (7, 5)
+
+
+class TestStarProject:
+    def test_clamps_all_params_back_into_valid_range(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=torch.tensor(0.5),
+                 inner_radius=torch.tensor(0.2), outer_corner_radius=torch.tensor(0.02),
+                 inner_corner_radius=torch.tensor(0.02))
+        with torch.no_grad():
+            s.outer_radius.fill_(-1.0)
+            s.inner_radius.fill_(5.0)
+            s.outer_corner_radius.fill_(5.0)
+            s.inner_corner_radius.fill_(5.0)
+
+        s._project()
+
+        # float32 storage of 1e-6 rounds down very slightly on this
+        # hardware, so compare with a tolerance rather than >=.
+        assert s.outer_radius.item() == pytest.approx(s._MIN_SIZE, abs=1e-9)
+        assert s.inner_radius.item() < s.outer_radius.item()
+        an = math.pi / 5
+        R, r = s.outer_radius.item(), s.inner_radius.item()
+        L = math.sqrt(R * R + r * r - 2.0 * R * r * math.cos(an))
+        sin_alpha = (r * math.sin(an)) / L
+        tan_alpha = sin_alpha / math.sqrt(max(0.0, 1.0 - sin_alpha * sin_alpha))
+        assert s.outer_corner_radius.item() < L * tan_alpha
+        out = s.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+
+    def test_sdf_bounds_and_min_feature_size_self_project(self):
+        s = Star(center=[0.0, 0.0], n=5, outer_radius=torch.tensor(0.5),
+                 inner_radius=torch.tensor(0.2))
+        with torch.no_grad():
+            s.inner_radius.fill_(5.0)  # now > outer_radius
+
+        out = s.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+        s.bounds()  # must not raise
+        assert s.min_feature_size >= 0.0

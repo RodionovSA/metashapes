@@ -187,10 +187,13 @@ class TestTShape:
 # ---------------------------------------------------------------------------
 
 class TestSharedRoundedBoxHelper:
-    """Cross and TShape both call shape/utils.py's _sdf_rounded_box. These
-    checks pin the outer-box component (d_base's building blocks) to the
-    shared helper directly, so a future edit that reintroduces a diverging
-    inline copy would be caught here."""
+    """Cross and TShape delegate their sdf() to sdflib.junctions'
+    CrossSDF/TShapeSDF, which build the outer box from sdflib's own
+    RectangleSDF. shape/utils.py's _sdf_rounded_box is the independent
+    reference implementation of the same rounded-box formula; these checks
+    pin the outer-box component (d_base's building blocks) to that
+    reference, so a future edit that lets the two diverge would be caught
+    here."""
 
     def test_cross_outer_box_matches_shared_helper(self):
         from metashapes.shape.utils import _sdf_rounded_box, _to_local_coords
@@ -275,6 +278,41 @@ class TestCrossDtypeDeviceGrad:
         )
         assert_gradients_finite(c, ["inner_corner_radius"])
 
+    def test_gradients_finite_exactly_at_concave_corner(self):
+        # (hw, hw) is the corner CrossSDF's fillet patch is centered on --
+        # a plain-old grid essentially never lands exactly here, so
+        # assert_gradients_finite's grid sweep above can't catch a NaN at
+        # this single point. sdflib/junctions.py used to compute this
+        # patch with a bare torch.sqrt(0), whose backward is inf * 0 = nan;
+        # routing through RectangleSDF/CircleSDF's clamp_min(tiny) fixed it.
+        c = Cross(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.nn.Parameter(torch.tensor(1.0)),
+            width=torch.nn.Parameter(torch.tensor(0.3)),
+        )
+        hw = 0.5 * c.width.item()
+        assert_gradients_finite_at(c, ["length", "width"], hw, hw)
+
+    def test_gradients_finite_on_fillet_square_edge_and_circle_center(self):
+        # Two more exact singular points of the same patch, only reachable
+        # with inner_corner_radius > 0: a point ON the fillet square's own
+        # boundary (qx = 0, 0 < qy < ri), and the circle's center (qx = qy
+        # = ri). Both fed a bare sqrt(0) in the old inline implementation.
+        hl, hw, ri = 0.5, 0.15, 0.05
+        edge = Cross(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.tensor(2 * hl), width=torch.tensor(2 * hw),
+            inner_corner_radius=torch.nn.Parameter(torch.tensor(ri)),
+        )
+        assert_gradients_finite_at(edge, ["inner_corner_radius"], hw, hw + 0.5 * ri)
+
+        center = Cross(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.tensor(2 * hl), width=torch.tensor(2 * hw),
+            inner_corner_radius=torch.nn.Parameter(torch.tensor(ri)),
+        )
+        assert_gradients_finite_at(center, ["inner_corner_radius"], hw + ri, hw + ri)
+
     def test_gradients_finite_at_width_equals_length(self):
         # width == length is deliberately permissive; confirm it also
         # evaluates cleanly with finite gradients, not just "doesn't raise."
@@ -329,6 +367,36 @@ class TestTShapeDtypeDeviceGrad:
         )
         assert_gradients_finite(t, ["inner_corner_radius"])
 
+    def test_gradients_finite_exactly_at_concave_corner(self):
+        # Same singular point as Cross's equivalent test above, but in
+        # TShapeSDF's coordinates: qx = |x| - hw, qy = y_cut - y, so the
+        # corner sits at x = hw, y = y_cut = hl - 2*hw.
+        t = TShape(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.nn.Parameter(torch.tensor(1.0)),
+            width=torch.nn.Parameter(torch.tensor(0.3)),
+        )
+        hl, hw = 0.5 * t.length.item(), 0.5 * t.width.item()
+        y_cut = hl - 2.0 * hw
+        assert_gradients_finite_at(t, ["length", "width"], hw, y_cut)
+
+    def test_gradients_finite_on_fillet_square_edge_and_circle_center(self):
+        hl, hw, ri = 0.5, 0.15, 0.05
+        y_cut = hl - 2.0 * hw
+        edge = TShape(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.tensor(2 * hl), width=torch.tensor(2 * hw),
+            inner_corner_radius=torch.nn.Parameter(torch.tensor(ri)),
+        )
+        assert_gradients_finite_at(edge, ["inner_corner_radius"], hw, y_cut - 0.5 * ri)
+
+        center = TShape(
+            center=torch.tensor([0.0, 0.0]),
+            length=torch.tensor(2 * hl), width=torch.tensor(2 * hw),
+            inner_corner_radius=torch.nn.Parameter(torch.tensor(ri)),
+        )
+        assert_gradients_finite_at(center, ["inner_corner_radius"], hw + ri, y_cut - ri)
+
     def test_gradients_finite_at_width_equals_length(self):
         t = TShape(
             center=torch.tensor([0.0, 0.0]),
@@ -343,3 +411,82 @@ class TestTShapeDtypeDeviceGrad:
         y = torch.linspace(-1, 1, 7).reshape(7, 1)
         out = t.sdf(x, y)
         assert out.shape == (7, 5)
+
+
+# ---------------------------------------------------------------------------
+# _project() -- constrained-optimization parameter clamping
+# ---------------------------------------------------------------------------
+# Both Cross and TShape validate their parameters at construction but, like
+# Rectangle/IsoscelesTrapezoid in test_quads.py, an nn.Parameter can drift
+# out of range afterward under an optimizer step. _project() (called at the
+# top of sdf()/bounds()/min_feature_size) snaps it back in place so sdf()
+# stays defined instead of raising or silently returning garbage.
+
+class TestCrossProject:
+    def test_clamps_all_params_back_into_valid_range(self):
+        c = Cross(center=[0.0, 0.0], length=torch.tensor(1.0), width=torch.tensor(0.3),
+                   outer_corner_radius=torch.tensor(0.02), inner_corner_radius=torch.tensor(0.02))
+        with torch.no_grad():
+            c.length.fill_(-1.0)
+            c.width.fill_(5.0)
+            c.outer_corner_radius.fill_(10.0)
+            c.inner_corner_radius.fill_(10.0)
+
+        c._project()
+
+        # float32 storage of 1e-6 rounds down very slightly on this
+        # hardware, so compare with a tolerance rather than >=.
+        assert c.length.item() == pytest.approx(c._MIN_SIZE, abs=1e-9)
+        assert c.width.item() <= c.length.item()
+        assert c.outer_corner_radius.item() < 0.5 * c.width.item()
+        assert c.inner_corner_radius.item() <= (
+            0.5 * c.length.item() - 0.5 * c.width.item() - c.outer_corner_radius.item() + 1e-6
+        )
+        out = c.sdf(torch.tensor(0.1), torch.tensor(0.1))
+        assert torch.isfinite(out)
+
+    def test_sdf_bounds_and_min_feature_size_self_project(self):
+        # width drifted past length -- would violate __init__'s own
+        # invariant if left unprojected.
+        c = Cross(center=[0.0, 0.0], length=torch.tensor(1.0), width=torch.tensor(0.3))
+        with torch.no_grad():
+            c.width.fill_(5.0)
+
+        out = c.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+        c.bounds()  # must not raise
+        assert c.min_feature_size <= c.length.item()
+
+
+class TestTShapeProject:
+    def test_clamps_all_params_back_into_valid_range(self):
+        t = TShape(center=[0.0, 0.0], length=torch.tensor(1.0), width=torch.tensor(0.3),
+                   outer_corner_radius=torch.tensor(0.02), inner_corner_radius=torch.tensor(0.02))
+        with torch.no_grad():
+            t.length.fill_(-1.0)
+            t.width.fill_(5.0)
+            t.outer_corner_radius.fill_(10.0)
+            t.inner_corner_radius.fill_(10.0)
+
+        t._project()
+
+        # float32 storage of 1e-6 rounds down very slightly on this
+        # hardware, so compare with a tolerance rather than >=.
+        assert t.length.item() == pytest.approx(t._MIN_SIZE, abs=1e-9)
+        assert t.width.item() <= t.length.item()
+        assert t.outer_corner_radius.item() < 0.5 * t.width.item()
+        assert t.inner_corner_radius.item() <= (
+            0.5 * t.length.item() - 0.5 * t.width.item() - t.outer_corner_radius.item() + 1e-6
+        )
+        out = t.sdf(torch.tensor(0.1), torch.tensor(0.1))
+        assert torch.isfinite(out)
+
+    def test_sdf_bounds_and_min_feature_size_self_project(self):
+        t = TShape(center=[0.0, 0.0], length=torch.tensor(1.0), width=torch.tensor(0.3))
+        with torch.no_grad():
+            t.width.fill_(5.0)
+
+        out = t.sdf(torch.tensor(0.0), torch.tensor(0.0))
+        assert torch.isfinite(out)
+        t.bounds()  # must not raise
+        assert t.min_feature_size <= t.length.item()
