@@ -8,6 +8,7 @@ import torch
 from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
 from metashapes.shape.utils import register
+from sdflib.stripes import BarSDF
 
 __all__ = [
     "Bar",
@@ -51,17 +52,22 @@ class Bar(Shape):
 
         if torch.any(self.width <= 0):
             raise ValueError("Bar width must be positive")
+        
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap size/corner_radius back into their valid ranges in place."""
+        self.width.clamp_(min=self._MIN_SIZE)
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         w   = self.width
-        off = self.offset
+        off_x = self.offset if self.axis == "y" else 0.0
+        off_y = self.offset if self.axis == "x" else 0.0
 
-        # SDF of a 1-D band along the perpendicular coordinate t:
-        #   d = |t - offset| - width/2
-        t = y if self.axis == 'x' else x
-        return torch.abs(t - off) - 0.5 * w
+        return BarSDF(w, self.axis)(x - off_x, y - off_y)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         off = self.offset.detach().item()
         w = self.width.detach().item()
         inf = float('inf')
@@ -76,6 +82,7 @@ class Bar(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return self.width.detach().item()
 
     def rotate(
