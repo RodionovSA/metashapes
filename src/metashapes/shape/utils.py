@@ -2,7 +2,7 @@
 
 import torch
 import torch.nn as nn
-
+import torch.nn.functional as F
 
 """ Helper functions """
 def _to_local_coords(
@@ -45,17 +45,29 @@ def _sdf_rounded_box(
 
     return outside + inside - r
 
-def register(module, name, value, dtype=torch.float32):
+def register(module, name, value):
     """Register `value` on `module` under `name`.
 
     If `value` is an nn.Parameter it becomes an optimizable parameter;
     otherwise it is stored as a (non-gradient) buffer that still moves
     with .to() and is saved in state_dict().
     """
+    if not isinstance(value, torch.Tensor):
+        value = torch.as_tensor(value, dtype=torch.get_default_dtype())
+
+    if value.dtype not in (torch.float32, torch.float64):
+        raise TypeError("Only float32 and float64 dtype variables can be registered.")
+    
     if isinstance(value, nn.Parameter):
-        if value.dtype != dtype:
-            value = nn.Parameter(value.detach().to(dtype),
-                                  requires_grad=value.requires_grad)
         setattr(module, name, value)
     else:
-        module.register_buffer(name, torch.as_tensor(value, dtype=dtype))
+        module.register_buffer(name, value)
+        
+def positive(parameter):
+    """ Make parameter stricly positive"""
+    return F.softplus(parameter)
+
+def bounded(parameter, lo, hi):
+    """ Make parameter stricly bounded """          
+    return lo + (hi - lo) * torch.sigmoid(parameter)
+

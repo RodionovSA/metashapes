@@ -8,7 +8,8 @@ import torch
 
 from metashapes.shape.base import Shape
 from metashapes.shape.registry import register_shape
-from metashapes.shape.utils import _sdf_rounded_box, _to_local_coords, register
+from metashapes.shape.utils import _to_local_coords, register
+from sdflib.quads import ConvexQuadSDF, IsoscelesTrapezoidSDF, RectangleSDF
 
 __all__ = [
     "Rectangle",
@@ -27,8 +28,9 @@ class Rectangle(Shape):
         angle: counter-clockwise rotation angle in degrees
         corner_radius: radius for soft corners (ignored if soft_corners=False)
     """
-    def __init__(self, 
-                 center: torch.tensor, 
+
+    def __init__(self,
+                 center: torch.Tensor,
                  size: torch.Tensor,
                  angle: torch.Tensor = 0.0,
                  corner_radius: torch.Tensor = 0.0):
@@ -37,26 +39,32 @@ class Rectangle(Shape):
         register(self, "size", size)
         register(self, "angle", angle)
         register(self, "corner_radius", corner_radius)
-        
+
         if torch.any(self.size <= 0):
             raise ValueError("Rectangle size components must be positive")
         if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
-        
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap size/corner_radius back into their valid ranges in place."""
+        self.size.clamp_(min=self._MIN_SIZE)
+        self.corner_radius.clamp_(min=0.0, max=0.5 * self.size.min())
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
-        w, h = self.size[0], self.size[1]
         a = self.angle
         r = self.corner_radius
-
-        r = torch.minimum(r, 0.5 * torch.minimum(w, h))
+        w, h = self.size
 
         # shift to local center and rotate
         x_local, y_local = _to_local_coords(x, y, cx, cy, a)
 
-        return _sdf_rounded_box(x_local, y_local, w * 0.5, h * 0.5, r)
+        return RectangleSDF(w * 0.5, h * 0.5, r)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         w, h = self.size.detach().tolist()
         angle = self.angle.detach().item()
@@ -69,6 +77,7 @@ class Rectangle(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return self.size.detach().min().item()
 
 @register_shape("ConvexQuad")
@@ -118,13 +127,6 @@ class ConvexQuad(Shape):
         if uv_cross.abs().item() <= 1e-12:
             raise ValueError("u and v must not be collinear")
 
-        # Corner-radius validity depends only on the quad's own geometry
-        # (edge lengths and interior angles), not on rotation -- a rigid
-        # rotation changes neither. So it's checked once here, against the
-        # unrotated frame, rather than being (re-)discovered inside sdf()
-        # on every call via a degeneracy side-effect of the inset
-        # construction (see _max_corner_radius for why that guard was
-        # unsound above a certain radius).
         zero = torch.zeros((), dtype=self.u.dtype, device=self.u.device)
         base_verts = ConvexQuad._quad_vertices(
             zero, zero, self.u[0], self.u[1], self.v[0], self.v[1], self.alpha, self.beta
@@ -150,7 +152,8 @@ class ConvexQuad(Shape):
         frame, in construction order -- CCW or CW depending on the sign of
         u x v; callers that need a definite orientation check/fix it via
         `_signed_area2`. Shared by `__init__` (unrotated, for validation)
-        and `sdf` (rotated, for the actual query).
+        and `bounds` (rotated, for the extent box); `sdf` builds its own
+        corners inside `ConvexQuadSDF`.
         """
         v0 = (cx - ux - vx, cy - uy - vy)
         v1 = (cx + ux - vx, cy + uy - vy)
@@ -212,134 +215,11 @@ class ConvexQuad(Shape):
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         cx, cy = self.center[0], self.center[1]
-        u0x, u0y = self.u[0], self.u[1]
-        v0x, v0y = self.v[0], self.v[1]
-        angle = self.angle
-        alpha = self.alpha
-        beta  = self.beta
-        rr    = self.corner_radius
+        x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
 
-        theta = angle * (torch.pi / 180.0)
-        ct = torch.cos(theta)
-        st = torch.sin(theta)
-
-        # rotate local frame vectors by global angle
-        ux = ct * u0x - st * u0y
-        uy = st * u0x + ct * u0y
-        vx = ct * v0x - st * v0y
-        vy = st * v0x + ct * v0y
-
-        verts = ConvexQuad._quad_vertices(cx, cy, ux, uy, vx, vy, alpha, beta)
-
-        # Rotation is rigid, so it can't turn a valid (non-degenerate) quad
-        # degenerate or flip which winding correction __init__ already
-        # determined -- but alpha/beta/u/v aren't re-validated here (they
-        # were fixed at construction), so this stays a cheap live check
-        # rather than trusting stale __init__-time state.
-        area2 = ConvexQuad._signed_area2(verts)
-        if area2.abs().item() <= 1e-12:
-            # An .item()-based raise is fine here even though sdf() must
-            # otherwise stay branch-free: this validates degeneracy and
-            # must raise a clear error, not silently select a
-            # NaN-producing branch. __init__ already guarantees this is
-            # unreachable for any valid construction; this is a live
-            # safety net, not a per-point SDF decision.
-            raise ValueError("Degenerate quadrilateral")
-
-        # Winding correction stays branch-free: swap v1<->v3 by masked
-        # selection rather than an `if area2.item() < 0:` -- safe because
-        # both orderings are already-finite affine rearrangements of the
-        # same computed vertices.
-        flip = area2 < 0
-        v0, v1, v2, v3 = verts
-
-        def _select(a, b):
-            return torch.where(flip, b, a)
-
-        verts = [
-            v0,
-            (_select(v1[0], v3[0]), _select(v1[1], v3[1])),
-            v2,
-            (_select(v3[0], v1[0]), _select(v3[1], v1[1])),
-        ]
-
-        def _line_intersection(px, py, rx, ry, qx, qy, sx, sy):
-            det = rx * sy - ry * sx
-            if det.abs().item() <= 1e-12:
-                # __init__ already proves this can't trigger for a valid
-                # quad (see _max_corner_radius); this raise is a defensive
-                # safety net, not a data-dependent SDF branch.
-                raise ValueError("Degenerate inset polygon")
-            t = ((qx - px) * sy - (qy - py) * sx) / det
-            return px + t * rx, py + t * ry
-
-        def _inset_convex_polygon(poly, rad):
-            n = len(poly)
-            lines = []
-
-            for i in range(n):
-                ax, ay = poly[i]
-                bx, by = poly[(i + 1) % n]
-
-                ex = bx - ax
-                ey = by - ay
-                elen = torch.sqrt(ex * ex + ey * ey)
-
-                if elen.abs().item() <= 1e-12:
-                    raise ValueError("Degenerate polygon edge")
-
-                nx = -ey / elen
-                ny = ex / elen
-                lines.append((ax + rad * nx, ay + rad * ny, ex, ey))
-
-            out = []
-            for i in range(n):
-                p1x, p1y, r1x, r1y = lines[i - 1]
-                p2x, p2y, r2x, r2y = lines[i]
-                ix, iy = _line_intersection(p1x, p1y, r1x, r1y, p2x, p2y, r2x, r2y)
-                out.append((ix, iy))
-
-            # No degeneracy check here: __init__ already guarantees
-            # corner_radius stays under the exact bound for which this
-            # construction is valid (see _max_corner_radius).
-            return out
-
-        # No `if rr.item() > 0:` guard: offsetting each edge by 0
-        # reconstructs the original vertices exactly (the line-intersection
-        # of two unmoved adjacent edges is the original shared vertex), so
-        # the inset is already an identity at rr=0. Always insetting keeps
-        # this branch-free.
-        verts = _inset_convex_polygon(verts, rr)
-
-        min_d2 = None
-        inside = torch.ones_like(x, dtype=torch.bool)
-
-        n = len(verts)
-        for i in range(n):
-            ax, ay = verts[i]
-            bx, by = verts[(i + 1) % n]
-
-            ex = bx - ax
-            ey = by - ay
-            wx = x - ax
-            wy = y - ay
-
-            ee = ex * ex + ey * ey
-            t = torch.clamp((wx * ex + wy * ey) / ee, 0.0, 1.0)
-
-            px = ax + t * ex
-            py = ay + t * ey
-
-            d2 = (x - px) ** 2 + (y - py) ** 2
-            min_d2 = d2 if min_d2 is None else torch.minimum(min_d2, d2)
-
-            cross = ex * (y - ay) - ey * (x - ax)
-            inside = inside & (cross >= 0)
-
-        d = torch.sqrt(torch.clamp(min_d2, min=0.0))
-        d = torch.where(inside, -d, d)
-
-        return d - rr
+        return ConvexQuadSDF(
+            self.u, self.v, self.alpha, self.beta, self.corner_radius
+        )(x_local, y_local)
     
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
         cx, cy = self.center.detach().tolist()
@@ -356,14 +236,7 @@ class ConvexQuad(Shape):
         vx = ct * v0x - st * v0y
         vy = st * v0x + ct * v0y
 
-        verts = [
-            (cx - ux - vx,                       cy - uy - vy),
-            (cx + ux - vx,                       cy + uy - vy),
-            (cx + (1.0 + alpha) * ux + (1.0 + beta) * vx,
-             cy + (1.0 + alpha) * uy + (1.0 + beta) * vy),
-            (cx - (1.0 + alpha) * ux + (1.0 + beta) * vx,
-             cy - (1.0 + alpha) * uy + (1.0 + beta) * vy),
-        ]
+        verts = ConvexQuad._quad_vertices(cx, cy, ux, uy, vx, vy, alpha, beta)
         xs = [v[0] for v in verts]
         ys = [v[1] for v in verts]
         return (min(xs), min(ys)), (max(xs), max(ys))
@@ -456,12 +329,6 @@ class IsoscelesTrapezoid(Shape):
         if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
 
-        # Corner-radius validity depends only on the trapezoid's own
-        # geometry (widths and height), not on rotation, so it's checked
-        # once here rather than being (re-)discovered inside sdf() on every
-        # call. Same bound sdf()'s own inset construction below uses,
-        # solved for the radius at which each of r1, r2, he first reaches
-        # zero.
         r1_0 = 0.5 * self.bottom_width.item()
         r2_0 = 0.5 * self.top_width.item()
         he_0 = 0.5 * self.height.item()
@@ -483,53 +350,9 @@ class IsoscelesTrapezoid(Shape):
         rr    = self.corner_radius
         angle = self.angle
 
-        r1 = 0.5 * wb
-        r2 = 0.5 * wt
-        he = 0.5 * h
-
-        # inset trapezoid so outer support lines stay fixed after rounding
-        slope = (r2 - r1) / (2.0 * he)
-        q = torch.sqrt(1.0 + slope * slope)
-
-        r1 = r1 - rr * (q - slope)
-        r2 = r2 - rr * (q + slope)
-        he = he - rr
-
-        # No degeneracy check here: __init__ now guarantees corner_radius
-        # is below the exact bound for which this inset stays valid (see
-        # above), matching the pattern already used by ConvexQuad's
-        # _inset_convex_polygon and keeping sdf() free of data-dependent
-        # Python control flow.
-
         x_local, y_local = _to_local_coords(x, y, cx, cy, angle)
 
-        px = torch.abs(x_local)
-        py = y_local
-
-        k1x = r2
-        k1y = he
-        k2x = r2 - r1
-        k2y = 2.0 * he
-
-        lim = torch.where(py < 0.0, r1, r2)
-        cax = px - torch.minimum(px, lim)
-        cay = torch.abs(py) - he
-
-        dx = k1x - px
-        dy = k1y - py
-        k2_dot_k2 = k2x * k2x + k2y * k2y
-        t = torch.clamp((dx * k2x + dy * k2y) / k2_dot_k2, 0.0, 1.0)
-
-        cbx = px - k1x + k2x * t
-        cby = py - k1y + k2y * t
-
-        ca2 = cax * cax + cay * cay
-        cb2 = cbx * cbx + cby * cby
-
-        s = torch.where((cbx < 0.0) & (cay < 0.0), -1.0, 1.0)
-        d = s * torch.sqrt(torch.clamp(torch.minimum(ca2, cb2), min=0.0))
-
-        return d - rr
+        return IsoscelesTrapezoidSDF(wb * 0.5, wt * 0.5, h * 0.5, rr)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
         cx, cy = self.center.detach().tolist()

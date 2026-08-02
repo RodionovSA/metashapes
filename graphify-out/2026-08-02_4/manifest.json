@@ -1,0 +1,382 @@
+{
+  "/home/rodionsa/Code/metashapes/.claude/settings.local.json": {
+    "mtime": 1779178508.6998448,
+    "ast_hash": "83a0cdc494cdceb0ad54e920b7f43303",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/.claude/settings.json": {
+    "mtime": 1779570862.3524377,
+    "ast_hash": "87f0d903477984d0587a02f8fe185263",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/__init__.py": {
+    "mtime": 1779190314.489658,
+    "ast_hash": "c6ae31fc2b8c0e4e6daa1d7c5ba8af4d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/analysis.py": {
+    "mtime": 1785501847.039347,
+    "ast_hash": "d2df348fd84ccf0c361df4f07463f87d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/transform.py": {
+    "mtime": 1780920856.0163908,
+    "ast_hash": "048ef32e39db8e4c1647c691a1d60378",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/boolean.py": {
+    "mtime": 1785523319.016579,
+    "ast_hash": "af1ec3ce3cd7ec9849b1a18c089db177",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/transforms.py": {
+    "mtime": 1785518655.9696844,
+    "ast_hash": "ded1cb439e67d5f42540ee53531e5483",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/__init__.py": {
+    "mtime": 1779010901.6117542,
+    "ast_hash": "acd41b52838177822fcdbb22f0e947dd",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/utils.py": {
+    "mtime": 1785569058.4420278,
+    "ast_hash": "ba1093d5e7676cec453f933cb516b7ae",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/registry.py": {
+    "mtime": 1779010901.6117542,
+    "ast_hash": "c1b1076c177406842218ce964dcdc183",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/base.py": {
+    "mtime": 1785523292.007986,
+    "ast_hash": "faf806afdd9acb1cbde8ad296a3ce6f5",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/junctions.py": {
+    "mtime": 1785569022.0282419,
+    "ast_hash": "d69bbff38a3f9d130653211e6b91f967",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/polygons.py": {
+    "mtime": 1785569053.5689225,
+    "ast_hash": "01e4c1e1185cac97c5f34aea0ca67277",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/quads.py": {
+    "mtime": 1785661666.3605704,
+    "ast_hash": "6fffbfbcd4cc0231e356ef1b4e4528ed",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/__init__.py": {
+    "mtime": 1785659628.8103657,
+    "ast_hash": "863ce140d6e2fb9612b6248d53f1d5ee",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/lattice/basis.py": {
+    "mtime": 1785613683.2922428,
+    "ast_hash": "1ac2096949137d50f5885eec3f9dc52e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/lattice/grid.py": {
+    "mtime": 1779190314.491658,
+    "ast_hash": "f9091a64c11295bf723113b4fe6cfc1d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/lattice/__init__.py": {
+    "mtime": 1785523227.6875727,
+    "ast_hash": "fea0294d80c7555a2f6623787fb0784c",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/lattice/unit_cell.py": {
+    "mtime": 1785569454.6275775,
+    "ast_hash": "26aeafcc02450717bbce3e32492c7c54",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/yaml.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "f6e8d74138a10cf4a56f0d2dc5fbe6a7",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/__init__.py": {
+    "mtime": 1779190314.489658,
+    "ast_hash": "f595361f675f5fdcde639f4f27df6750",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/junctions.py": {
+    "mtime": 1780922257.317401,
+    "ast_hash": "69c6ea8e16c3f7ae1a095e8ff48c53c8",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/polygons.py": {
+    "mtime": 1780922257.317401,
+    "ast_hash": "091810e45de1b5613969edc23d32a4a8",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/dispatch.py": {
+    "mtime": 1785659629.90439,
+    "ast_hash": "f067806c7b317ef28870606633b9f546",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/transforms.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "799f2aacd4bb744462c773bd1174058d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/quads.py": {
+    "mtime": 1780922257.317401,
+    "ast_hash": "2f7826af2695e44dbd70e3d0cff30e10",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/booleans.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "4b096e3fe33e14c8da6b7301e229f390",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/__init__.py": {
+    "mtime": 1779010901.610754,
+    "ast_hash": "302b239699b3e29a7fca6fc38bfd8093",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/helpers.py": {
+    "mtime": 1779885900.6613164,
+    "ast_hash": "1452d72e46efe1e35a444f3001ac7c49",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/raster.py": {
+    "mtime": 1779190314.489658,
+    "ast_hash": "e1ae9dad08ffb287dba42fad74b0aae8",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/config.py": {
+    "mtime": 1779190314.490658,
+    "ast_hash": "91a87851e1f6d343dc3f9d17aaa5bed0",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/report.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "f3ef192ee41d5f9fde53d202568855e1",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/validator.py": {
+    "mtime": 1780922193.1780677,
+    "ast_hash": "f2d8bcc0cb2cc65eae83d8281ee68f9c",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/__init__.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "8971728aee30b795ab4733d03e743aa6",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/registry.py": {
+    "mtime": 1779011200.819792,
+    "ast_hash": "dc9a25949fc0c864a9be71601250bd84",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/random.py": {
+    "mtime": 1785518681.818254,
+    "ast_hash": "6deac5689879946c5c57e3c4ea6475a7",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/base.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "9ca7cbd09e9012485a9dadfab395322d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/junctions.py": {
+    "mtime": 1780922193.1800678,
+    "ast_hash": "80bfcbf61caa117fe43eec0c57e80a0d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/polygons.py": {
+    "mtime": 1780922193.1790676,
+    "ast_hash": "26d9389d03bb347d534cc6f45063ade4",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/quads.py": {
+    "mtime": 1780922193.1800678,
+    "ast_hash": "014ff1e570b9efd088f4989246dd005a",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/__init__.py": {
+    "mtime": 1785659630.5174038,
+    "ast_hash": "8090125bc5f9b2fefd1f943c90083b75",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/utils.py": {
+    "mtime": 1780922193.1800678,
+    "ast_hash": "731aaa8128ef476ef12b43234f434329",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/base.py": {
+    "mtime": 1780922193.1780677,
+    "ast_hash": "d4639c510375f9a72906828e9935aa44",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/__init__.py": {
+    "mtime": 1779190314.4926581,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/test_analysis.py": {
+    "mtime": 1785659651.151865,
+    "ast_hash": "4f79127b729b661cd8fad427991a555f",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_junctions.py": {
+    "mtime": 1785569285.5349288,
+    "ast_hash": "2232cbac0ee44f130a80dca6bb7109d4",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_quads.py": {
+    "mtime": 1785661999.6226149,
+    "ast_hash": "9d81acc63f4e53dfa66a4f505f09a7a1",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/__init__.py": {
+    "mtime": 1779190314.4926581,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/conftest.py": {
+    "mtime": 1785569335.5280077,
+    "ast_hash": "74c9e1545fb995097cd7443e7616c50b",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_polygons.py": {
+    "mtime": 1785569356.630463,
+    "ast_hash": "001656833fe246062ee0a86ad8be6bb8",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/lattice/test_basis.py": {
+    "mtime": 1785613703.7817042,
+    "ast_hash": "ec79ea2a7270fcb359b840acfca0ffe0",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/lattice/test_unit_cell.py": {
+    "mtime": 1785613721.2620978,
+    "ast_hash": "0872b37be7d9c2474e5380c3a2bc200b",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/lattice/__init__.py": {
+    "mtime": 1779190314.4926581,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/lattice/test_unit_cell_center.py": {
+    "mtime": 1785659649.13882,
+    "ast_hash": "9680580dbb1c2d461ba13a820d127573",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/lattice/conftest.py": {
+    "mtime": 1780922241.180814,
+    "ast_hash": "69dc4e4bd1600526a8b85b35565cacb5",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/adapters/test_yaml.py": {
+    "mtime": 1785659640.3066227,
+    "ast_hash": "8a993f0a3e86879cecaac03483505347",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/adapters/test_shapely.py": {
+    "mtime": 1785659647.256778,
+    "ast_hash": "4df4bb0712d9a7582cbce7741c5d1a66",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/adapters/__init__.py": {
+    "mtime": 1779190314.4926581,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/adapters/test_shapely_safe_extraction.py": {
+    "mtime": 1785659641.398647,
+    "ast_hash": "4ab62ddf8985c223b07817659a1c66a1",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/generators/__init__.py": {
+    "mtime": 1779190314.4926581,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/generators/test_random_generator.py": {
+    "mtime": 1785501847.0403469,
+    "ast_hash": "6b6125c980c54d3f528045dd68994cce",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/CLAUDE.md": {
+    "mtime": 1785659669.5262754,
+    "ast_hash": "0cb984af724b287e9e1e7e1786d408cf",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/README.md": {
+    "mtime": 1785501847.0383468,
+    "ast_hash": "10d15dbb5a38518850b272a84f9efff8",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/stripes.py": {
+    "mtime": 1785501847.039347,
+    "ast_hash": "4ba2ecbd148e5c958b81922a2a73e746",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/stripes.py": {
+    "mtime": 1785501847.039347,
+    "ast_hash": "22240fd0d656689980c7ac05cc4ecb70",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/stripes.py": {
+    "mtime": 1785501847.039347,
+    "ast_hash": "3bea4c6f0e913fc25bb090fbf3401e7a",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_stripes.py": {
+    "mtime": 1785565369.5681503,
+    "ast_hash": "5525ea6235291f4923aa45e79359216d",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_boolean.py": {
+    "mtime": 1785569328.271851,
+    "ast_hash": "787ffa33fcea8c018d842264deb418a6",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_transforms.py": {
+    "mtime": 1785569313.6365352,
+    "ast_hash": "7c0463d4d8a39a734711303bf8622867",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/sdflib/__init__.py": {
+    "mtime": 1785659277.095457,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/sdflib/ovals.py": {
+    "mtime": 1785661002.313768,
+    "ast_hash": "82de6a1cd2510c383799b614bbbe1dbb",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/shape/primitives/ovals.py": {
+    "mtime": 1785659658.1510215,
+    "ast_hash": "773707f8cfab52e8cc36db452c0a0244",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/adapters/shapely/ovals.py": {
+    "mtime": 1785659659.205045,
+    "ast_hash": "cc8f01f86acf03d32c7d2794d3238243",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/metashapes/generators/samplers/ovals.py": {
+    "mtime": 1785659660.2980695,
+    "ast_hash": "ef53b3bf58ff8e2effe84486337112a0",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/tests/shape/test_ovals.py": {
+    "mtime": 1785659646.135753,
+    "ast_hash": "c1f6f1306d70f3d784d57eef6311d302",
+    "semantic_hash": ""
+  },
+  "/home/rodionsa/Code/metashapes/src/sdflib/quads.py": {
+    "mtime": 1785663310.338069,
+    "ast_hash": "038b5f3896be8af95fb01e35d617b477",
+    "semantic_hash": ""
+  }
+}

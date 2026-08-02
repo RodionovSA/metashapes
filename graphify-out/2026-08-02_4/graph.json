@@ -63,7 +63,7 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L1",
       "id": "src_sdflib_quads_py",
-      "community": 83,
+      "community": 91,
       "norm_label": "quads.py"
     },
     {
@@ -72,7 +72,7 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L7",
       "id": "sdflib_quads_rectanglesdf",
-      "community": 83,
+      "community": 91,
       "norm_label": "rectanglesdf()"
     },
     {
@@ -81,7 +81,7 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L25",
       "id": "sdflib_quads_isoscelestrapezoidsdf",
-      "community": 83,
+      "community": 91,
       "norm_label": "isoscelestrapezoidsdf()"
     },
     {
@@ -90,7 +90,7 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L76",
       "id": "sdflib_quads_convexquadsdf",
-      "community": 83,
+      "community": 91,
       "norm_label": "convexquadsdf()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L8",
       "id": "sdflib_quads_rationale_8",
-      "community": 83,
+      "community": 91,
       "norm_label": "sdf for a rectangle.           parameters:          hx: half of the rectangle si"
     },
     {
@@ -108,17 +108,17 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L26",
       "id": "sdflib_quads_rationale_26",
-      "community": 83,
+      "community": 91,
       "norm_label": "sdf for an isosceles trapezoid, symmetric about the y-axis.      the bottom base"
     },
     {
-      "label": "SDF for a convex quadrilateral.      Corners sit at +-u +-v, with the far corner",
+      "label": "SDF for a convex quadrilateral.                   Parameters:              u:",
       "file_type": "rationale",
       "source_file": "src/sdflib/quads.py",
       "source_location": "L77",
       "id": "sdflib_quads_rationale_77",
-      "community": 83,
-      "norm_label": "sdf for a convex quadrilateral.      corners sit at +-u +-v, with the far corner"
+      "community": 91,
+      "norm_label": "sdf for a convex quadrilateral.                   parameters:              u:"
     },
     {
       "label": "__init__.py",
@@ -171,7 +171,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L31",
       "id": "metashapes_analysis_leaf_shapes",
-      "community": 81,
+      "community": 2,
       "norm_label": "_leaf_shapes()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L63",
       "id": "metashapes_analysis_cellmetrics",
-      "community": 6,
+      "community": 70,
       "norm_label": "cellmetrics"
     },
     {
@@ -207,7 +207,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L146",
       "id": "metashapes_analysis_unitcellanalyzer_metrics",
-      "community": 55,
+      "community": 2,
       "norm_label": ".metrics()"
     },
     {
@@ -279,7 +279,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L341",
       "id": "metashapes_analysis_compute_min_gap",
-      "community": 55,
+      "community": 1,
       "norm_label": "_compute_min_gap()"
     },
     {
@@ -288,7 +288,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L32",
       "id": "metashapes_analysis_rationale_32",
-      "community": 81,
+      "community": 2,
       "norm_label": "yield leaf (primitive) shapes from a composed shape tree.      union nodes are d"
     },
     {
@@ -297,7 +297,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L64",
       "id": "metashapes_analysis_rationale_64",
-      "community": 6,
+      "community": 70,
       "norm_label": "per-cell measurements produced by :class:`unitcellanalyzer`.      attributes"
     },
     {
@@ -315,7 +315,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L147",
       "id": "metashapes_analysis_rationale_147",
-      "community": 55,
+      "community": 2,
       "norm_label": "compute all metrics for a single cell."
     },
     {
@@ -369,7 +369,7 @@
       "source_file": "src/metashapes/analysis.py",
       "source_location": "L346",
       "id": "metashapes_analysis_rationale_346",
-      "community": 55,
+      "community": 1,
       "norm_label": "minimum distance between any two shapes (or a shape and its own periodic     ima"
     },
     {
@@ -477,7 +477,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_boolean_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "boolean.py"
     },
     {
@@ -486,7 +486,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L14",
       "id": "shape_boolean_union",
-      "community": 52,
+      "community": 70,
       "norm_label": "union"
     },
     {
@@ -504,7 +504,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L29",
       "id": "shape_boolean_union_sdf",
-      "community": 52,
+      "community": 70,
       "norm_label": ".sdf()"
     },
     {
@@ -513,7 +513,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L36",
       "id": "shape_boolean_union_bounds",
-      "community": 52,
+      "community": 70,
       "norm_label": ".bounds()"
     },
     {
@@ -522,7 +522,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L50",
       "id": "shape_boolean_union_to_parametric",
-      "community": 52,
+      "community": 70,
       "norm_label": ".to_parametric()"
     },
     {
@@ -531,7 +531,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L60",
       "id": "shape_boolean_from_parametric",
-      "community": 29,
+      "community": 77,
       "norm_label": "from_parametric()"
     },
     {
@@ -540,7 +540,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L70",
       "id": "shape_boolean_intersection",
-      "community": 52,
+      "community": 70,
       "norm_label": "intersection"
     },
     {
@@ -558,7 +558,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L94",
       "id": "shape_boolean_intersection_sdf",
-      "community": 52,
+      "community": 70,
       "norm_label": ".sdf()"
     },
     {
@@ -567,7 +567,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L101",
       "id": "shape_boolean_intersection_bounds",
-      "community": 52,
+      "community": 70,
       "norm_label": ".bounds()"
     },
     {
@@ -576,7 +576,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L117",
       "id": "shape_boolean_intersection_to_parametric",
-      "community": 52,
+      "community": 70,
       "norm_label": ".to_parametric()"
     },
     {
@@ -585,7 +585,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L137",
       "id": "shape_boolean_difference",
-      "community": 52,
+      "community": 70,
       "norm_label": "difference"
     },
     {
@@ -603,7 +603,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L157",
       "id": "shape_boolean_difference_sdf",
-      "community": 52,
+      "community": 70,
       "norm_label": ".sdf()"
     },
     {
@@ -612,7 +612,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L164",
       "id": "shape_boolean_difference_bounds",
-      "community": 52,
+      "community": 70,
       "norm_label": ".bounds()"
     },
     {
@@ -621,7 +621,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L171",
       "id": "shape_boolean_difference_to_parametric",
-      "community": 52,
+      "community": 70,
       "norm_label": ".to_parametric()"
     },
     {
@@ -630,7 +630,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L192",
       "id": "shape_boolean_smooth_min_poly",
-      "community": 52,
+      "community": 70,
       "norm_label": "smooth_min_poly()"
     },
     {
@@ -639,7 +639,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L197",
       "id": "shape_boolean_smooth_max_poly",
-      "community": 52,
+      "community": 70,
       "norm_label": "smooth_max_poly()"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L15",
       "id": "shape_boolean_rationale_15",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic union of two shapes."
     },
     {
@@ -657,7 +657,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L71",
       "id": "shape_boolean_rationale_71",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic intersection of two shapes.      note: `max(d1, d2)` is the standard cs"
     },
     {
@@ -666,7 +666,7 @@
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L138",
       "id": "shape_boolean_rationale_138",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic difference of two shapes: left - right.      note: like `intersection`,"
     },
     {
@@ -675,7 +675,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_transforms_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "transforms.py"
     },
     {
@@ -693,7 +693,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L20",
       "id": "shape_transforms_translate_init",
-      "community": 6,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -720,7 +720,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L39",
       "id": "shape_transforms_min_feature_size",
-      "community": 29,
+      "community": 77,
       "norm_label": "min_feature_size()"
     },
     {
@@ -738,7 +738,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L52",
       "id": "shape_transforms_from_parametric",
-      "community": 29,
+      "community": 74,
       "norm_label": "from_parametric()"
     },
     {
@@ -756,7 +756,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L64",
       "id": "shape_transforms_rotate_init",
-      "community": 6,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -801,7 +801,7 @@
       "source_file": "src/metashapes/shape/transforms.py",
       "source_location": "L137",
       "id": "shape_transforms_scale_init",
-      "community": 6,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -864,7 +864,7 @@
       "source_file": "src/metashapes/shape/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_init_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "__init__.py"
     },
     {
@@ -873,7 +873,7 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_utils_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "utils.py"
     },
     {
@@ -882,7 +882,7 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L8",
       "id": "shape_utils_to_local_coords",
-      "community": 16,
+      "community": 52,
       "norm_label": "_to_local_coords()"
     },
     {
@@ -891,7 +891,7 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L26",
       "id": "shape_utils_sdf_rounded_box",
-      "community": 16,
+      "community": 29,
       "norm_label": "_sdf_rounded_box()"
     },
     {
@@ -900,26 +900,8 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L48",
       "id": "shape_utils_register",
-      "community": 29,
+      "community": 52,
       "norm_label": "register()"
-    },
-    {
-      "label": "positive()",
-      "file_type": "code",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L66",
-      "id": "shape_utils_positive",
-      "community": 29,
-      "norm_label": "positive()"
-    },
-    {
-      "label": "bounded()",
-      "file_type": "code",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L70",
-      "id": "shape_utils_bounded",
-      "community": 29,
-      "norm_label": "bounded()"
     },
     {
       "label": "SDF of an axis-aligned box of half-extents (hx, hy) with corners     rounded by",
@@ -927,7 +909,7 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L33",
       "id": "shape_utils_rationale_33",
-      "community": 16,
+      "community": 29,
       "norm_label": "sdf of an axis-aligned box of half-extents (hx, hy) with corners     rounded by"
     },
     {
@@ -936,26 +918,8 @@
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L49",
       "id": "shape_utils_rationale_49",
-      "community": 29,
+      "community": 52,
       "norm_label": "register `value` on `module` under `name`.      if `value` is an nn.parameter it"
-    },
-    {
-      "label": "Make parameter stricly positive",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L67",
-      "id": "shape_utils_rationale_67",
-      "community": 29,
-      "norm_label": "make parameter stricly positive"
-    },
-    {
-      "label": "Make parameter stricly bounded",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L71",
-      "id": "shape_utils_rationale_71",
-      "community": 29,
-      "norm_label": "make parameter stricly bounded"
     },
     {
       "label": "registry.py",
@@ -963,7 +927,7 @@
       "source_file": "src/metashapes/shape/registry.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_registry_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "registry.py"
     },
     {
@@ -972,7 +936,7 @@
       "source_file": "src/metashapes/shape/registry.py",
       "source_location": "L12",
       "id": "shape_registry_register_shape",
-      "community": 29,
+      "community": 52,
       "norm_label": "register_shape()"
     },
     {
@@ -981,7 +945,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_base_py",
-      "community": 29,
+      "community": 77,
       "norm_label": "base.py"
     },
     {
@@ -990,7 +954,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L26",
       "id": "shape_base_is_empty_bounds",
-      "community": 1,
+      "community": 77,
       "norm_label": "is_empty_bounds()"
     },
     {
@@ -999,7 +963,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L32",
       "id": "shape_base_shape",
-      "community": 29,
+      "community": 27,
       "norm_label": "shape"
     },
     {
@@ -1008,7 +972,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L37",
       "id": "shape_base_shape_sdf",
-      "community": 1,
+      "community": 27,
       "norm_label": ".sdf()"
     },
     {
@@ -1017,7 +981,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L45",
       "id": "shape_base_shape_forward",
-      "community": 1,
+      "community": 27,
       "norm_label": ".forward()"
     },
     {
@@ -1026,7 +990,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L50",
       "id": "shape_base_shape_bounds",
-      "community": 1,
+      "community": 27,
       "norm_label": ".bounds()"
     },
     {
@@ -1035,124 +999,115 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L69",
       "id": "shape_base_min_feature_size",
-      "community": 29,
+      "community": 74,
       "norm_label": "min_feature_size()"
-    },
-    {
-      "label": "._project()",
-      "file_type": "code",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L78",
-      "id": "shape_base_shape_project",
-      "community": 29,
-      "norm_label": "._project()"
     },
     {
       "label": ".__or__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L95",
+      "source_location": "L79",
       "id": "shape_base_shape_or",
-      "community": 29,
+      "community": 27,
       "norm_label": ".__or__()"
     },
     {
       "label": ".__and__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L99",
+      "source_location": "L83",
       "id": "shape_base_shape_and",
-      "community": 29,
+      "community": 27,
       "norm_label": ".__and__()"
     },
     {
       "label": ".__sub__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L103",
+      "source_location": "L87",
       "id": "shape_base_shape_sub",
-      "community": 29,
+      "community": 27,
       "norm_label": ".__sub__()"
     },
     {
       "label": ".union()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L107",
+      "source_location": "L91",
       "id": "shape_base_shape_union",
-      "community": 29,
+      "community": 27,
       "norm_label": ".union()"
     },
     {
       "label": ".intersection()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L112",
+      "source_location": "L96",
       "id": "shape_base_shape_intersection",
-      "community": 29,
+      "community": 27,
       "norm_label": ".intersection()"
     },
     {
       "label": ".difference()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L117",
+      "source_location": "L101",
       "id": "shape_base_shape_difference",
-      "community": 29,
+      "community": 27,
       "norm_label": ".difference()"
     },
     {
       "label": ".translate()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L123",
+      "source_location": "L107",
       "id": "shape_base_shape_translate",
-      "community": 29,
+      "community": 27,
       "norm_label": ".translate()"
     },
     {
       "label": ".rotate()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L129",
+      "source_location": "L113",
       "id": "shape_base_shape_rotate",
-      "community": 29,
+      "community": 27,
       "norm_label": ".rotate()"
     },
     {
       "label": ".scale()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L137",
+      "source_location": "L121",
       "id": "shape_base_shape_scale",
-      "community": 29,
+      "community": 27,
       "norm_label": ".scale()"
     },
     {
       "label": ".to_parametric()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L146",
+      "source_location": "L130",
       "id": "shape_base_shape_to_parametric",
-      "community": 29,
+      "community": 74,
       "norm_label": ".to_parametric()"
     },
     {
       "label": "from_parametric()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L158",
+      "source_location": "L142",
       "id": "shape_base_from_parametric",
-      "community": 29,
+      "community": 74,
       "norm_label": "from_parametric()"
     },
     {
       "label": "to_plain_data()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L188",
+      "source_location": "L172",
       "id": "shape_base_to_plain_data",
-      "community": 6,
+      "community": 74,
       "norm_label": "to_plain_data()"
     },
     {
@@ -1161,7 +1116,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L27",
       "id": "shape_base_rationale_27",
-      "community": 1,
+      "community": 27,
       "norm_label": "true if `bounds` (as returned by `shape.bounds()`) is an empty/inverted box."
     },
     {
@@ -1170,7 +1125,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L33",
       "id": "shape_base_rationale_33",
-      "community": 29,
+      "community": 27,
       "norm_label": "base class for all symbolic 2d shapes."
     },
     {
@@ -1179,7 +1134,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L38",
       "id": "shape_base_rationale_38",
-      "community": 1,
+      "community": 27,
       "norm_label": "signed distance evaluated on torch tensors.         x, y can be broadcastable te"
     },
     {
@@ -1188,7 +1143,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L46",
       "id": "shape_base_rationale_46",
-      "community": 1,
+      "community": 27,
       "norm_label": "alias for `sdf`, so a shape can be called directly (`shape(x, y)`)         follo"
     },
     {
@@ -1197,7 +1152,7 @@
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L51",
       "id": "shape_base_rationale_51",
-      "community": 1,
+      "community": 27,
       "norm_label": "axis-aligned bounding box of the shape, in world coordinates.          returns ("
     },
     {
@@ -1210,21 +1165,12 @@
       "norm_label": "narrowest place the shape gets, in world units, or none if unknown.          lea"
     },
     {
-      "label": "Snap this shape's constrained parameters back into their valid         ranges, i",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L79",
-      "id": "shape_base_rationale_79",
-      "community": 29,
-      "norm_label": "snap this shape's constrained parameters back into their valid         ranges, i"
-    },
-    {
       "label": "Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L189",
-      "id": "shape_base_rationale_189",
-      "community": 6,
+      "source_location": "L173",
+      "id": "shape_base_rationale_173",
+      "community": 74,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala"
     },
     {
@@ -1233,7 +1179,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_junctions_py",
-      "community": 29,
+      "community": 52,
       "norm_label": "junctions.py"
     },
     {
@@ -1251,7 +1197,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L33",
       "id": "primitives_junctions_cross_init",
-      "community": 80,
+      "community": 9,
       "norm_label": ".__init__()"
     },
     {
@@ -1260,7 +1206,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L68",
       "id": "primitives_junctions_cross_sdf",
-      "community": 16,
+      "community": 29,
       "norm_label": ".sdf()"
     },
     {
@@ -1278,7 +1224,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L130",
       "id": "primitives_junctions_min_feature_size",
-      "community": 29,
+      "community": 52,
       "norm_label": "min_feature_size()"
     },
     {
@@ -1287,7 +1233,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L135",
       "id": "primitives_junctions_tshape",
-      "community": 80,
+      "community": 9,
       "norm_label": "tshape"
     },
     {
@@ -1296,7 +1242,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L147",
       "id": "primitives_junctions_tshape_init",
-      "community": 80,
+      "community": 9,
       "norm_label": ".__init__()"
     },
     {
@@ -1305,7 +1251,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L182",
       "id": "primitives_junctions_tshape_sdf",
-      "community": 16,
+      "community": 29,
       "norm_label": ".sdf()"
     },
     {
@@ -1314,7 +1260,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L226",
       "id": "primitives_junctions_tshape_bounds",
-      "community": 80,
+      "community": 9,
       "norm_label": ".bounds()"
     },
     {
@@ -1332,7 +1278,7 @@
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L136",
       "id": "primitives_junctions_rationale_136",
-      "community": 80,
+      "community": 9,
       "norm_label": "symbolic t-shape.      parameters:         center: (cx, cy)         length: full"
     },
     {
@@ -1341,7 +1287,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_polygons_py",
-      "community": 29,
+      "community": 52,
       "norm_label": "polygons.py"
     },
     {
@@ -1359,7 +1305,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L32",
       "id": "primitives_polygons_regularpolygon_init",
-      "community": 70,
+      "community": 10,
       "norm_label": ".__init__()"
     },
     {
@@ -1368,7 +1314,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L57",
       "id": "primitives_polygons_regularpolygon_sdf",
-      "community": 16,
+      "community": 14,
       "norm_label": ".sdf()"
     },
     {
@@ -1395,7 +1341,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L137",
       "id": "primitives_polygons_min_feature_size",
-      "community": 29,
+      "community": 52,
       "norm_label": "min_feature_size()"
     },
     {
@@ -1413,7 +1359,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L161",
       "id": "primitives_polygons_triangle_init",
-      "community": 70,
+      "community": 10,
       "norm_label": ".__init__()"
     },
     {
@@ -1422,7 +1368,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L187",
       "id": "primitives_polygons_triangle_inradius",
-      "community": 70,
+      "community": 10,
       "norm_label": "._inradius()"
     },
     {
@@ -1467,7 +1413,7 @@
       "source_file": "src/metashapes/shape/primitives/polygons.py",
       "source_location": "L314",
       "id": "primitives_polygons_star_init",
-      "community": 70,
+      "community": 10,
       "norm_label": ".__init__()"
     },
     {
@@ -1548,7 +1494,7 @@
       "source_file": "src/metashapes/shape/primitives/quads.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_quads_py",
-      "community": 29,
+      "community": 65,
       "norm_label": "quads.py"
     },
     {
@@ -1564,34 +1510,25 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L36",
+      "source_location": "L31",
       "id": "primitives_quads_rectangle_init",
-      "community": 17,
+      "community": 65,
       "norm_label": ".__init__()"
-    },
-    {
-      "label": "_project()",
-      "file_type": "code",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L53",
-      "id": "primitives_quads_project",
-      "community": 29,
-      "norm_label": "_project()"
     },
     {
       "label": ".sdf()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L58",
+      "source_location": "L47",
       "id": "primitives_quads_rectangle_sdf",
-      "community": 83,
+      "community": 91,
       "norm_label": ".sdf()"
     },
     {
       "label": ".bounds()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L70",
+      "source_location": "L60",
       "id": "primitives_quads_rectangle_bounds",
       "community": 17,
       "norm_label": ".bounds()"
@@ -1600,16 +1537,16 @@
       "label": "min_feature_size()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L83",
+      "source_location": "L72",
       "id": "primitives_quads_min_feature_size",
-      "community": 29,
+      "community": 65,
       "norm_label": "min_feature_size()"
     },
     {
       "label": "ConvexQuad",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L88",
+      "source_location": "L76",
       "id": "primitives_quads_convexquad",
       "community": 17,
       "norm_label": "convexquad"
@@ -1618,52 +1555,52 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L110",
+      "source_location": "L98",
       "id": "primitives_quads_convexquad_init",
-      "community": 17,
+      "community": 65,
       "norm_label": ".__init__()"
     },
     {
       "label": "_quad_vertices()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L154",
+      "source_location": "L149",
       "id": "primitives_quads_quad_vertices",
-      "community": 17,
+      "community": 65,
       "norm_label": "_quad_vertices()"
     },
     {
       "label": "_signed_area2()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L171",
+      "source_location": "L165",
       "id": "primitives_quads_signed_area2",
-      "community": 17,
+      "community": 65,
       "norm_label": "_signed_area2()"
     },
     {
       "label": "_max_corner_radius()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L181",
+      "source_location": "L175",
       "id": "primitives_quads_max_corner_radius",
-      "community": 17,
+      "community": 65,
       "norm_label": "_max_corner_radius()"
     },
     {
       "label": ".sdf()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L220",
+      "source_location": "L214",
       "id": "primitives_quads_convexquad_sdf",
-      "community": 17,
+      "community": 65,
       "norm_label": ".sdf()"
     },
     {
       "label": ".bounds()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L228",
+      "source_location": "L345",
       "id": "primitives_quads_convexquad_bounds",
       "community": 17,
       "norm_label": ".bounds()"
@@ -1672,7 +1609,7 @@
       "label": "IsoscelesTrapezoid",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L300",
+      "source_location": "L424",
       "id": "primitives_quads_isoscelestrapezoid",
       "community": 15,
       "norm_label": "isoscelestrapezoid"
@@ -1681,25 +1618,25 @@
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L312",
+      "source_location": "L436",
       "id": "primitives_quads_isoscelestrapezoid_init",
-      "community": 17,
+      "community": 65,
       "norm_label": ".__init__()"
     },
     {
       "label": ".sdf()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L349",
+      "source_location": "L479",
       "id": "primitives_quads_isoscelestrapezoid_sdf",
-      "community": 83,
+      "community": 15,
       "norm_label": ".sdf()"
     },
     {
       "label": ".bounds()",
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L361",
+      "source_location": "L535",
       "id": "primitives_quads_isoscelestrapezoid_bounds",
       "community": 15,
       "norm_label": ".bounds()"
@@ -1714,20 +1651,11 @@
       "norm_label": "symbolic rectangle.      parameters:         center: (cx, cy)         size: (wid"
     },
     {
-      "label": "Snap size/corner_radius back into their valid ranges in place.",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L54",
-      "id": "primitives_quads_rationale_54",
-      "community": 79,
-      "norm_label": "snap size/corner_radius back into their valid ranges in place."
-    },
-    {
       "label": "Symbolic convex quadrilateral with optional rounded corners.      The quad is bu",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L89",
-      "id": "primitives_quads_rationale_89",
+      "source_location": "L77",
+      "id": "primitives_quads_rationale_77",
       "community": 17,
       "norm_label": "symbolic convex quadrilateral with optional rounded corners.      the quad is bu"
     },
@@ -1735,35 +1663,35 @@
       "label": "The four corners of the (possibly stretched) parallelogram         frame, in con",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L155",
-      "id": "primitives_quads_rationale_155",
-      "community": 86,
+      "source_location": "L150",
+      "id": "primitives_quads_rationale_150",
+      "community": 92,
       "norm_label": "the four corners of the (possibly stretched) parallelogram         frame, in con"
     },
     {
       "label": "Largest radius for which eroding `verts` (via the same         edge-normal line-",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L182",
-      "id": "primitives_quads_rationale_182",
-      "community": 89,
+      "source_location": "L176",
+      "id": "primitives_quads_rationale_176",
+      "community": 93,
       "norm_label": "largest radius for which eroding `verts` (via the same         edge-normal line-"
     },
     {
       "label": "Narrowest place the (possibly rounded) quad gets.          Computed fresh from t",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L250",
-      "id": "primitives_quads_rationale_250",
-      "community": 90,
+      "source_location": "L374",
+      "id": "primitives_quads_rationale_374",
+      "community": 94,
       "norm_label": "narrowest place the (possibly rounded) quad gets.          computed fresh from t"
     },
     {
       "label": "Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy)",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L301",
-      "id": "primitives_quads_rationale_301",
+      "source_location": "L425",
+      "id": "primitives_quads_rationale_425",
       "community": 15,
       "norm_label": "symbolic isosceles trapezoid.      parameters:         center: (cx, cy)"
     },
@@ -1773,7 +1701,7 @@
       "source_file": "src/metashapes/shape/primitives/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_init_py",
-      "community": 29,
+      "community": 52,
       "norm_label": "__init__.py"
     },
     {
@@ -1863,7 +1791,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L1",
       "id": "src_metashapes_shape_primitives_ovals_py",
-      "community": 36,
+      "community": 78,
       "norm_label": "ovals.py"
     },
     {
@@ -1872,7 +1800,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L19",
       "id": "primitives_ovals_ellipse_closest_point",
-      "community": 16,
+      "community": 78,
       "norm_label": "_ellipse_closest_point()"
     },
     {
@@ -1890,7 +1818,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L171",
       "id": "primitives_ovals_ellipse_init",
-      "community": 29,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -1899,7 +1827,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L183",
       "id": "primitives_ovals_ellipse_sdf",
-      "community": 16,
+      "community": 78,
       "norm_label": ".sdf()"
     },
     {
@@ -1917,7 +1845,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L228",
       "id": "primitives_ovals_min_feature_size",
-      "community": 36,
+      "community": 78,
       "norm_label": "min_feature_size()"
     },
     {
@@ -1935,7 +1863,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L244",
       "id": "primitives_ovals_egg_init",
-      "community": 29,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -1944,7 +1872,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L264",
       "id": "primitives_ovals_egg_sdf",
-      "community": 16,
+      "community": 78,
       "norm_label": ".sdf()"
     },
     {
@@ -1971,7 +1899,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L343",
       "id": "primitives_ovals_stadium_init",
-      "community": 29,
+      "community": 52,
       "norm_label": ".__init__()"
     },
     {
@@ -1980,7 +1908,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L361",
       "id": "primitives_ovals_stadium_sdf",
-      "community": 16,
+      "community": 36,
       "norm_label": ".sdf()"
     },
     {
@@ -1998,7 +1926,7 @@
       "source_file": "src/metashapes/shape/primitives/ovals.py",
       "source_location": "L21",
       "id": "primitives_ovals_rationale_21",
-      "community": 16,
+      "community": 78,
       "norm_label": "nearest point on the boundary of an axis-aligned ellipse (semi-axes     a, b, ce"
     },
     {
@@ -2385,7 +2313,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L382",
       "id": "lattice_unit_cell_unitcell_center_scene",
-      "community": 77,
+      "community": 80,
       "norm_label": ".center_scene()"
     },
     {
@@ -2502,7 +2430,7 @@
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L383",
       "id": "lattice_unit_cell_rationale_383",
-      "community": 77,
+      "community": 80,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the"
     },
     {
@@ -2664,7 +2592,7 @@
       "source_file": "src/metashapes/adapters/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_init_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "__init__.py"
     },
     {
@@ -2673,7 +2601,7 @@
       "source_file": "src/metashapes/adapters/shapely/junctions.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_junctions_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "junctions.py"
     },
     {
@@ -2682,7 +2610,7 @@
       "source_file": "src/metashapes/adapters/shapely/junctions.py",
       "source_location": "L15",
       "id": "shapely_junctions_rounded_box",
-      "community": 77,
+      "community": 1,
       "norm_label": "_rounded_box()"
     },
     {
@@ -2691,7 +2619,7 @@
       "source_file": "src/metashapes/adapters/shapely/junctions.py",
       "source_location": "L20",
       "id": "shapely_junctions_cross_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "cross_to_shapely()"
     },
     {
@@ -2700,7 +2628,7 @@
       "source_file": "src/metashapes/adapters/shapely/junctions.py",
       "source_location": "L84",
       "id": "shapely_junctions_tshape_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "tshape_to_shapely()"
     },
     {
@@ -2709,7 +2637,7 @@
       "source_file": "src/metashapes/adapters/shapely/polygons.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_polygons_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "polygons.py"
     },
     {
@@ -2718,7 +2646,7 @@
       "source_file": "src/metashapes/adapters/shapely/polygons.py",
       "source_location": "L16",
       "id": "shapely_polygons_triangle_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "triangle_to_shapely()"
     },
     {
@@ -2727,7 +2655,7 @@
       "source_file": "src/metashapes/adapters/shapely/polygons.py",
       "source_location": "L37",
       "id": "shapely_polygons_star_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "star_to_shapely()"
     },
     {
@@ -2736,7 +2664,7 @@
       "source_file": "src/metashapes/adapters/shapely/polygons.py",
       "source_location": "L62",
       "id": "shapely_polygons_regular_polygon_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "regular_polygon_to_shapely()"
     },
     {
@@ -2745,7 +2673,7 @@
       "source_file": "src/metashapes/adapters/shapely/dispatch.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_dispatch_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "dispatch.py"
     },
     {
@@ -2754,7 +2682,7 @@
       "source_file": "src/metashapes/adapters/shapely/dispatch.py",
       "source_location": "L33",
       "id": "shapely_dispatch_shape_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "shape_to_shapely()"
     },
     {
@@ -2763,7 +2691,7 @@
       "source_file": "src/metashapes/adapters/shapely/transforms.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_transforms_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "transforms.py"
     },
     {
@@ -2772,7 +2700,7 @@
       "source_file": "src/metashapes/adapters/shapely/transforms.py",
       "source_location": "L14",
       "id": "shapely_transforms_translate_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "translate_to_shapely()"
     },
     {
@@ -2781,7 +2709,7 @@
       "source_file": "src/metashapes/adapters/shapely/transforms.py",
       "source_location": "L18",
       "id": "shapely_transforms_rotate_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "rotate_to_shapely()"
     },
     {
@@ -2790,7 +2718,7 @@
       "source_file": "src/metashapes/adapters/shapely/transforms.py",
       "source_location": "L23",
       "id": "shapely_transforms_scale_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "scale_to_shapely()"
     },
     {
@@ -2799,7 +2727,7 @@
       "source_file": "src/metashapes/adapters/shapely/quads.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_quads_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "quads.py"
     },
     {
@@ -2808,7 +2736,7 @@
       "source_file": "src/metashapes/adapters/shapely/quads.py",
       "source_location": "L15",
       "id": "shapely_quads_convex_quad_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "convex_quad_to_shapely()"
     },
     {
@@ -2817,7 +2745,7 @@
       "source_file": "src/metashapes/adapters/shapely/quads.py",
       "source_location": "L61",
       "id": "shapely_quads_rectangle_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "rectangle_to_shapely()"
     },
     {
@@ -2826,7 +2754,7 @@
       "source_file": "src/metashapes/adapters/shapely/quads.py",
       "source_location": "L90",
       "id": "shapely_quads_isosceles_trapezoid_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "isosceles_trapezoid_to_shapely()"
     },
     {
@@ -2835,7 +2763,7 @@
       "source_file": "src/metashapes/adapters/shapely/booleans.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_booleans_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "booleans.py"
     },
     {
@@ -2844,7 +2772,7 @@
       "source_file": "src/metashapes/adapters/shapely/booleans.py",
       "source_location": "L10",
       "id": "shapely_booleans_union_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "union_to_shapely()"
     },
     {
@@ -2853,7 +2781,7 @@
       "source_file": "src/metashapes/adapters/shapely/booleans.py",
       "source_location": "L13",
       "id": "shapely_booleans_intersection_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "intersection_to_shapely()"
     },
     {
@@ -2862,7 +2790,7 @@
       "source_file": "src/metashapes/adapters/shapely/booleans.py",
       "source_location": "L16",
       "id": "shapely_booleans_difference_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "difference_to_shapely()"
     },
     {
@@ -2871,7 +2799,7 @@
       "source_file": "src/metashapes/adapters/shapely/__init__.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_init_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "__init__.py"
     },
     {
@@ -2880,7 +2808,7 @@
       "source_file": "src/metashapes/adapters/shapely/stripes.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_stripes_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "stripes.py"
     },
     {
@@ -2889,7 +2817,7 @@
       "source_file": "src/metashapes/adapters/shapely/stripes.py",
       "source_location": "L17",
       "id": "shapely_stripes_bar_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "bar_to_shapely()"
     },
     {
@@ -2898,7 +2826,7 @@
       "source_file": "src/metashapes/adapters/shapely/stripes.py",
       "source_location": "L18",
       "id": "shapely_stripes_rationale_18",
-      "community": 77,
+      "community": 1,
       "norm_label": "convert a bar to a shapely box.      the bar is infinite along its axis, so we a"
     },
     {
@@ -2907,7 +2835,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_helpers_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "helpers.py"
     },
     {
@@ -2916,7 +2844,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L13",
       "id": "shapely_helpers_as_float",
-      "community": 77,
+      "community": 1,
       "norm_label": "as_float()"
     },
     {
@@ -2925,7 +2853,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L25",
       "id": "shapely_helpers_as_list",
-      "community": 77,
+      "community": 1,
       "norm_label": "as_list()"
     },
     {
@@ -2934,7 +2862,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L39",
       "id": "shapely_helpers_round_corners",
-      "community": 77,
+      "community": 1,
       "norm_label": "round_corners()"
     },
     {
@@ -2943,7 +2871,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L63",
       "id": "shapely_helpers_remove_holes",
-      "community": 77,
+      "community": 1,
       "norm_label": "remove_holes()"
     },
     {
@@ -2952,7 +2880,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L14",
       "id": "shapely_helpers_rationale_14",
-      "community": 77,
+      "community": 1,
       "norm_label": "safely extract a scalar tensor (any device/grad state) to python float.      cal"
     },
     {
@@ -2961,7 +2889,7 @@
       "source_file": "src/metashapes/adapters/shapely/helpers.py",
       "source_location": "L26",
       "id": "shapely_helpers_rationale_26",
-      "community": 77,
+      "community": 1,
       "norm_label": "safely extract a tensor (any device/grad state) to a python list.      calls ``."
     },
     {
@@ -2970,7 +2898,7 @@
       "source_file": "src/metashapes/adapters/shapely/raster.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_raster_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "raster.py"
     },
     {
@@ -2979,7 +2907,7 @@
       "source_file": "src/metashapes/adapters/shapely/raster.py",
       "source_location": "L11",
       "id": "shapely_raster_shapely_to_numpy",
-      "community": 77,
+      "community": 1,
       "norm_label": "shapely_to_numpy()"
     },
     {
@@ -2988,7 +2916,7 @@
       "source_file": "src/metashapes/adapters/shapely/raster.py",
       "source_location": "L16",
       "id": "shapely_raster_rationale_16",
-      "community": 77,
+      "community": 1,
       "norm_label": "rasterize a shapely geometry onto a coordinate grid.      parameters     -------"
     },
     {
@@ -2997,7 +2925,7 @@
       "source_file": "src/metashapes/adapters/shapely/ovals.py",
       "source_location": "L1",
       "id": "src_metashapes_adapters_shapely_ovals_py",
-      "community": 77,
+      "community": 1,
       "norm_label": "ovals.py"
     },
     {
@@ -3006,7 +2934,7 @@
       "source_file": "src/metashapes/adapters/shapely/ovals.py",
       "source_location": "L16",
       "id": "shapely_ovals_ellipse_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "ellipse_to_shapely()"
     },
     {
@@ -3015,7 +2943,7 @@
       "source_file": "src/metashapes/adapters/shapely/ovals.py",
       "source_location": "L28",
       "id": "shapely_ovals_egg_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "egg_to_shapely()"
     },
     {
@@ -3024,7 +2952,7 @@
       "source_file": "src/metashapes/adapters/shapely/ovals.py",
       "source_location": "L52",
       "id": "shapely_ovals_stadium_to_shapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "stadium_to_shapely()"
     },
     {
@@ -3888,7 +3816,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L1",
       "id": "tests_test_analysis_py",
-      "community": 6,
+      "community": 70,
       "norm_label": "test_analysis.py"
     },
     {
@@ -3915,7 +3843,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L42",
       "id": "tests_test_analysis_testleafshapes",
-      "community": 81,
+      "community": 2,
       "norm_label": "testleafshapes"
     },
     {
@@ -3924,7 +3852,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L43",
       "id": "tests_test_analysis_testleafshapes_test_primitive_yields_itself",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_primitive_yields_itself()"
     },
     {
@@ -3933,7 +3861,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L49",
       "id": "tests_test_analysis_testleafshapes_test_union_yields_both",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_union_yields_both()"
     },
     {
@@ -3942,7 +3870,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L55",
       "id": "tests_test_analysis_testleafshapes_test_deep_union",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_deep_union()"
     },
     {
@@ -3951,7 +3879,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L60",
       "id": "tests_test_analysis_testleafshapes_test_intersection_is_atomic",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_intersection_is_atomic()"
     },
     {
@@ -3960,7 +3888,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L67",
       "id": "tests_test_analysis_testleafshapes_test_difference_is_atomic",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_difference_is_atomic()"
     },
     {
@@ -3969,7 +3897,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L74",
       "id": "tests_test_analysis_testleafshapes_test_translate_wraps_leaf",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_translate_wraps_leaf()"
     },
     {
@@ -3978,7 +3906,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L82",
       "id": "tests_test_analysis_testleafshapes_test_rotate_wraps_leaf",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_rotate_wraps_leaf()"
     },
     {
@@ -3987,7 +3915,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L89",
       "id": "tests_test_analysis_testleafshapes_test_scale_wraps_leaf",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_scale_wraps_leaf()"
     },
     {
@@ -3996,7 +3924,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L96",
       "id": "tests_test_analysis_testleafshapes_test_translate_union_splits",
-      "community": 81,
+      "community": 2,
       "norm_label": ".test_translate_union_splits()"
     },
     {
@@ -4005,7 +3933,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L108",
       "id": "tests_test_analysis_testcellmetrics",
-      "community": 6,
+      "community": 70,
       "norm_label": "testcellmetrics"
     },
     {
@@ -4014,7 +3942,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L109",
       "id": "tests_test_analysis_testcellmetrics_test_default_fields",
-      "community": 6,
+      "community": 70,
       "norm_label": ".test_default_fields()"
     },
     {
@@ -4023,7 +3951,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L116",
       "id": "tests_test_analysis_testcellmetrics_test_fields_set",
-      "community": 6,
+      "community": 70,
       "norm_label": ".test_fields_set()"
     },
     {
@@ -4257,7 +4185,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L303",
       "id": "tests_test_analysis_testvalidate",
-      "community": 6,
+      "community": 70,
       "norm_label": "testvalidate"
     },
     {
@@ -4293,7 +4221,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L327",
       "id": "tests_test_analysis_testanalyze",
-      "community": 6,
+      "community": 70,
       "norm_label": "testanalyze"
     },
     {
@@ -4311,7 +4239,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L334",
       "id": "tests_test_analysis_testanalyze_test_empty_list",
-      "community": 6,
+      "community": 2,
       "norm_label": ".test_empty_list()"
     },
     {
@@ -4320,7 +4248,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L342",
       "id": "tests_test_analysis_testfindduplicates",
-      "community": 6,
+      "community": 2,
       "norm_label": "testfindduplicates"
     },
     {
@@ -4329,7 +4257,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L343",
       "id": "tests_test_analysis_testfindduplicates_test_empty",
-      "community": 6,
+      "community": 2,
       "norm_label": ".test_empty()"
     },
     {
@@ -4410,7 +4338,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L395",
       "id": "tests_test_analysis_testcomputemingap",
-      "community": 55,
+      "community": 70,
       "norm_label": "testcomputemingap"
     },
     {
@@ -4419,7 +4347,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L396",
       "id": "tests_test_analysis_testcomputemingap_test_no_shapes_returns_none",
-      "community": 55,
+      "community": 1,
       "norm_label": ".test_no_shapes_returns_none()"
     },
     {
@@ -4428,7 +4356,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L401",
       "id": "tests_test_analysis_testcomputemingap_test_single_shape_positive_gap",
-      "community": 55,
+      "community": 1,
       "norm_label": ".test_single_shape_positive_gap()"
     },
     {
@@ -4437,7 +4365,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L411",
       "id": "tests_test_analysis_testcomputemingap_test_two_shapes_gap_matches_geometry",
-      "community": 55,
+      "community": 1,
       "norm_label": ".test_two_shapes_gap_matches_geometry()"
     },
     {
@@ -4446,7 +4374,7 @@
       "source_file": "tests/test_analysis.py",
       "source_location": "L422",
       "id": "tests_test_analysis_testcomputemingap_test_bar_gap_is_perpendicular_only",
-      "community": 55,
+      "community": 1,
       "norm_label": ".test_bar_gap_is_perpendicular_only()"
     },
     {
@@ -4644,7 +4572,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L131",
       "id": "shape_test_stripes_testbardtypedevicegrad",
-      "community": 28,
+      "community": 12,
       "norm_label": "testbardtypedevicegrad"
     },
     {
@@ -4653,7 +4581,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L132",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -4662,7 +4590,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L136",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_direct_call_dtype_promotion",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_direct_call_dtype_promotion()"
     },
     {
@@ -4671,7 +4599,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L140",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_integer_query_does_not_crash",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_integer_query_does_not_crash()"
     },
     {
@@ -4680,7 +4608,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L145",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_gradients_finite_generic_point",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_gradients_finite_generic_point()"
     },
     {
@@ -4689,7 +4617,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L153",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_gradients_finite_both_axes",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_gradients_finite_both_axes()"
     },
     {
@@ -4698,7 +4626,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L159",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_infinite_bounds_does_not_affect_min_feature_size",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_infinite_bounds_does_not_affect_min_feature_size()"
     },
     {
@@ -4707,7 +4635,7 @@
       "source_file": "tests/shape/test_stripes.py",
       "source_location": "L167",
       "id": "shape_test_stripes_testbardtypedevicegrad_test_broadcast_x_y_different_shapes",
-      "community": 28,
+      "community": 12,
       "norm_label": ".test_broadcast_x_y_different_shapes()"
     },
     {
@@ -4716,7 +4644,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L1",
       "id": "tests_shape_test_junctions_py",
-      "community": 9,
+      "community": 28,
       "norm_label": "test_junctions.py"
     },
     {
@@ -4734,7 +4662,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L18",
       "id": "shape_test_junctions_testcross_basic",
-      "community": 27,
+      "community": 9,
       "norm_label": "._basic()"
     },
     {
@@ -4743,7 +4671,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L21",
       "id": "shape_test_junctions_testcross_test_center_is_inside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_center_is_inside()"
     },
     {
@@ -4752,7 +4680,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L24",
       "id": "shape_test_junctions_testcross_test_arm_tips_inside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_arm_tips_inside()"
     },
     {
@@ -4761,7 +4689,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L29",
       "id": "shape_test_junctions_testcross_test_corners_outside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_corners_outside()"
     },
     {
@@ -4770,7 +4698,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L34",
       "id": "shape_test_junctions_testcross_test_tip_boundary",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_tip_boundary()"
     },
     {
@@ -4797,7 +4725,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L49",
       "id": "shape_test_junctions_testcross_test_outer_corner_radius",
-      "community": 18,
+      "community": 9,
       "norm_label": ".test_outer_corner_radius()"
     },
     {
@@ -4824,7 +4752,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L73",
       "id": "shape_test_junctions_testcross_test_bounds",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_bounds()"
     },
     {
@@ -4869,7 +4797,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L100",
       "id": "shape_test_junctions_testcross_test_round_trip_no_rounding",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_round_trip_no_rounding()"
     },
     {
@@ -4878,7 +4806,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L109",
       "id": "shape_test_junctions_testtshape",
-      "community": 27,
+      "community": 9,
       "norm_label": "testtshape"
     },
     {
@@ -4887,7 +4815,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L110",
       "id": "shape_test_junctions_testtshape_basic",
-      "community": 27,
+      "community": 9,
       "norm_label": "._basic()"
     },
     {
@@ -4896,7 +4824,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L113",
       "id": "shape_test_junctions_testtshape_test_center_is_inside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_center_is_inside()"
     },
     {
@@ -4905,7 +4833,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L116",
       "id": "shape_test_junctions_testtshape_test_stem_is_inside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_stem_is_inside()"
     },
     {
@@ -4914,7 +4842,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L120",
       "id": "shape_test_junctions_testtshape_test_bar_tip_is_inside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_bar_tip_is_inside()"
     },
     {
@@ -4923,7 +4851,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L124",
       "id": "shape_test_junctions_testtshape_test_below_stem_is_outside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_below_stem_is_outside()"
     },
     {
@@ -4932,7 +4860,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L128",
       "id": "shape_test_junctions_testtshape_test_top_bar_corners_outside",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_top_bar_corners_outside()"
     },
     {
@@ -4941,7 +4869,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L133",
       "id": "shape_test_junctions_testtshape_test_offset_center",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -4950,7 +4878,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L138",
       "id": "shape_test_junctions_testtshape_test_rotated",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_rotated()"
     },
     {
@@ -4959,7 +4887,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L142",
       "id": "shape_test_junctions_testtshape_test_outer_corner_radius",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_outer_corner_radius()"
     },
     {
@@ -4968,7 +4896,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L146",
       "id": "shape_test_junctions_testtshape_test_inner_corner_radius",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_inner_corner_radius()"
     },
     {
@@ -4977,7 +4905,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L153",
       "id": "shape_test_junctions_testtshape_test_zero_inner_radius_sdf_finite_and_correct",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_zero_inner_radius_sdf_finite_and_correct()"
     },
     {
@@ -4986,7 +4914,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L165",
       "id": "shape_test_junctions_testtshape_test_width_exceeds_length_raises",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_width_exceeds_length_raises()"
     },
     {
@@ -5004,7 +4932,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L173",
       "id": "shape_test_junctions_testtshape_test_round_trip",
-      "community": 4,
+      "community": 9,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -5013,7 +4941,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L180",
       "id": "shape_test_junctions_testtshape_test_round_trip_no_rounding",
-      "community": 27,
+      "community": 9,
       "norm_label": ".test_round_trip_no_rounding()"
     },
     {
@@ -5022,7 +4950,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L189",
       "id": "shape_test_junctions_testsharedroundedboxhelper",
-      "community": 16,
+      "community": 29,
       "norm_label": "testsharedroundedboxhelper"
     },
     {
@@ -5031,7 +4959,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L195",
       "id": "shape_test_junctions_testsharedroundedboxhelper_test_cross_outer_box_matches_shared_helper",
-      "community": 16,
+      "community": 29,
       "norm_label": ".test_cross_outer_box_matches_shared_helper()"
     },
     {
@@ -5040,7 +4968,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L215",
       "id": "shape_test_junctions_testsharedroundedboxhelper_test_tshape_outer_box_matches_shared_helper",
-      "community": 16,
+      "community": 29,
       "norm_label": ".test_tshape_outer_box_matches_shared_helper()"
     },
     {
@@ -5121,7 +5049,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L296",
       "id": "shape_test_junctions_testtshapedtypedevicegrad",
-      "community": 80,
+      "community": 9,
       "norm_label": "testtshapedtypedevicegrad"
     },
     {
@@ -5130,7 +5058,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L297",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_dtype_device_flow",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -5139,7 +5067,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L302",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_direct_call_dtype_promotion",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_direct_call_dtype_promotion()"
     },
     {
@@ -5148,7 +5076,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L306",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_integer_query_does_not_crash",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_integer_query_does_not_crash()"
     },
     {
@@ -5157,7 +5085,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L311",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_gradients_finite_generic_point",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_gradients_finite_generic_point()"
     },
     {
@@ -5166,7 +5094,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L324",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_gradients_finite_at_zero_inner_corner_radius",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_gradients_finite_at_zero_inner_corner_radius()"
     },
     {
@@ -5175,7 +5103,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L332",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_gradients_finite_at_width_equals_length",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_gradients_finite_at_width_equals_length()"
     },
     {
@@ -5184,7 +5112,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L340",
       "id": "shape_test_junctions_testtshapedtypedevicegrad_test_broadcast_x_y_different_shapes",
-      "community": 80,
+      "community": 9,
       "norm_label": ".test_broadcast_x_y_different_shapes()"
     },
     {
@@ -5193,7 +5121,7 @@
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L190",
       "id": "shape_test_junctions_rationale_190",
-      "community": 16,
+      "community": 29,
       "norm_label": "cross and tshape both call shape/utils.py's _sdf_rounded_box. these     checks p"
     },
     {
@@ -5211,7 +5139,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L18",
       "id": "shape_test_quads_testrectangle",
-      "community": 17,
+      "community": 61,
       "norm_label": "testrectangle"
     },
     {
@@ -5319,7 +5247,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L82",
       "id": "shape_test_quads_testsdfroundedbox",
-      "community": 16,
+      "community": 29,
       "norm_label": "testsdfroundedbox"
     },
     {
@@ -5328,7 +5256,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L87",
       "id": "shape_test_quads_testsdfroundedbox_test_zero_radius_matches_plain_box",
-      "community": 16,
+      "community": 29,
       "norm_label": ".test_zero_radius_matches_plain_box()"
     },
     {
@@ -5337,7 +5265,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L108",
       "id": "shape_test_quads_testsdfroundedbox_test_rectangle_delegates_to_shared_helper",
-      "community": 16,
+      "community": 29,
       "norm_label": ".test_rectangle_delegates_to_shared_helper()"
     },
     {
@@ -5859,7 +5787,7 @@
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L83",
       "id": "shape_test_quads_rationale_83",
-      "community": 16,
+      "community": 29,
       "norm_label": "direct tests of the shared helper, plus a check that rectangle's own     sdf() a"
     },
     {
@@ -5868,7 +5796,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L1",
       "id": "tests_shape_test_boolean_py",
-      "community": 65,
+      "community": 79,
       "norm_label": "test_boolean.py"
     },
     {
@@ -5877,7 +5805,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L15",
       "id": "shape_test_boolean_rect",
-      "community": 65,
+      "community": 79,
       "norm_label": "_rect()"
     },
     {
@@ -5886,7 +5814,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L19",
       "id": "shape_test_boolean_testisemptybounds",
-      "community": 1,
+      "community": 77,
       "norm_label": "testisemptybounds"
     },
     {
@@ -5895,7 +5823,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L20",
       "id": "shape_test_boolean_testisemptybounds_test_normal_box_is_not_empty",
-      "community": 1,
+      "community": 77,
       "norm_label": ".test_normal_box_is_not_empty()"
     },
     {
@@ -5904,7 +5832,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L23",
       "id": "shape_test_boolean_testisemptybounds_test_zero_area_box_is_not_empty",
-      "community": 1,
+      "community": 77,
       "norm_label": ".test_zero_area_box_is_not_empty()"
     },
     {
@@ -5913,7 +5841,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L28",
       "id": "shape_test_boolean_testisemptybounds_test_inverted_box_is_empty",
-      "community": 1,
+      "community": 77,
       "norm_label": ".test_inverted_box_is_empty()"
     },
     {
@@ -5922,7 +5850,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L31",
       "id": "shape_test_boolean_testisemptybounds_test_canonical_sentinel_is_empty",
-      "community": 1,
+      "community": 77,
       "norm_label": ".test_canonical_sentinel_is_empty()"
     },
     {
@@ -5931,7 +5859,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L35",
       "id": "shape_test_boolean_testintersectionbounds",
-      "community": 65,
+      "community": 79,
       "norm_label": "testintersectionbounds"
     },
     {
@@ -5940,7 +5868,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L36",
       "id": "shape_test_boolean_testintersectionbounds_test_disjoint_shapes_give_canonical_empty_bounds",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_disjoint_shapes_give_canonical_empty_bounds()"
     },
     {
@@ -5949,7 +5877,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L43",
       "id": "shape_test_boolean_testintersectionbounds_test_overlapping_shapes_give_real_bounds",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_overlapping_shapes_give_real_bounds()"
     },
     {
@@ -5958,7 +5886,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L52",
       "id": "shape_test_boolean_testintersectionbounds_test_touching_shapes_are_not_empty",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_touching_shapes_are_not_empty()"
     },
     {
@@ -5967,7 +5895,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L62",
       "id": "shape_test_boolean_testunionboundswithemptychild",
-      "community": 65,
+      "community": 79,
       "norm_label": "testunionboundswithemptychild"
     },
     {
@@ -5976,7 +5904,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L63",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_empty_left_operand_yields_right_bounds",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_empty_left_operand_yields_right_bounds()"
     },
     {
@@ -5985,7 +5913,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L68",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_empty_right_operand_yields_left_bounds",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_empty_right_operand_yields_left_bounds()"
     },
     {
@@ -5994,7 +5922,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L73",
       "id": "shape_test_boolean_testunionboundswithemptychild_test_both_empty_stays_empty",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_both_empty_stays_empty()"
     },
     {
@@ -6003,7 +5931,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L79",
       "id": "shape_test_boolean_testdifferencebounds",
-      "community": 65,
+      "community": 79,
       "norm_label": "testdifferencebounds"
     },
     {
@@ -6012,7 +5940,7 @@
       "source_file": "tests/shape/test_boolean.py",
       "source_location": "L80",
       "id": "shape_test_boolean_testdifferencebounds_test_returns_left_bounds",
-      "community": 65,
+      "community": 79,
       "norm_label": ".test_returns_left_bounds()"
     },
     {
@@ -6255,7 +6183,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L9",
       "id": "shape_conftest_sdf_at",
-      "community": 4,
+      "community": 20,
       "norm_label": "sdf_at()"
     },
     {
@@ -6264,7 +6192,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L16",
       "id": "shape_conftest_assert_inside",
-      "community": 18,
+      "community": 10,
       "norm_label": "assert_inside()"
     },
     {
@@ -6273,7 +6201,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L23",
       "id": "shape_conftest_assert_outside",
-      "community": 4,
+      "community": 28,
       "norm_label": "assert_outside()"
     },
     {
@@ -6282,7 +6210,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L30",
       "id": "shape_conftest_assert_round_trip",
-      "community": 4,
+      "community": 28,
       "norm_label": "assert_round_trip()"
     },
     {
@@ -6291,7 +6219,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L49",
       "id": "shape_conftest_assert_bounds_contain",
-      "community": 9,
+      "community": 28,
       "norm_label": "assert_bounds_contain()"
     },
     {
@@ -6327,7 +6255,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L136",
       "id": "shape_conftest_assert_gradients_finite_at",
-      "community": 69,
+      "community": 71,
       "norm_label": "assert_gradients_finite_at()"
     },
     {
@@ -6345,7 +6273,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L17",
       "id": "shape_conftest_rationale_17",
-      "community": 4,
+      "community": 10,
       "norm_label": "all points should have sdf < tol (inside or on boundary)."
     },
     {
@@ -6354,7 +6282,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L24",
       "id": "shape_conftest_rationale_24",
-      "community": 4,
+      "community": 28,
       "norm_label": "all points should have sdf > -tol (outside or on boundary)."
     },
     {
@@ -6363,7 +6291,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L31",
       "id": "shape_conftest_rationale_31",
-      "community": 4,
+      "community": 28,
       "norm_label": "serialise \u2192 deserialise and verify sdf equality on a small grid."
     },
     {
@@ -6372,7 +6300,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L50",
       "id": "shape_conftest_rationale_50",
-      "community": 9,
+      "community": 28,
       "norm_label": "all points should lie inside (or on) the reported bounding box."
     },
     {
@@ -6408,7 +6336,7 @@
       "source_file": "tests/shape/conftest.py",
       "source_location": "L137",
       "id": "shape_conftest_rationale_137",
-      "community": 69,
+      "community": 71,
       "norm_label": "same as assert_gradients_finite but evaluates sdf() at a single,     possibly su"
     },
     {
@@ -6417,7 +6345,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L1",
       "id": "tests_shape_test_ovals_py",
-      "community": 4,
+      "community": 28,
       "norm_label": "test_ovals.py"
     },
     {
@@ -6507,7 +6435,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L60",
       "id": "shape_test_ovals_testellipse_test_bounds_contain_interior",
-      "community": 9,
+      "community": 69,
       "norm_label": ".test_bounds_contain_interior()"
     },
     {
@@ -6561,7 +6489,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L105",
       "id": "shape_test_ovals_test_matches_brute_force_nearest_point",
-      "community": 4,
+      "community": 20,
       "norm_label": "test_matches_brute_force_nearest_point()"
     },
     {
@@ -6912,7 +6840,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L374",
       "id": "shape_test_ovals_testellipsedtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 69,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -6921,7 +6849,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L378",
       "id": "shape_test_ovals_testellipsedtypedevicegrad_test_direct_call_dtype_promotion",
-      "community": 28,
+      "community": 69,
       "norm_label": ".test_direct_call_dtype_promotion()"
     },
     {
@@ -6948,7 +6876,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L401",
       "id": "shape_test_ovals_testellipsedtypedevicegrad_test_gradients_finite_dense_grid",
-      "community": 28,
+      "community": 69,
       "norm_label": ".test_gradients_finite_dense_grid()"
     },
     {
@@ -6957,7 +6885,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L412",
       "id": "shape_test_ovals_testellipsedtypedevicegrad_test_gradients_finite_extreme_aspect_dense_grid",
-      "community": 28,
+      "community": 69,
       "norm_label": ".test_gradients_finite_extreme_aspect_dense_grid()"
     },
     {
@@ -7056,7 +6984,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L511",
       "id": "shape_test_ovals_testeggdtypedevicegrad_test_dtype_device_flow",
-      "community": 28,
+      "community": 20,
       "norm_label": ".test_dtype_device_flow()"
     },
     {
@@ -7065,7 +6993,7 @@
       "source_file": "tests/shape/test_ovals.py",
       "source_location": "L515",
       "id": "shape_test_ovals_testeggdtypedevicegrad_test_direct_call_dtype_promotion",
-      "community": 28,
+      "community": 20,
       "norm_label": ".test_direct_call_dtype_promotion()"
     },
     {
@@ -7209,7 +7137,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L1",
       "id": "tests_shape_test_polygons_py",
-      "community": 10,
+      "community": 28,
       "norm_label": "test_polygons.py"
     },
     {
@@ -7551,7 +7479,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L213",
       "id": "shape_test_polygons_teststar_test_far_outside",
-      "community": 10,
+      "community": 18,
       "norm_label": ".test_far_outside()"
     },
     {
@@ -7659,7 +7587,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L304",
       "id": "shape_test_polygons_teststar_test_rotation",
-      "community": 18,
+      "community": 10,
       "norm_label": ".test_rotation()"
     },
     {
@@ -7668,7 +7596,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L314",
       "id": "shape_test_polygons_teststar_test_offset_center",
-      "community": 18,
+      "community": 10,
       "norm_label": ".test_offset_center()"
     },
     {
@@ -7704,7 +7632,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L335",
       "id": "shape_test_polygons_teststar_test_bounds_contain_center",
-      "community": 10,
+      "community": 18,
       "norm_label": ".test_bounds_contain_center()"
     },
     {
@@ -7713,7 +7641,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L341",
       "id": "shape_test_polygons_teststar_test_round_trip",
-      "community": 10,
+      "community": 18,
       "norm_label": ".test_round_trip()"
     },
     {
@@ -7731,7 +7659,7 @@
       "source_file": "tests/shape/test_polygons.py",
       "source_location": "L351",
       "id": "shape_test_polygons_teststar_test_round_trip_with_corner_radii",
-      "community": 10,
+      "community": 18,
       "norm_label": ".test_round_trip_with_corner_radii()"
     },
     {
@@ -8433,7 +8361,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L1",
       "id": "tests_lattice_test_unit_cell_py",
-      "community": 5,
+      "community": 16,
       "norm_label": "test_unit_cell.py"
     },
     {
@@ -8451,7 +8379,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L27",
       "id": "lattice_test_unit_cell_sdf_at",
-      "community": 5,
+      "community": 16,
       "norm_label": "_sdf_at()"
     },
     {
@@ -8460,7 +8388,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L38",
       "id": "lattice_test_unit_cell_testunitcellsdf",
-      "community": 5,
+      "community": 16,
       "norm_label": "testunitcellsdf"
     },
     {
@@ -8469,7 +8397,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L39",
       "id": "lattice_test_unit_cell_testunitcellsdf_test_sdf_inside_center",
-      "community": 5,
+      "community": 16,
       "norm_label": ".test_sdf_inside_center()"
     },
     {
@@ -8478,7 +8406,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L43",
       "id": "lattice_test_unit_cell_testunitcellsdf_test_sdf_outside",
-      "community": 5,
+      "community": 16,
       "norm_label": ".test_sdf_outside()"
     },
     {
@@ -8487,7 +8415,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L48",
       "id": "lattice_test_unit_cell_testunitcellsdf_test_sdf_periodicity",
-      "community": 5,
+      "community": 16,
       "norm_label": ".test_sdf_periodicity()"
     },
     {
@@ -8496,7 +8424,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L58",
       "id": "lattice_test_unit_cell_testunitcellsdf_test_sdf_hexagonal",
-      "community": 5,
+      "community": 16,
       "norm_label": ".test_sdf_hexagonal()"
     },
     {
@@ -8505,7 +8433,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L68",
       "id": "lattice_test_unit_cell_testunitcellsdf_test_sdf_returns_tensor",
-      "community": 5,
+      "community": 16,
       "norm_label": ".test_sdf_returns_tensor()"
     },
     {
@@ -8694,7 +8622,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L206",
       "id": "lattice_test_unit_cell_testunitcellserialization",
-      "community": 75,
+      "community": 14,
       "norm_label": "testunitcellserialization"
     },
     {
@@ -8703,7 +8631,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L207",
       "id": "lattice_test_unit_cell_testunitcellserialization_sdf_grid",
-      "community": 75,
+      "community": 14,
       "norm_label": "._sdf_grid()"
     },
     {
@@ -8712,7 +8640,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L213",
       "id": "lattice_test_unit_cell_testunitcellserialization_test_round_trip_rectangular",
-      "community": 75,
+      "community": 14,
       "norm_label": ".test_round_trip_rectangular()"
     },
     {
@@ -8721,7 +8649,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L221",
       "id": "lattice_test_unit_cell_testunitcellserialization_test_round_trip_hexagonal",
-      "community": 75,
+      "community": 14,
       "norm_label": ".test_round_trip_hexagonal()"
     },
     {
@@ -8730,7 +8658,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L231",
       "id": "lattice_test_unit_cell_testunitcellserialization_test_round_trip_preserves_lattice_vectors",
-      "community": 75,
+      "community": 14,
       "norm_label": ".test_round_trip_preserves_lattice_vectors()"
     },
     {
@@ -8874,7 +8802,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L408",
       "id": "lattice_test_unit_cell_brute_force_sdf",
-      "community": 5,
+      "community": 16,
       "norm_label": "_brute_force_sdf()"
     },
     {
@@ -8928,7 +8856,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L480",
       "id": "lattice_test_unit_cell_testperiodicsdfmatchesbruteforce",
-      "community": 5,
+      "community": 16,
       "norm_label": "testperiodicsdfmatchesbruteforce"
     },
     {
@@ -8937,7 +8865,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L496",
       "id": "lattice_test_unit_cell_test_matches_brute_force",
-      "community": 5,
+      "community": 16,
       "norm_label": "test_matches_brute_force()"
     },
     {
@@ -9063,7 +8991,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L409",
       "id": "lattice_test_unit_cell_rationale_409",
-      "community": 5,
+      "community": 16,
       "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha"
     },
     {
@@ -9072,7 +9000,7 @@
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L481",
       "id": "lattice_test_unit_cell_rationale_481",
-      "community": 5,
+      "community": 16,
       "norm_label": "sdf() must agree with a large brute-force reference search for a     variety of"
     },
     {
@@ -9288,7 +9216,7 @@
       "source_file": "tests/lattice/test_unit_cell_center.py",
       "source_location": "L207",
       "id": "lattice_test_unit_cell_center_testgradientflow",
-      "community": 31,
+      "community": 76,
       "norm_label": "testgradientflow"
     },
     {
@@ -9297,7 +9225,7 @@
       "source_file": "tests/lattice/test_unit_cell_center.py",
       "source_location": "L208",
       "id": "lattice_test_unit_cell_center_testgradientflow_test_param_center_receives_gradient_after_centering",
-      "community": 31,
+      "community": 76,
       "norm_label": ".test_param_center_receives_gradient_after_centering()"
     },
     {
@@ -9306,7 +9234,7 @@
       "source_file": "tests/lattice/test_unit_cell_center.py",
       "source_location": "L227",
       "id": "lattice_test_unit_cell_center_testgradientflow_test_learnable_polygon_center_grad",
-      "community": 31,
+      "community": 76,
       "norm_label": ".test_learnable_polygon_center_grad()"
     },
     {
@@ -9414,7 +9342,7 @@
       "source_file": "tests/lattice/test_unit_cell_center.py",
       "source_location": "L209",
       "id": "lattice_test_unit_cell_center_rationale_209",
-      "community": 31,
+      "community": 76,
       "norm_label": "nn.parameter centre of a shape must receive gradients after center_scene()."
     },
     {
@@ -9423,7 +9351,7 @@
       "source_file": "tests/lattice/test_unit_cell_center.py",
       "source_location": "L228",
       "id": "lattice_test_unit_cell_center_rationale_228",
-      "community": 31,
+      "community": 76,
       "norm_label": "make_learnable_polygon center param grad is non-none after centering."
     },
     {
@@ -9450,7 +9378,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L1",
       "id": "tests_lattice_conftest_py",
-      "community": 75,
+      "community": 16,
       "norm_label": "conftest.py"
     },
     {
@@ -9459,7 +9387,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L13",
       "id": "lattice_conftest_rect_lattice",
-      "community": 75,
+      "community": 16,
       "norm_label": "rect_lattice()"
     },
     {
@@ -9468,7 +9396,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L18",
       "id": "lattice_conftest_hex_lattice",
-      "community": 75,
+      "community": 16,
       "norm_label": "hex_lattice()"
     },
     {
@@ -9477,7 +9405,7 @@
       "source_file": "/home/rodionsa/Code/Metashapes/tests/lattice/conftest.py",
       "source_location": "L23",
       "id": "lattice_conftest_square_in_rect",
-      "community": 75,
+      "community": 16,
       "norm_label": "square_in_rect()"
     },
     {
@@ -9684,7 +9612,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L1",
       "id": "tests_adapters_test_shapely_py",
-      "community": 52,
+      "community": 6,
       "norm_label": "test_shapely.py"
     },
     {
@@ -9693,7 +9621,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L17",
       "id": "adapters_test_shapely_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": "_centroid()"
     },
     {
@@ -9702,7 +9630,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L25",
       "id": "adapters_test_shapely_testprimitivestoshapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "testprimitivestoshapely"
     },
     {
@@ -9711,7 +9639,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L26",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_rectangle",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_rectangle()"
     },
     {
@@ -9720,7 +9648,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L32",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_rectangle_with_corner_radius",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_rectangle_with_corner_radius()"
     },
     {
@@ -9729,7 +9657,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L39",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_ellipse",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_ellipse()"
     },
     {
@@ -9738,7 +9666,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L46",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_ellipse_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_ellipse_centroid()"
     },
     {
@@ -9747,7 +9675,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L53",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_egg",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_egg()"
     },
     {
@@ -9756,7 +9684,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L62",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_egg_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_egg_centroid()"
     },
     {
@@ -9765,7 +9693,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L70",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_stadium()"
     },
     {
@@ -9774,7 +9702,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L80",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_stadium_centroid()"
     },
     {
@@ -9783,7 +9711,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L87",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stadium_degenerate_circle",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_stadium_degenerate_circle()"
     },
     {
@@ -9792,7 +9720,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L94",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_convex_quad",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_convex_quad()"
     },
     {
@@ -9801,7 +9729,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L108",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_isosceles_trapezoid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_isosceles_trapezoid()"
     },
     {
@@ -9810,7 +9738,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L120",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_equilateral_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_triangle_equilateral_area()"
     },
     {
@@ -9819,7 +9747,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L127",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_triangle_centroid()"
     },
     {
@@ -9828,7 +9756,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L134",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_triangle_corner_radius_reduces_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_triangle_corner_radius_reduces_area()"
     },
     {
@@ -9837,7 +9765,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L141",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_area_in_bounds",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_star_area_in_bounds()"
     },
     {
@@ -9846,7 +9774,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L149",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_star_centroid()"
     },
     {
@@ -9855,7 +9783,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L156",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_star_outer_corner_radius_reduces_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_star_outer_corner_radius_reduces_area()"
     },
     {
@@ -9864,7 +9792,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L162",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_regular_polygon_square",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_regular_polygon_square()"
     },
     {
@@ -9873,7 +9801,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L168",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_regular_polygon_hexagon",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_regular_polygon_hexagon()"
     },
     {
@@ -9882,7 +9810,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L175",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_cross",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_cross()"
     },
     {
@@ -9891,7 +9819,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L185",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_tshape",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_tshape()"
     },
     {
@@ -9900,7 +9828,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L195",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_bar_x_height",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_bar_x_height()"
     },
     {
@@ -9909,7 +9837,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L204",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_bar_y_width",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_bar_y_width()"
     },
     {
@@ -9918,7 +9846,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L213",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_unsupported_shape_raises",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_unsupported_shape_raises()"
     },
     {
@@ -9927,7 +9855,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L230",
       "id": "adapters_test_shapely_testbooleanstoshapely",
-      "community": 77,
+      "community": 1,
       "norm_label": "testbooleanstoshapely"
     },
     {
@@ -9936,7 +9864,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L231",
       "id": "adapters_test_shapely_testbooleanstoshapely_non_overlapping_pair",
-      "community": 77,
+      "community": 1,
       "norm_label": "._non_overlapping_pair()"
     },
     {
@@ -9945,7 +9873,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L236",
       "id": "adapters_test_shapely_testbooleanstoshapely_overlapping_pair",
-      "community": 77,
+      "community": 1,
       "norm_label": "._overlapping_pair()"
     },
     {
@@ -9954,7 +9882,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L241",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_non_overlapping_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_union_non_overlapping_area()"
     },
     {
@@ -9963,7 +9891,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L246",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_non_overlapping_contains_both_centers",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_union_non_overlapping_contains_both_centers()"
     },
     {
@@ -9972,7 +9900,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L253",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_union_overlapping_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_union_overlapping_area()"
     },
     {
@@ -9981,7 +9909,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L259",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_intersection_overlapping_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_intersection_overlapping_area()"
     },
     {
@@ -9990,7 +9918,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L265",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_intersection_non_overlapping_is_empty",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_intersection_non_overlapping_is_empty()"
     },
     {
@@ -9999,7 +9927,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L270",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_difference_area",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_difference_area()"
     },
     {
@@ -10008,7 +9936,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L276",
       "id": "adapters_test_shapely_testbooleanstoshapely_test_difference_excludes_r2_region",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_difference_excludes_r2_region()"
     },
     {
@@ -10017,7 +9945,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L290",
       "id": "adapters_test_shapely_testtransformstoshapely",
-      "community": 52,
+      "community": 61,
       "norm_label": "testtransformstoshapely"
     },
     {
@@ -10026,7 +9954,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L291",
       "id": "adapters_test_shapely_testtransformstoshapely_test_translate_moves_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_translate_moves_centroid()"
     },
     {
@@ -10053,7 +9981,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L310",
       "id": "adapters_test_shapely_testtransformstoshapely_test_rotate_moves_centroid",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_rotate_moves_centroid()"
     },
     {
@@ -10071,7 +9999,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L325",
       "id": "adapters_test_shapely_testtransformstoshapely_test_scale_centroid_unchanged_at_origin",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_scale_centroid_unchanged_at_origin()"
     },
     {
@@ -10080,7 +10008,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L337",
       "id": "adapters_test_shapely_testcompoundshapestoshapely",
-      "community": 52,
+      "community": 6,
       "norm_label": "testcompoundshapestoshapely"
     },
     {
@@ -10089,7 +10017,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L338",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_translated_union",
-      "community": 61,
+      "community": 1,
       "norm_label": ".test_translated_union()"
     },
     {
@@ -10116,7 +10044,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L361",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_scale_then_translate",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_scale_then_translate()"
     },
     {
@@ -10125,7 +10053,7 @@
       "source_file": "tests/adapters/test_shapely.py",
       "source_location": "L369",
       "id": "adapters_test_shapely_testcompoundshapestoshapely_test_nested_booleans",
-      "community": 61,
+      "community": 1,
       "norm_label": ".test_nested_booleans()"
     },
     {
@@ -10143,7 +10071,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L1",
       "id": "tests_adapters_test_shapely_safe_extraction_py",
-      "community": 53,
+      "community": 6,
       "norm_label": "test_shapely_safe_extraction.py"
     },
     {
@@ -10206,7 +10134,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L69",
       "id": "adapters_test_shapely_safe_extraction_testellipsesafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testellipsesafeextraction"
     },
     {
@@ -10233,7 +10161,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L85",
       "id": "adapters_test_shapely_safe_extraction_teststadiumsafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "teststadiumsafeextraction"
     },
     {
@@ -10251,7 +10179,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L97",
       "id": "adapters_test_shapely_safe_extraction_testregularpolygonsafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testregularpolygonsafeextraction"
     },
     {
@@ -10269,7 +10197,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L110",
       "id": "adapters_test_shapely_safe_extraction_testisoscelestrapezoidsafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testisoscelestrapezoidsafeextraction"
     },
     {
@@ -10287,7 +10215,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L124",
       "id": "adapters_test_shapely_safe_extraction_testcrosssafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testcrosssafeextraction"
     },
     {
@@ -10305,7 +10233,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L138",
       "id": "adapters_test_shapely_safe_extraction_testbarsafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testbarsafeextraction"
     },
     {
@@ -10359,7 +10287,7 @@
       "source_file": "tests/adapters/test_shapely_safe_extraction.py",
       "source_location": "L173",
       "id": "adapters_test_shapely_safe_extraction_testunitcellsafeextraction",
-      "community": 53,
+      "community": 6,
       "norm_label": "testunitcellsafeextraction"
     },
     {
@@ -11209,123 +11137,6 @@
       "norm_label": "license"
     },
     {
-      "label": "Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L173",
-      "community": 6,
-      "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala",
-      "id": "shape_base_rationale_173"
-    },
-    {
-      "label": "Symbolic convex quadrilateral with optional rounded corners.      The quad is bu",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L97",
-      "community": 17,
-      "norm_label": "symbolic convex quadrilateral with optional rounded corners.      the quad is bu",
-      "id": "primitives_quads_rationale_97"
-    },
-    {
-      "label": "The four corners of the (possibly stretched) parallelogram         frame, in con",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L163",
-      "community": 74,
-      "norm_label": "the four corners of the (possibly stretched) parallelogram         frame, in con",
-      "id": "primitives_quads_rationale_163"
-    },
-    {
-      "label": "Largest radius for which eroding `verts` (via the same         edge-normal line-",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L190",
-      "community": 76,
-      "norm_label": "largest radius for which eroding `verts` (via the same         edge-normal line-",
-      "id": "primitives_quads_rationale_190"
-    },
-    {
-      "label": "Narrowest place the (possibly rounded) quad gets.          Computed fresh from t",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L258",
-      "community": 78,
-      "norm_label": "narrowest place the (possibly rounded) quad gets.          computed fresh from t",
-      "id": "primitives_quads_rationale_258"
-    },
-    {
-      "label": "Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy)",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L309",
-      "community": 15,
-      "norm_label": "symbolic isosceles trapezoid.      parameters:         center: (cx, cy)",
-      "id": "primitives_quads_rationale_309"
-    },
-    {
-      "label": "Symbolic convex quadrilateral with optional rounded corners.      The quad is bu",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L77",
-      "community": 17,
-      "norm_label": "symbolic convex quadrilateral with optional rounded corners.      the quad is bu",
-      "id": "primitives_quads_rationale_77"
-    },
-    {
-      "label": "The four corners of the (possibly stretched) parallelogram         frame, in con",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L150",
-      "community": 92,
-      "norm_label": "the four corners of the (possibly stretched) parallelogram         frame, in con",
-      "id": "primitives_quads_rationale_150"
-    },
-    {
-      "label": "Largest radius for which eroding `verts` (via the same         edge-normal line-",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L176",
-      "community": 93,
-      "norm_label": "largest radius for which eroding `verts` (via the same         edge-normal line-",
-      "id": "primitives_quads_rationale_176"
-    },
-    {
-      "label": "Narrowest place the (possibly rounded) quad gets.          Computed fresh from t",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L256",
-      "community": 82,
-      "norm_label": "narrowest place the (possibly rounded) quad gets.          computed fresh from t",
-      "id": "primitives_quads_rationale_256"
-    },
-    {
-      "label": "Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy)",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L307",
-      "community": 15,
-      "norm_label": "symbolic isosceles trapezoid.      parameters:         center: (cx, cy)",
-      "id": "primitives_quads_rationale_307"
-    },
-    {
-      "label": "Narrowest place the (possibly rounded) quad gets.          Computed fresh from t",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L374",
-      "community": 94,
-      "norm_label": "narrowest place the (possibly rounded) quad gets.          computed fresh from t",
-      "id": "primitives_quads_rationale_374"
-    },
-    {
-      "label": "Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy)",
-      "file_type": "rationale",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L425",
-      "community": 15,
-      "norm_label": "symbolic isosceles trapezoid.      parameters:         center: (cx, cy)",
-      "id": "primitives_quads_rationale_425"
-    },
-    {
       "label": "Symbolic rectangle.      Parameters:         center: (cx, cy)         size: (wid",
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/quads.py",
@@ -11393,7 +11204,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "conics.py",
       "id": "src_metashapes_shape_primitives_conics_py"
     },
@@ -11402,7 +11213,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L19",
-      "community": 71,
+      "community": 4,
       "norm_label": "_ellipse_closest_point()",
       "id": "primitives_conics_ellipse_closest_point"
     },
@@ -11411,7 +11222,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L162",
-      "community": 71,
+      "community": 4,
       "norm_label": "ellipse",
       "id": "primitives_conics_ellipse"
     },
@@ -11420,7 +11231,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L171",
-      "community": 32,
+      "community": 81,
       "norm_label": ".__init__()",
       "id": "primitives_conics_ellipse_init"
     },
@@ -11429,7 +11240,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L183",
-      "community": 71,
+      "community": 4,
       "norm_label": ".sdf()",
       "id": "primitives_conics_ellipse_sdf"
     },
@@ -11438,7 +11249,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L212",
-      "community": 71,
+      "community": 4,
       "norm_label": ".bounds()",
       "id": "primitives_conics_ellipse_bounds"
     },
@@ -11447,7 +11258,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L228",
-      "community": 29,
+      "community": 52,
       "norm_label": "min_feature_size()",
       "id": "primitives_conics_min_feature_size"
     },
@@ -11465,7 +11276,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L244",
-      "community": 32,
+      "community": 81,
       "norm_label": ".__init__()",
       "id": "primitives_conics_egg_init"
     },
@@ -11474,7 +11285,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L264",
-      "community": 71,
+      "community": 4,
       "norm_label": ".sdf()",
       "id": "primitives_conics_egg_sdf"
     },
@@ -11501,7 +11312,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L343",
-      "community": 32,
+      "community": 81,
       "norm_label": ".__init__()",
       "id": "primitives_conics_stadium_init"
     },
@@ -11510,7 +11321,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L361",
-      "community": 16,
+      "community": 32,
       "norm_label": ".sdf()",
       "id": "primitives_conics_stadium_sdf"
     },
@@ -11528,7 +11339,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L21",
-      "community": 71,
+      "community": 4,
       "norm_label": "nearest point on the boundary of an axis-aligned ellipse (semi-axes     a, b, ce",
       "id": "primitives_conics_rationale_21"
     },
@@ -11537,7 +11348,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L163",
-      "community": 71,
+      "community": 4,
       "norm_label": "symbolic ellipse.      parameters:         center: (cx, cy)         axes: full s",
       "id": "primitives_conics_rationale_163"
     },
@@ -11564,7 +11375,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/adapters/shapely/conics.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "conics.py",
       "id": "src_metashapes_adapters_shapely_conics_py"
     },
@@ -11573,7 +11384,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/adapters/shapely/conics.py",
       "source_location": "L16",
-      "community": 77,
+      "community": 1,
       "norm_label": "ellipse_to_shapely()",
       "id": "shapely_conics_ellipse_to_shapely"
     },
@@ -11582,7 +11393,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/adapters/shapely/conics.py",
       "source_location": "L28",
-      "community": 77,
+      "community": 1,
       "norm_label": "egg_to_shapely()",
       "id": "shapely_conics_egg_to_shapely"
     },
@@ -11591,7 +11402,7 @@
       "file_type": "code",
       "source_file": "src/metashapes/adapters/shapely/conics.py",
       "source_location": "L52",
-      "community": 77,
+      "community": 1,
       "norm_label": "stadium_to_shapely()",
       "id": "shapely_conics_stadium_to_shapely"
     },
@@ -11663,7 +11474,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L1",
-      "community": 4,
+      "community": 28,
       "norm_label": "test_conics.py",
       "id": "tests_shape_test_conics_py"
     },
@@ -11753,7 +11564,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L60",
-      "community": 9,
+      "community": 4,
       "norm_label": ".test_bounds_contain_interior()",
       "id": "shape_test_conics_testellipse_test_bounds_contain_interior"
     },
@@ -11807,7 +11618,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L105",
-      "community": 4,
+      "community": 20,
       "norm_label": "test_matches_brute_force_nearest_point()",
       "id": "shape_test_conics_test_matches_brute_force_nearest_point"
     },
@@ -11843,7 +11654,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L154",
-      "community": 18,
+      "community": 10,
       "norm_label": ".test_center_is_inside()",
       "id": "shape_test_conics_testegg_test_center_is_inside"
     },
@@ -11852,7 +11663,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L158",
-      "community": 4,
+      "community": 35,
       "norm_label": ".test_far_point_is_outside()",
       "id": "shape_test_conics_testegg_test_far_point_is_outside"
     },
@@ -11906,7 +11717,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L203",
-      "community": 4,
+      "community": 35,
       "norm_label": ".test_offset_center()",
       "id": "shape_test_conics_testegg_test_offset_center"
     },
@@ -11969,7 +11780,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L241",
-      "community": 35,
+      "community": 32,
       "norm_label": ".test_round_trip()",
       "id": "shape_test_conics_testegg_test_round_trip"
     },
@@ -12302,7 +12113,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L511",
-      "community": 28,
+      "community": 35,
       "norm_label": ".test_dtype_device_flow()",
       "id": "shape_test_conics_testeggdtypedevicegrad_test_dtype_device_flow"
     },
@@ -12311,7 +12122,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L515",
-      "community": 28,
+      "community": 35,
       "norm_label": ".test_direct_call_dtype_promotion()",
       "id": "shape_test_conics_testeggdtypedevicegrad_test_direct_call_dtype_promotion"
     },
@@ -12338,7 +12149,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L534",
-      "community": 28,
+      "community": 35,
       "norm_label": ".test_gradients_finite_dense_grid()",
       "id": "shape_test_conics_testeggdtypedevicegrad_test_gradients_finite_dense_grid"
     },
@@ -12392,7 +12203,7 @@
       "file_type": "code",
       "source_file": "tests/shape/test_conics.py",
       "source_location": "L583",
-      "community": 28,
+      "community": 32,
       "norm_label": ".test_dtype_device_flow()",
       "id": "shape_test_conics_teststadiumdtypedevicegrad_test_dtype_device_flow"
     },
@@ -12518,7 +12329,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L396",
-      "community": 5,
+      "community": 16,
       "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha",
       "id": "lattice_test_unit_cell_rationale_396"
     },
@@ -12527,7 +12338,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L468",
-      "community": 5,
+      "community": 16,
       "norm_label": "sdf() must agree with a large brute-force reference search for a     variety of",
       "id": "lattice_test_unit_cell_rationale_468"
     },
@@ -13040,7 +12851,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L399",
-      "community": 5,
+      "community": 16,
       "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha",
       "id": "lattice_test_unit_cell_rationale_399"
     },
@@ -13049,7 +12860,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L472",
-      "community": 5,
+      "community": 16,
       "norm_label": "sdf() after the l-02/l-03 rewrite must agree with a large brute-force     refere",
       "id": "lattice_test_unit_cell_rationale_472"
     },
@@ -13058,7 +12869,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L50",
-      "community": 29,
+      "community": 52,
       "norm_label": "register `value` on `module` under `name`.      if `value` is an nn.parameter it",
       "id": "shape_utils_rationale_50"
     },
@@ -13067,7 +12878,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L138",
-      "community": 80,
+      "community": 9,
       "norm_label": "symbolic t-shape.      parameters:         center: (cx, cy)         length: full",
       "id": "primitives_junctions_rationale_138"
     },
@@ -13112,7 +12923,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L183",
-      "community": 71,
+      "community": 4,
       "norm_label": "symbolic ellipse.      parameters:         center: (cx, cy)         axes: full s",
       "id": "primitives_conics_rationale_183"
     },
@@ -13139,7 +12950,7 @@
       "file_type": "rationale",
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L192",
-      "community": 16,
+      "community": 29,
       "norm_label": "cross and tshape used to each carry their own inline copy of the     rounded-box",
       "id": "shape_test_junctions_rationale_192"
     },
@@ -13184,7 +12995,7 @@
       "file_type": "rationale",
       "source_file": "tests/shape/conftest.py",
       "source_location": "L138",
-      "community": 69,
+      "community": 71,
       "norm_label": "same as assert_gradients_finite but evaluates sdf() at a single,     possibly su",
       "id": "shape_conftest_rationale_138"
     },
@@ -13193,7 +13004,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/conics.py",
       "source_location": "L132",
-      "community": 71,
+      "community": 4,
       "norm_label": "symbolic ellipse.      parameters:         center: (cx, cy)         axes: full s",
       "id": "primitives_conics_rationale_132"
     },
@@ -13238,7 +13049,7 @@
       "file_type": "rationale",
       "source_file": "tests/shape/test_junctions.py",
       "source_location": "L188",
-      "community": 16,
+      "community": 29,
       "norm_label": "cross and tshape used to each carry their own inline copy of the     rounded-box",
       "id": "shape_test_junctions_rationale_188"
     },
@@ -13247,7 +13058,7 @@
       "file_type": "rationale",
       "source_file": "tests/shape/test_quads.py",
       "source_location": "L79",
-      "community": 16,
+      "community": 29,
       "norm_label": "direct tests of the shared helper, plus a check that rectangle's own     sdf() a",
       "id": "shape_test_quads_rationale_79"
     },
@@ -13256,7 +13067,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L129",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic difference of two shapes: left - right.",
       "id": "shape_boolean_rationale_129"
     },
@@ -13265,7 +13076,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/utils.py",
       "source_location": "L27",
-      "community": 29,
+      "community": 52,
       "norm_label": "register `value` on `module` under `name`.      if `value` is an nn.parameter it",
       "id": "shape_utils_rationale_27"
     },
@@ -13283,7 +13094,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L164",
-      "community": 6,
+      "community": 74,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala",
       "id": "shape_base_rationale_164"
     },
@@ -13292,7 +13103,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/primitives/junctions.py",
       "source_location": "L143",
-      "community": 80,
+      "community": 9,
       "norm_label": "symbolic t-shape.      parameters:         center: (cx, cy)         length: full",
       "id": "primitives_junctions_rationale_143"
     },
@@ -13373,7 +13184,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L368",
-      "community": 77,
+      "community": 80,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the",
       "id": "lattice_unit_cell_rationale_368"
     },
@@ -13409,7 +13220,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L380",
-      "community": 5,
+      "community": 16,
       "norm_label": "independent reference: fold into the cell, then search a ring far     larger tha",
       "id": "lattice_test_unit_cell_rationale_380"
     },
@@ -13418,7 +13229,7 @@
       "file_type": "rationale",
       "source_file": "tests/lattice/test_unit_cell.py",
       "source_location": "L453",
-      "community": 5,
+      "community": 16,
       "norm_label": "sdf() after the l-02/l-03 rewrite must agree with a large brute-force     refere",
       "id": "lattice_test_unit_cell_rationale_453"
     },
@@ -13499,7 +13310,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/lattice/unit_cell.py",
       "source_location": "L294",
-      "community": 77,
+      "community": 80,
       "norm_label": "return a new unitcell with the scene translated to the cell centre.          the",
       "id": "lattice_unit_cell_rationale_294"
     },
@@ -13535,7 +13346,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L62",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic intersection of two shapes.",
       "id": "shape_boolean_rationale_62"
     },
@@ -13544,7 +13355,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/boolean.py",
       "source_location": "L109",
-      "community": 52,
+      "community": 70,
       "norm_label": "symbolic difference of two shapes: left - right.",
       "id": "shape_boolean_rationale_109"
     },
@@ -13571,7 +13382,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L14",
-      "community": 29,
+      "community": 27,
       "norm_label": "base class for all symbolic 2d shapes.",
       "id": "shape_base_rationale_14"
     },
@@ -13580,7 +13391,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L19",
-      "community": 1,
+      "community": 27,
       "norm_label": "signed distance evaluated on torch tensors.         x, y can be broadcastable te",
       "id": "shape_base_rationale_19"
     },
@@ -13589,7 +13400,7 @@
       "file_type": "rationale",
       "source_file": "src/metashapes/shape/base.py",
       "source_location": "L139",
-      "community": 6,
+      "community": 74,
       "norm_label": "tensor -> json/yaml-serializable python value.     scalar tensor -> python scala",
       "id": "shape_base_rationale_139"
     },
@@ -13625,7 +13436,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/adapters/test_shapely.py",
       "source_location": "L195",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_stripe_x_height()",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stripe_x_height"
     },
@@ -13634,7 +13445,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/adapters/test_shapely.py",
       "source_location": "L204",
-      "community": 77,
+      "community": 1,
       "norm_label": ".test_stripe_y_width()",
       "id": "adapters_test_shapely_testprimitivestoshapely_test_stripe_y_width"
     },
@@ -13715,7 +13526,7 @@
       "file_type": "code",
       "source_file": "/home/rodionsa/Code/Metashapes/tests/test_analysis.py",
       "source_location": "L404",
-      "community": 55,
+      "community": 1,
       "norm_label": ".test_stripe_gap_is_perpendicular_only()",
       "id": "tests_test_analysis_testcomputemingap_test_stripe_gap_is_perpendicular_only"
     },
@@ -13724,7 +13535,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/conics.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "conics.py",
       "id": "metashapes_adapters_shapely_conics_py"
     },
@@ -13733,7 +13544,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/helpers.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "helpers.py",
       "id": "metashapes_adapters_shapely_helpers_py"
     },
@@ -13742,7 +13553,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/junctions.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "junctions.py",
       "id": "metashapes_adapters_shapely_junctions_py"
     },
@@ -13751,7 +13562,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/polygons.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "polygons.py",
       "id": "metashapes_adapters_shapely_polygons_py"
     },
@@ -13760,7 +13571,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/quads.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "quads.py",
       "id": "metashapes_adapters_shapely_quads_py"
     },
@@ -13769,7 +13580,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/transforms.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "transforms.py",
       "id": "metashapes_adapters_shapely_transforms_py"
     },
@@ -13814,7 +13625,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/boolean.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "boolean.py",
       "id": "metashapes_shape_boolean_py"
     },
@@ -13823,7 +13634,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/transforms.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "transforms.py",
       "id": "metashapes_shape_transforms_py"
     },
@@ -13832,7 +13643,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/__init__.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "__init__.py",
       "id": "metashapes_shape_init_py"
     },
@@ -13841,7 +13652,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/utils.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "utils.py",
       "id": "metashapes_shape_utils_py"
     },
@@ -13850,7 +13661,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/registry.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "registry.py",
       "id": "metashapes_shape_registry_py"
     },
@@ -13859,7 +13670,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/base.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 74,
       "norm_label": "base.py",
       "id": "metashapes_shape_base_py"
     },
@@ -13868,7 +13679,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/primitives/junctions.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "junctions.py",
       "id": "metashapes_shape_primitives_junctions_py"
     },
@@ -13877,7 +13688,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/primitives/polygons.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "polygons.py",
       "id": "metashapes_shape_primitives_polygons_py"
     },
@@ -13895,7 +13706,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/primitives/quads.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "quads.py",
       "id": "metashapes_shape_primitives_quads_py"
     },
@@ -13904,7 +13715,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/primitives/conics.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "conics.py",
       "id": "metashapes_shape_primitives_conics_py"
     },
@@ -13913,7 +13724,7 @@
       "file_type": "rationale",
       "source_file": "metashapes/shape/primitives/conics.py",
       "source_location": "L19",
-      "community": 71,
+      "community": 4,
       "norm_label": "symbolic ellipse.      parameters:         center: (cx, cy)         axes: full s",
       "id": "primitives_conics_rationale_19"
     },
@@ -13922,7 +13733,7 @@
       "file_type": "code",
       "source_file": "metashapes/shape/primitives/__init__.py",
       "source_location": "L1",
-      "community": 29,
+      "community": 52,
       "norm_label": "__init__.py",
       "id": "metashapes_shape_primitives_init_py"
     },
@@ -13967,7 +13778,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/__init__.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "__init__.py",
       "id": "metashapes_adapters_init_py"
     },
@@ -13976,7 +13787,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/dispatch.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "dispatch.py",
       "id": "metashapes_adapters_shapely_dispatch_py"
     },
@@ -13985,7 +13796,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/booleans.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "booleans.py",
       "id": "metashapes_adapters_shapely_booleans_py"
     },
@@ -13994,7 +13805,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/__init__.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "__init__.py",
       "id": "metashapes_adapters_shapely_init_py"
     },
@@ -14003,7 +13814,7 @@
       "file_type": "code",
       "source_file": "metashapes/adapters/shapely/raster.py",
       "source_location": "L1",
-      "community": 77,
+      "community": 1,
       "norm_label": "raster.py",
       "id": "metashapes_adapters_shapely_raster_py"
     },
@@ -14133,7 +13944,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 27,
       "norm_label": "shape_registry dict",
       "id": "shape_registry_shape_registry"
     },
@@ -14146,7 +13957,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 4,
+      "community": 20,
       "norm_label": "sdf convention: negative inside, positive outside",
       "id": "concept_sdf_convention"
     },
@@ -14159,7 +13970,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 52,
+      "community": 70,
       "norm_label": "smooth boolean operations via polynomial blending",
       "id": "concept_smooth_boolean"
     },
@@ -14172,7 +13983,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 29,
+      "community": 27,
       "norm_label": "parametric serialization (to_parametric / from_parametric)",
       "id": "concept_parametric_serialization"
     },
@@ -14263,7 +14074,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 6,
+      "community": 70,
       "norm_label": "cellmetrics",
       "id": "analysis_cellmetrics"
     },
@@ -14302,7 +14113,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 55,
+      "community": 1,
       "norm_label": "_compute_min_gap",
       "id": "analysis_compute_min_gap"
     },
@@ -14315,7 +14126,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 81,
+      "community": 2,
       "norm_label": "_leaf_shapes",
       "id": "analysis_leaf_shapes"
     },
@@ -14419,7 +14230,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 4,
       "norm_label": "ellipse.min_feature_size",
       "id": "primitives_conics_ellipse_min_feature_size"
     },
@@ -14445,7 +14256,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 77,
+      "community": 1,
       "norm_label": "shapely adapter __init__",
       "id": "shapely_init_module"
     },
@@ -14484,7 +14295,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 89,
       "norm_label": "metashapes project documentation",
       "id": "readme_metashapes_project"
     },
@@ -14497,7 +14308,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 89,
       "norm_label": "sdf-based differentiable shapes concept",
       "id": "readme_concept_sdf_design"
     },
@@ -14510,7 +14321,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 89,
       "norm_label": "shape + lattice = unitcell model",
       "id": "readme_concept_unit_cell_model"
     },
@@ -14523,7 +14334,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 71,
+      "community": 89,
       "norm_label": "inverse design for metasurfaces",
       "id": "readme_concept_inverse_design"
     },
@@ -14536,7 +14347,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 77,
+      "community": 1,
       "norm_label": "shapely adapter pattern",
       "id": "shapely_adapter_pattern"
     },
@@ -14629,9 +14440,9 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L25",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_sdflib_quads_py",
-      "target": "sdflib_quads_isoscelestrapezoidsdf"
+      "target": "sdflib_quads_isoscelestrapezoidsdf",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14639,9 +14450,9 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L76",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "src_sdflib_quads_py",
-      "target": "sdflib_quads_convexquadsdf"
+      "target": "sdflib_quads_convexquadsdf",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -14670,20 +14481,9 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L26",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "sdflib_quads_rationale_26",
-      "target": "sdflib_quads_isoscelestrapezoidsdf"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L489",
-      "weight": 1.0,
-      "source": "primitives_quads_isoscelestrapezoid_sdf",
-      "target": "sdflib_quads_isoscelestrapezoidsdf"
+      "target": "sdflib_quads_isoscelestrapezoidsdf",
+      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -14691,20 +14491,9 @@
       "source_file": "src/sdflib/quads.py",
       "source_location": "L77",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "sdflib_quads_rationale_77",
-      "target": "sdflib_quads_convexquadsdf"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L223",
-      "weight": 1.0,
-      "source": "primitives_quads_convexquad_sdf",
-      "target": "sdflib_quads_convexquadsdf"
+      "target": "sdflib_quads_convexquadsdf",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -20866,26 +20655,6 @@
       "target": "shape_utils_register"
     },
     {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L66",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_metashapes_shape_utils_py",
-      "target": "shape_utils_positive"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_metashapes_shape_utils_py",
-      "target": "shape_utils_bounded"
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -20949,17 +20718,6 @@
       "source_location": "L353",
       "weight": 1.0,
       "source": "primitives_quads_rectangle_sdf",
-      "target": "shape_utils_to_local_coords"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L221",
-      "weight": 1.0,
-      "source": "primitives_quads_convexquad_sdf",
       "target": "shape_utils_to_local_coords"
     },
     {
@@ -21584,26 +21342,6 @@
       "target": "shape_utils_register"
     },
     {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L67",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "shape_utils_rationale_67",
-      "target": "shape_utils_positive"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/utils.py",
-      "source_location": "L71",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "shape_utils_rationale_71",
-      "target": "shape_utils_bounded"
-    },
-    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -21986,16 +21724,6 @@
       "confidence_score": 1.0,
       "source": "shape_base_shape",
       "target": "shape_base_shape_bounds"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L78",
-      "weight": 1.0,
-      "source": "shape_base_shape",
-      "target": "shape_base_shape_project",
-      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -22825,16 +22553,6 @@
       "target": "shape_base_min_feature_size"
     },
     {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "shape_base_rationale_79",
-      "target": "shape_base_shape_project",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -22887,16 +22605,6 @@
       "confidence_score": 1.0,
       "source": "metashapes_shape_base_py",
       "target": "shape_base_from_parametric"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/base.py",
-      "source_location": "L189",
-      "weight": 1.0,
-      "source": "shape_base_rationale_189",
-      "target": "shape_base_to_plain_data",
-      "confidence_score": 1.0
     },
     {
       "relation": "rationale_for",
@@ -26600,16 +26308,6 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L53",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_metashapes_shape_primitives_quads_py",
-      "target": "primitives_quads_project"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
       "source_location": "L399",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -28253,39 +27951,6 @@
       "target": "primitives_quads_rectangle_init"
     },
     {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L67",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rectangle_sdf",
-      "target": "primitives_quads_project"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rectangle_bounds",
-      "target": "primitives_quads_project"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L92",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_min_feature_size",
-      "target": "primitives_quads_project"
-    },
-    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "metashapes/shape/primitives/quads.py",
@@ -28369,11 +28034,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L89",
+      "source_location": "L77",
       "weight": 1.0,
-      "source": "primitives_quads_rationale_89",
-      "target": "primitives_quads_convexquad",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "primitives_quads_rationale_77",
+      "target": "primitives_quads_convexquad"
     },
     {
       "relation": "uses",
@@ -28694,26 +28359,6 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L97",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rationale_97",
-      "target": "primitives_quads_convexquad"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L77",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rationale_77",
-      "target": "primitives_quads_convexquad"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
       "source_location": "L76",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -28875,17 +28520,6 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L251",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_convexquad_bounds",
-      "target": "primitives_quads_quad_vertices"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
       "source_location": "L244",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -28937,11 +28571,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L301",
+      "source_location": "L425",
       "weight": 1.0,
-      "source": "primitives_quads_rationale_301",
-      "target": "primitives_quads_isoscelestrapezoid",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "primitives_quads_rationale_425",
+      "target": "primitives_quads_isoscelestrapezoid"
     },
     {
       "relation": "uses",
@@ -29291,36 +28925,6 @@
       "source_location": "L112",
       "weight": 1.0,
       "source": "adapters_test_shapely_safe_extraction_testisoscelestrapezoidsafeextraction_test_all_params_learnable",
-      "target": "primitives_quads_isoscelestrapezoid"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L309",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rationale_309",
-      "target": "primitives_quads_isoscelestrapezoid"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L307",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rationale_307",
-      "target": "primitives_quads_isoscelestrapezoid"
-    },
-    {
-      "relation": "rationale_for",
-      "confidence": "EXTRACTED",
-      "source_file": "src/metashapes/shape/primitives/quads.py",
-      "source_location": "L425",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "primitives_quads_rationale_425",
       "target": "primitives_quads_isoscelestrapezoid"
     },
     {

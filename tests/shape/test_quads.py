@@ -194,9 +194,9 @@ class TestConvexQuad:
                 ConvexQuad(center=[0.0, 0.0], u=[1.0, 0.0], v=[0.0, 1.0], corner_radius=rr)
 
     def test_zero_radius_sdf_matches_inset_at_zero(self):
-        # _inset_convex_polygon is called unconditionally, including at
-        # rr=0 where it's an exact identity; pin that result against a
-        # wide grid.
+        # ConvexQuadSDF insets unconditionally, including at rr=0 where the
+        # edge-offset construction is an exact identity; pin that result
+        # against a wide grid.
         q = ConvexQuad(center=[0.05, -0.1], u=[0.4, 0.05], v=[0.05, 0.35],
                         alpha=0.15, beta=0.1, angle=20.0, corner_radius=0.0)
         x = torch.linspace(-1.5, 1.5, 60)
@@ -409,18 +409,23 @@ class TestRectangleDtypeDeviceGrad:
                       size=torch.tensor([0.5, 0.3]))
         assert_gradients_finite_at(r, ["center"], 0.2505, 0.1505)
 
-    def test_gradient_nan_exactly_at_sharp_corner(self):
-        # Documents a known, inherent property of Euclidean-distance SDFs,
-        # not a bug: the distance-to-corner formula is sqrt(qx^2+qy^2),
-        # whose gradient is qx/sqrt(qx^2+qy^2) -- an exact 0/0 at qx=qy=0,
-        # i.e. precisely at a sharp (unrounded) corner. Found by accident
-        # while smoke-testing the gradient helper on this exact point;
-        # kept as a documented characteristic rather than silently avoided.
+    def test_gradient_finite_exactly_at_sharp_corner(self):
+        # The distance-to-corner formula is sqrt(qx^2+qy^2), which is an
+        # exact 0/0 at qx=qy=0, i.e. precisely at a sharp (unrounded)
+        # corner -- naively this would backprop to NaN. RectangleSDF
+        # (sdflib/quads.py) guards against this by clamping the squared
+        # distance up to finfo(dtype).tiny before the sqrt, so it never
+        # evaluates sqrt at exactly zero and the gradient stays finite
+        # (a valid subgradient at the kink, not the true two-sided
+        # derivative, which doesn't exist there). As a side effect the SDF
+        # value at the corner is ~1e-19 rather than exactly 0.0 -- any
+        # assertion on it must use a tolerance, not ==.
         r = Rectangle(center=torch.nn.Parameter(torch.tensor([0.0, 0.0])),
                       size=torch.tensor([0.5, 0.3]))
         d = r.sdf(torch.tensor(0.25), torch.tensor(0.15))  # exactly (w/2, h/2)
+        assert d.item() == pytest.approx(0.0, abs=1e-6)
         d.backward()
-        assert torch.isnan(r.center.grad).all()
+        assert torch.isfinite(r.center.grad).all()
 
     def test_gradient_finite_with_rounded_corner_at_same_point(self):
         # The same query point that produces a NaN gradient for a sharp

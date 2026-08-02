@@ -41,7 +41,7 @@ Repository = "https://github.com/RodionovSA/metashapes"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["metashapes*"]
+include = ["metashapes*", "sdflib*"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/metashapes"]
+packages = ["src/metashapes", "src/sdflib"]

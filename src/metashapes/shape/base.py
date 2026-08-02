@@ -33,6 +33,10 @@ class Shape(nn.Module):
     """
     Base class for all symbolic 2D shapes.
     """
+    # Small fixed positive floor so a projected shape can't collapse to
+    # literally zero area. Not a precision-sensitive choice, 
+    # just "small enough to be visually/geometrically negligible".
+    _MIN_SIZE = 1e-6
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """
@@ -74,6 +78,22 @@ class Shape(nn.Module):
         value as if there were no constraint.
         """
         return None
+    
+    def _project(self) -> None:
+        """Snap this shape's constrained parameters back into their valid
+        ranges, in place.
+
+        Leaf primitives whose parameters have validity constraints that
+        can't be guaranteed to survive a gradient step (e.g. Rectangle's
+        corner_radius depending on its own size) override this and call it
+        at the top of every method that reads those parameters. Overrides
+        should mutate the actual stored nn.Parameter(s) in place, under
+        torch.no_grad() -- there is no separate "reparameterized" value used
+        for geometry; whatever a parameter reads as afterward is exactly
+        what sdf() uses.
+        """
+        raise NotImplementedError(
+            f"{type(self).__name__} must implement _project()")
 
     # Boolean operators for easy shape composition
     def __or__(self, other: "Shape") -> "Shape":
