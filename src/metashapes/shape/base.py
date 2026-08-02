@@ -34,9 +34,17 @@ class Shape(nn.Module):
     Base class for all symbolic 2D shapes.
     """
     # Small fixed positive floor so a projected shape can't collapse to
-    # literally zero area. Not a precision-sensitive choice, 
+    # literally zero area. Not a precision-sensitive choice,
     # just "small enough to be visually/geometrically negligible".
     _MIN_SIZE = 1e-6
+
+    # Some analytic corner_radius bounds (e.g. IsoscelesTrapezoid's inset
+    # trapezoid, ConvexQuad's inset polygon) are only valid for a *strictly*
+    # smaller radius -- at exactly the bound the inset collapses to a single
+    # point and the SDF's own edge/line-intersection math divides by zero.
+    # _project() overrides that clamp such a bound must scale it down by
+    # this factor first, rather than clamping to the bound itself.
+    _MAX_RADIUS_FRACTION = 1.0 - 1e-4
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
         """

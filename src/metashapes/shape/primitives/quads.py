@@ -147,6 +147,49 @@ class ConvexQuad(Shape):
                 )
 
     @staticmethod
+    def _floor_vector_norm(vec: torch.Tensor, min_norm: float,
+                            fallback: tuple[float, float]) -> None:
+        """In-place: rescale `vec` up to at least `min_norm`, preserving its
+        direction. `vec` exactly zero has no direction to preserve, so it
+        snaps to `fallback` instead of dividing by zero.
+        """
+        norm = torch.linalg.vector_norm(vec)
+        if norm.item() <= 1e-12:
+            vec.copy_(torch.as_tensor(fallback, dtype=vec.dtype, device=vec.device))
+        elif norm.item() < min_norm:
+            vec.mul_(min_norm / norm)
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap u/v/corner_radius back into their valid ranges in place.
+
+        Collinear-but-nonzero u/v and an alpha/beta that collapses the quad
+        to zero area are NOT corrected -- unlike a scalar bound, there's no
+        unique "nearest valid frame" to snap to. Only the unambiguous case
+        (a frame vector collapsed to exactly zero) is fixed; corner_radius's
+        clamp is skipped for a step where the frame is otherwise degenerate,
+        rather than computed from invalid geometry.
+        """
+        ConvexQuad._floor_vector_norm(self.u, self._MIN_SIZE, fallback=(self._MIN_SIZE, 0.0))
+        ConvexQuad._floor_vector_norm(self.v, self._MIN_SIZE, fallback=(0.0, self._MIN_SIZE))
+
+        zero = torch.zeros((), dtype=self.u.dtype, device=self.u.device)
+        base_verts = ConvexQuad._quad_vertices(
+            zero, zero, self.u[0], self.u[1], self.v[0], self.v[1], self.alpha, self.beta
+        )
+        area2 = ConvexQuad._signed_area2(base_verts)
+        if area2.abs().item() <= 1e-12:
+            return
+        if area2.item() < 0:
+            base_verts = [base_verts[0], base_verts[3], base_verts[2], base_verts[1]]
+
+        # Strictly less than rr_max: at exactly rr_max the inset polygon
+        # collapses to a single point, and ConvexQuadSDF's line-intersection
+        # divides by a near-zero determinant there.
+        rr_max = self._max_corner_radius(base_verts)
+        self.corner_radius.clamp_(min=0.0, max=rr_max * self._MAX_RADIUS_FRACTION)
+
+    @staticmethod
     def _quad_vertices(cx, cy, ux, uy, vx, vy, alpha, beta):
         """The four corners of the (possibly stretched) parallelogram
         frame, in construction order -- CCW or CW depending on the sign of
@@ -214,14 +257,16 @@ class ConvexQuad(Shape):
         return rr_max
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
         x_local, y_local = _to_local_coords(x, y, cx, cy, self.angle)
 
         return ConvexQuadSDF(
             self.u, self.v, self.alpha, self.beta, self.corner_radius
         )(x_local, y_local)
-    
+
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         u0x, u0y = self.u.detach().tolist()
         v0x, v0y = self.v.detach().tolist()
@@ -260,6 +305,7 @@ class ConvexQuad(Shape):
         `_max_corner_radius` in `__init__`. Rounding erodes a convex
         shape's width by exactly `2 * corner_radius` in every direction.
         """
+        self._project()
         cx = cy = 0.0  # width is translation-invariant; skip self.center
         ux, uy = self.u.detach().tolist()
         vx, vy = self.v.detach().tolist()
@@ -329,12 +375,7 @@ class IsoscelesTrapezoid(Shape):
         if torch.any(self.corner_radius < 0):
             raise ValueError("corner_radius must be non-negative")
 
-        r1_0 = 0.5 * self.bottom_width.item()
-        r2_0 = 0.5 * self.top_width.item()
-        he_0 = 0.5 * self.height.item()
-        slope0 = (r2_0 - r1_0) / (2.0 * he_0)
-        q0 = math.sqrt(1.0 + slope0 * slope0)
-        rr_max = min(r1_0 / (q0 - slope0), r2_0 / (q0 + slope0), he_0)
+        rr_max = self._max_corner_radius(self.bottom_width, self.top_width, self.height)
         if torch.any(self.corner_radius >= rr_max):
             raise ValueError(
                 f"corner_radius must be < {rr_max:.6g} for this trapezoid's "
@@ -342,7 +383,35 @@ class IsoscelesTrapezoid(Shape):
                 "make the inset trapezoid degenerate"
             )
 
+    @staticmethod
+    def _max_corner_radius(bottom_width, top_width, height) -> torch.Tensor:
+        """Largest corner_radius for which the inset trapezoid (the same
+        construction IsoscelesTrapezoidSDF uses) stays non-degenerate: the
+        tightest of the three bounds at which r1, r2, or he first reaches
+        zero.
+        """
+        r1 = 0.5 * bottom_width
+        r2 = 0.5 * top_width
+        he = 0.5 * height
+        slope = (r2 - r1) / (2.0 * he)
+        q = torch.sqrt(1.0 + slope * slope)
+        return torch.minimum(torch.minimum(r1 / (q - slope), r2 / (q + slope)), he)
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap bottom_width/top_width/height/corner_radius back into their
+        valid ranges in place."""
+        self.bottom_width.clamp_(min=self._MIN_SIZE)
+        self.top_width.clamp_(min=self._MIN_SIZE)
+        self.height.clamp_(min=self._MIN_SIZE)
+        # Strictly less than rr_max: at exactly rr_max the inset trapezoid
+        # collapses to a single point (b=t=e=0), and IsoscelesTrapezoidSDF's
+        # edge-projection divides by ex^2+ey^2 == 0 there.
+        rr_max = self._max_corner_radius(self.bottom_width, self.top_width, self.height)
+        self.corner_radius.clamp_(min=0.0, max=rr_max * self._MAX_RADIUS_FRACTION)
+
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         cx, cy = self.center[0], self.center[1]
         wb    = self.bottom_width
         wt    = self.top_width
@@ -355,6 +424,7 @@ class IsoscelesTrapezoid(Shape):
         return IsoscelesTrapezoidSDF(wb * 0.5, wt * 0.5, h * 0.5, rr)(x_local, y_local)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         cx, cy = self.center.detach().tolist()
         wb = self.bottom_width.detach().item()
         wt = self.top_width.detach().item()
@@ -371,6 +441,7 @@ class IsoscelesTrapezoid(Shape):
 
     @property
     def min_feature_size(self) -> float:
+        self._project()
         return min(
             self.bottom_width.detach().item(),
             self.top_width.detach().item(),
