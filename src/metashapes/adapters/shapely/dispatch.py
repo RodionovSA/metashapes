@@ -16,7 +16,7 @@ from .quads import (
     isosceles_trapezoid_to_shapely,
 )
 from .polygons import regular_polygon_to_shapely, triangle_to_shapely, star_to_shapely
-from .conics import ellipse_to_shapely, egg_to_shapely, stadium_to_shapely
+from .ovals import ellipse_to_shapely, egg_to_shapely, stadium_to_shapely
 from .junctions import cross_to_shapely, tshape_to_shapely
 from .stripes import bar_to_shapely
 from .booleans import (

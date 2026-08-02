@@ -1,5 +1,5 @@
-# metashapes/adapters/shapely/conics.py
-# This file contains the adapter function to convert Conic shapes to Shapely geometries.
+# metashapes/adapters/shapely/ovals.py
+# This file contains the adapter function to convert Oval shapes to Shapely geometries.
 
 from __future__ import annotations
 

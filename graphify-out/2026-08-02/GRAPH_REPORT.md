@@ -1,16 +1,16 @@
-# Graph Report - metashapes  (2026-08-02)
+# Graph Report - metashapes  (2026-08-01)
 
 ## Corpus Check
-- 75 files · ~46,906 words
+- 73 files · ~46,906 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1568 nodes · 5082 edges · 90 communities (60 shown, 30 thin omitted)
-- Extraction: 75% EXTRACTED · 25% INFERRED · 0% AMBIGUOUS · INFERRED: 1282 edges (avg confidence: 0.61)
+- 1448 nodes · 4666 edges · 82 communities (54 shown, 28 thin omitted)
+- Extraction: 77% EXTRACTED · 23% INFERRED · 0% AMBIGUOUS · INFERRED: 1081 edges (avg confidence: 0.59)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e18c29db`
+- Built from commit: `8c210b3d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -78,7 +78,6 @@
 - [[_COMMUNITY_Community 66|Community 66]]
 - [[_COMMUNITY_Community 67|Community 67]]
 - [[_COMMUNITY_Community 68|Community 68]]
-- [[_COMMUNITY_Community 69|Community 69]]
 - [[_COMMUNITY_Community 70|Community 70]]
 - [[_COMMUNITY_Community 71|Community 71]]
 - [[_COMMUNITY_Community 72|Community 72]]
@@ -86,12 +85,8 @@
 - [[_COMMUNITY_Community 74|Community 74]]
 - [[_COMMUNITY_Community 75|Community 75]]
 - [[_COMMUNITY_Community 76|Community 76]]
-- [[_COMMUNITY_Community 77|Community 77]]
 - [[_COMMUNITY_Community 78|Community 78]]
-- [[_COMMUNITY_Community 79|Community 79]]
 - [[_COMMUNITY_Community 80|Community 80]]
-- [[_COMMUNITY_Community 82|Community 82]]
-- [[_COMMUNITY_Community 83|Community 83]]
 - [[_COMMUNITY_Community 84|Community 84]]
 - [[_COMMUNITY_Community 85|Community 85]]
 - [[_COMMUNITY_Community 89|Community 89]]
@@ -99,14 +94,14 @@
 ## God Nodes (most connected - your core abstractions)
 1. `UnitCell` - 155 edges
 2. `Rectangle` - 147 edges
-3. `Lattice` - 141 edges
+3. `Lattice` - 138 edges
 4. `Ellipse` - 120 edges
-5. `shape_to_shapely()` - 113 edges
+5. `shape_to_shapely()` - 110 edges
 6. `RegularPolygon` - 100 edges
 7. `Bar` - 94 edges
-8. `Shape` - 90 edges
-9. `Ellipse` - 90 edges
-10. `assert_inside()` - 87 edges
+8. `Shape` - 87 edges
+9. `assert_inside()` - 76 edges
+10. `Translate` - 70 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `SDF-based differentiable shapes concept` --conceptually_related_to--> `Ellipse`  [INFERRED]
@@ -120,91 +115,91 @@
 - `TestMetrics` --uses--> `Union`  [INFERRED]
   tests/test_analysis.py → src/metashapes/shape/boolean.py
 
-## Communities (90 total, 30 thin omitted)
+## Communities (82 total, 28 thin omitted)
 
 ### Community 0 - "Shape Primitives Core"
-Cohesion: 0.06
-Nodes (34): cell_area(), device(), dtype(), hexagonal(), matrix(), Coerce a constructor scalar to float, refusing grad-carrying tensors.      ``rec, rectangular(), _scalar() (+26 more)
+Cohesion: 0.11
+Nodes (21): cell_area(), device(), dtype(), hexagonal(), matrix(), Coerce a constructor scalar to float, refusing grad-carrying tensors.      ``rec, rectangular(), _scalar() (+13 more)
 
 ### Community 1 - "Random Generator & Lattice"
 Cohesion: 0.06
-Nodes (38): _centroid(), TestBooleansToShapely, TestPrimitivesToShapely, TestTransformsToShapely, Shapely Adapter Pattern, difference_to_shapely(), intersection_to_shapely(), union_to_shapely() (+30 more)
+Nodes (35): _centroid(), TestBooleansToShapely, TestCompoundShapesToShapely, TestPrimitivesToShapely, TestTransformsToShapely, Shapely Adapter Pattern, difference_to_shapely(), intersection_to_shapely() (+27 more)
 
 ### Community 2 - "Shape Analysis & SDF Concepts"
 Cohesion: 0.06
-Nodes (49): TestBarSafeExtraction, TestCrossSafeExtraction, TestEllipseSafeExtraction, TestIsoscelesTrapezoidSafeExtraction, TestRegularPolygonSafeExtraction, TestStadiumSafeExtraction, TestStripeSafeExtraction, TestUnitCellSafeExtraction (+41 more)
+Nodes (49): TestBarSafeExtraction, TestCrossSafeExtraction, TestIsoscelesTrapezoidSafeExtraction, TestRegularPolygonSafeExtraction, TestStadiumSafeExtraction, TestStripeSafeExtraction, TestUnitCellSafeExtraction, CellMetrics (+41 more)
 
 ### Community 3 - "Unit Cell Analyzer"
 Cohesion: 0.05
-Nodes (52): register_shape_sampler(), Lattice, Cartesian translation for lattice cell (i, j)., Cartesian (x, y) -> fractional (f1, f2)., Fractional (f1, f2) -> Cartesian (x, y)., Cartesian translation for lattice cell (i, j)., In-plane periodicity of the unit cell.     Defined by two lattice vectors. A rec, In-plane periodicity of the unit cell. Fixed (non-optimizable).     Defined by t (+44 more)
+Nodes (53): ABC, Constraint-Based Unit Cell Generation, RandomUnitCellGenerator._sample_shape, register_shape_sampler(), SHAPE_SAMPLER_REGISTRY, Lattice, Cartesian translation for lattice cell (i, j)., Cartesian (x, y) -> fractional (f1, f2). (+45 more)
 
 ### Community 4 - "Conic Shape Primitives"
 Cohesion: 0.12
-Nodes (9): Ellipse, _ellipse_closest_point(), Ellipse.min_feature_size, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Nearest point on the boundary of an axis-aligned ellipse (semi-axes     a, b, ce (+1 more)
+Nodes (4): assert_gradients_finite_at(), Same as assert_gradients_finite but evaluates sdf() at a single,     possibly su, Same as assert_gradients_finite but evaluates sdf() at a single,     possibly su, TestEllipseDtypeDeviceGrad
 
 ### Community 5 - "YAML Serialization Tests"
-Cohesion: 0.13
-Nodes (5): Rectangular unit cell with a small square at the origin., _square_cell(), TestExtent, TestUnitCellMask, TestUnitCellRasterize
+Cohesion: 0.19
+Nodes (4): Rectangular unit cell with a small square at the origin., _square_cell(), TestExtent, TestUnitCellRasterize
 
 ### Community 6 - "Shapely Transform Tests"
-Cohesion: 0.10
-Nodes (5): SDF Convention: Negative Inside, Positive Outside, sdf_at(), test_matches_brute_force_nearest_point(), TestEllipse, test_matches_brute_force_nearest_point()
+Cohesion: 0.12
+Nodes (9): Ellipse, _ellipse_closest_point(), Ellipse.min_feature_size, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, Nearest point on the boundary of an axis-aligned ellipse (semi-axes     a, b, ce (+1 more)
 
 ### Community 7 - "Random Generator Logic"
 Cohesion: 0.11
-Nodes (7): _gen(), test_each_shape_type_generates(), TestBasicGeneration, TestConstraints, TestReport, TestShapeCount, TestShapeTypes
+Nodes (11): UnitCellAnalyzer.validate, _gen(), test_each_shape_type_generates(), TestBasicGeneration, TestConstraints, TestReport, TestShapeCount, TestShapeTypes (+3 more)
 
 ### Community 8 - "Shapely Compound Shape Tests"
 Cohesion: 0.16
 Nodes (13): GeneratorConfig, RandomUnitCellGenerator._generate_one, RandomGeneratorConfig, RandomUnitCellGenerator, First concrete generator config.      For now it only adds one flag:     - requi, First concrete generator config.      For now it only adds one flag:     - requi, Random unit-cell generator.      Current responsibilities:     1. choose number, Random unit-cell generator.      Current responsibilities:     1. choose number (+5 more)
 
 ### Community 9 - "Generator Integration Tests"
-Cohesion: 0.10
-Nodes (11): Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, TShape, assert_inside(), assert_round_trip(), All points should have SDF < tol (inside or on boundary)., Serialise → deserialise and verify SDF equality on a small grid. (+3 more)
+Cohesion: 0.07
+Nodes (18): Cross, Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, Symbolic T-shape.      Parameters:         center: (cx, cy)         length: full, Symbolic symmetric cross.      Parameters:         center: (cx, cy)         leng, TShape, assert_inside(), assert_round_trip() (+10 more)
 
 ### Community 10 - "Generator Base Classes"
-Cohesion: 0.11
-Nodes (7): General triangle defined by two base angles and the base length (ASA).      Para, (A, B, C) as (x, y) tensor pairs, CCW, centroid at origin., Triangle, assert_outside(), All points should have SDF > -tol (outside or on boundary)., TestTriangle, TestTriangleDtypeDeviceGrad
+Cohesion: 0.12
+Nodes (6): General triangle defined by two base angles and the base length (ASA).      Para, (A, B, C) as (x, y) tensor pairs, CCW, centroid at origin., Triangle, assert_outside(), All points should have SDF > -tol (outside or on boundary)., TestTriangle
 
 ### Community 11 - "Community 11"
-Cohesion: 0.12
-Nodes (18): ABC, UnitCellAnalyzer.validate, _generate_one(), Build metadata dict attached to every GenerationReport., Summarise key parameter ranges across generated cells., Base API for periodic unit-cell generators.      Generation pipeline for each ca, Return a (possibly rescaled) lattice for a single cell.          Uniform scaling, UnitCellGenerator (+10 more)
+Cohesion: 0.15
+Nodes (9): _generate_one(), Build metadata dict attached to every GenerationReport., Summarise key parameter ranges across generated cells., Base API for periodic unit-cell generators.      Generation pipeline for each ca, Return a (possibly rescaled) lattice for a single cell.          Uniform scaling, UnitCellGenerator, GeneratorConfig, _has_infinite_bounds() (+1 more)
 
 ### Community 12 - "Shapely Adapter Modules"
-Cohesion: 0.13
-Nodes (3): Bar, An infinite bar spanning the full unit cell along one axis.      The bar is unbo, TestBar
+Cohesion: 0.09
+Nodes (4): Bar, An infinite bar spanning the full unit cell along one axis.      The bar is unbo, TestBar, TestBarDtypeDeviceGrad
 
 ### Community 13 - "YAML & Unit Cell Serialization"
-Cohesion: 0.18
-Nodes (13): _rect_cell(), _sdf_grid(), TestSaveLoadUnitCells, _check_version(), _Dumper, _load_cell(), load_unit_cells(), Recursively convert tuples → lists so yaml.dump produces clean YAML. (+5 more)
+Cohesion: 0.29
+Nodes (7): _rect_cell(), _sdf_grid(), TestSaveLoadUnitCells, load_unit_cells(), Save one or more unit cells to a YAML file.      Parameters     ----------     p, Load unit cells from a YAML file saved by :func:`save_unit_cells`     or :func:`, save_unit_cells()
 
 ### Community 14 - "Unit Cell Tests"
-Cohesion: 0.11
-Nodes (5): Symbolic regular polygon.      Parameters:         center: (cx, cy)         n: N, Symbolic regular polygon.      Parameters:         center: (cx, cy)         n: N, RegularPolygon, TestRegularPolygon, TestRegularPolygonDtypeDeviceGrad
+Cohesion: 0.10
+Nodes (6): square_in_rect(), Symbolic regular polygon.      Parameters:         center: (cx, cy)         n: N, Symbolic regular polygon.      Parameters:         center: (cx, cy)         n: N, RegularPolygon, TestRegularPolygon, TestRegularPolygonDtypeDeviceGrad
 
 ### Community 15 - "Shapely Adapter Layer"
 Cohesion: 0.13
 Nodes (7): IsoscelesTrapezoid, Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy), Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy), Symbolic isosceles trapezoid.      Parameters:         center: (cx, cy), Shape, TestIsoscelesTrapezoid, TestIsoscelesTrapezoidDtypeDeviceGrad
 
 ### Community 16 - "PyTorch Differentiability"
-Cohesion: 0.18
-Nodes (8): _brute_force_sdf(), Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, _sdf_at(), test_matches_brute_force(), TestUnitCellSDF
+Cohesion: 0.33
+Nodes (6): _brute_force_sdf(), Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, Independent reference: fold into the cell, then search a ring far     larger tha, test_matches_brute_force()
 
 ### Community 17 - "Lattice SDF Tests"
-Cohesion: 0.05
-Nodes (18): p(), pv(), center_scene(method='centroid') must work even if params have grad., Verifies that calling shape_to_shapely (which does .detach().cpu())         does, Shorthand: make a scalar nn.Parameter., Shorthand: make a vector nn.Parameter., TestRectangleSafeExtraction, TestTransformSafeExtraction (+10 more)
+Cohesion: 0.09
+Nodes (5): ConvexQuad, Symbolic convex quadrilateral with optional rounded corners.      The quad is bu, Symbolic convex quadrilateral with optional rounded corners.      The quad is bu, TestConvexQuad, TestConvexQuadDtypeDeviceGrad
 
 ### Community 18 - "Coordinate Transform Bridge"
-Cohesion: 0.10
+Cohesion: 0.11
 Nodes (6): Regular n-pointed star.      Parameters:         center: (cx, cy)         n: num, Regular n-pointed star.      Parameters:         center: (cx, cy)         n: num, Regular n-pointed star.      Parameters:         center: (cx, cy)         n: num, Star, TestStar, TestStarDtypeDeviceGrad
 
 ### Community 19 - "Boolean Shape Tests"
-Cohesion: 0.25
-Nodes (8): _make_batch_result(), TestSaveBatchResult, load_batch_result(), Load a :class:`~metashapes.generators.report.GenerationBatchResult`     from a Y, Save a :class:`~metashapes.generators.report.GenerationBatchResult`     (unit ce, save_batch_result(), _sdf_grid(), TestYAMLSaving
+Cohesion: 0.15
+Nodes (18): _make_batch_result(), TestSaveBatchResult, _check_version(), _Dumper, load_batch_result(), _load_cell(), Load a :class:`~metashapes.generators.report.GenerationBatchResult`     from a Y, Recursively convert tuples → lists so yaml.dump produces clean YAML. (+10 more)
 
 ### Community 20 - "Periodic Unit Cell Ops"
-Cohesion: 0.12
-Nodes (4): Egg, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, TestEgg, TestEggDtypeDeviceGrad
+Cohesion: 0.11
+Nodes (16): _decompose_for_offsets(), Periodic signed distance of the scene at Cartesian (x, y).          Query points, Return world-coordinate points on the material boundary (zero-level-set)., A periodic structure: one Lattice + one Shape (the scene).      The lattice owns, Yield sub-shapes to measure separately when sizing the periodic     copy search,, Return world-coordinate points on the material boundary (zero-level-set)., Return world-coordinate points on the material boundary (zero-level-set)., Shapely geometry of the scene, clipped to the unit cell.          Periodic, matc (+8 more)
 
 ### Community 21 - "Mask Tests"
 Cohesion: 0.12
@@ -235,12 +230,12 @@ Cohesion: 0.40
 Nodes (5): sdf() after the L-02/L-03 rewrite must agree with a large brute-force     refere, sdf() must agree with a large brute-force reference search for a     variety of, sdf() after the L-02/L-03 rewrite must agree with a large brute-force     refere, sdf() must agree with a large brute-force reference search for a     variety of, TestPeriodicSdfMatchesBruteForce
 
 ### Community 28 - "Lattice Test Init"
-Cohesion: 0.09
-Nodes (13): assert_bounds_contain(), assert_direct_call_dtype_promotion(), assert_dtype_device_flow(), assert_gradients_finite(), _assert_param_grads_finite(), Calling sdf() directly on a primitive (bypassing UnitCell) with     float64 quer, Calling sdf() directly on a primitive (bypassing UnitCell) with     float64 quer, Grid-evaluate sdf() over `x_range`, sum, backward(); every named     parameter i (+5 more)
+Cohesion: 0.11
+Nodes (11): assert_direct_call_dtype_promotion(), assert_dtype_device_flow(), assert_gradients_finite(), _assert_param_grads_finite(), Calling sdf() directly on a primitive (bypassing UnitCell) with     float64 quer, Calling sdf() directly on a primitive (bypassing UnitCell) with     float64 quer, Grid-evaluate sdf() over `x_range`, sum, backward(); every named     parameter i, Grid-evaluate sdf() over `x_range`, sum, backward(); every named     parameter i (+3 more)
 
 ### Community 29 - "Adapters Test Init"
-Cohesion: 0.24
-Nodes (4): TestToShapely, A periodic structure: one Lattice + one Shape (the scene).      The lattice owns, A periodic structure: one Lattice + one Shape (the scene).      The lattice owns, UnitCell
+Cohesion: 0.12
+Nodes (6): TestOffsetSearchOverhead, TestOffsetsForRing, TestToShapely, Symbolic rectangle.      Parameters:         center: (cx, cy)         size: (wid, Rectangle, TestRectangleDtypeDeviceGrad
 
 ### Community 31 - "Lattice Basis Rationale"
 Cohesion: 0.15
@@ -251,44 +246,36 @@ Cohesion: 0.11
 Nodes (6): Stadium (discorectangle/capsule): a rectangle with semicircular caps.      Param, Stadium (discorectangle/capsule): a rectangle with semicircular caps.      Param, Stadium (discorectangle/capsule): a rectangle with semicircular caps.      Param, Stadium, TestStadium, TestStadiumDtypeDeviceGrad
 
 ### Community 35 - "Validator Rationale"
-Cohesion: 0.14
-Nodes (6): Egg, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, TestEgg, TestEggDtypeDeviceGrad
+Cohesion: 0.12
+Nodes (9): SDF Convention: Negative Inside, Positive Outside, Egg, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, Egg shape: two half-ellipses joined at the x-axis.      Parameters:         cent, sdf_at(), test_matches_brute_force_nearest_point(), TestEgg (+1 more)
 
 ### Community 36 - "Generator Base Rationale"
-Cohesion: 0.13
-Nodes (4): Stadium (discorectangle/capsule): a rectangle with semicircular caps.      Param, Stadium, TestStadium, TestStadiumDtypeDeviceGrad
+Cohesion: 0.20
+Nodes (3): assert_bounds_contain(), All points should lie inside (or on) the reported bounding box., TestRectangle
 
 ### Community 52 - "Community 52"
-Cohesion: 0.12
-Nodes (10): Parametric Serialization (to_parametric / from_parametric), Base class for all symbolic 2D shapes., Signed distance evaluated on torch tensors.         x, y can be broadcastable te, True if `bounds` (as returned by `Shape.bounds()`) is an empty/inverted box., Base class for all symbolic 2D shapes., Signed distance evaluated on torch tensors.         x, y can be broadcastable te, Alias for `sdf`, so a Shape can be called directly (`shape(x, y)`)         follo, Axis-aligned bounding box of the shape, in world coordinates.          Returns ( (+2 more)
+Cohesion: 0.10
+Nodes (11): Parametric Serialization (to_parametric / from_parametric), Base class for all symbolic 2D shapes., Signed distance evaluated on torch tensors.         x, y can be broadcastable te, True if `bounds` (as returned by `Shape.bounds()`) is an empty/inverted box., Base class for all symbolic 2D shapes., Signed distance evaluated on torch tensors.         x, y can be broadcastable te, Alias for `sdf`, so a Shape can be called directly (`shape(x, y)`)         follo, Axis-aligned bounding box of the shape, in world coordinates.          Returns ( (+3 more)
 
 ### Community 53 - "Community 53"
-Cohesion: 0.15
-Nodes (7): Cross, Symbolic symmetric cross.      Parameters:         center: (cx, cy)         leng, Cross and TShape used to each carry their own inline copy of the     rounded-box, Cross and TShape both call shape/utils.py's _sdf_rounded_box. These     checks p, Cross and TShape used to each carry their own inline copy of the     rounded-box, TestCrossDtypeDeviceGrad, TestSharedRoundedBoxHelper
+Cohesion: 0.17
+Nodes (6): Direct tests of the shared helper, plus a check that Rectangle's own     sdf() a, Direct tests of the shared helper, plus a check that Rectangle's own     sdf() a, TestSdfRoundedBox, SDF of an axis-aligned box of half-extents (hx, hy) with corners     rounded by, _sdf_rounded_box(), _to_local_coords()
 
 ### Community 55 - "Community 55"
-Cohesion: 0.23
-Nodes (6): min_feature_size(), Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, to_plain_data(), from_parametric()
+Cohesion: 0.19
+Nodes (6): from_parametric(), min_feature_size(), Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, Tensor -> JSON/YAML-serializable Python value.     Scalar tensor -> Python scala, to_plain_data()
 
 ### Community 65 - "Community 65"
-Cohesion: 0.16
-Nodes (7): _max_corner_radius(), _quad_vertices(), _signed_area2(), Register `value` on `module` under `name`.      If `value` is an nn.Parameter it, Register `value` on `module` under `name`.      If `value` is an nn.Parameter it, Register `value` on `module` under `name`.      If `value` is an nn.Parameter it, register()
+Cohesion: 0.12
+Nodes (9): p(), pv(), center_scene(method='centroid') must work even if params have grad., Verifies that calling shape_to_shapely (which does .detach().cpu())         does, Shorthand: make a scalar nn.Parameter., Shorthand: make a vector nn.Parameter., TestEllipseSafeExtraction, TestRectangleSafeExtraction (+1 more)
 
 ### Community 68 - "Community 68"
 Cohesion: 0.18
 Nodes (10): code:block5 (Rectangle(size=[0.3, 0.8]).min_feature_size          -> 0.3), code:python (Rotate.from_parametric({"type": "Rotate", "shape": ..., "ang), code:block8 (f1 = [-inf, -inf, inf, inf]), code:block9 (_ring_for -> (2, 2)  =>  25 full scene.sdf() evaluations per), High, L-02 — `_ring_for` correctness currently depends on `0 × inf → NaN`, L-03 — `UnitCell.sdf` costs ~22× a single shape evaluation for small shapes, S-04 — `min_feature_size` is silently lost through every transform and boolean (+2 more)
 
-### Community 69 - "Community 69"
-Cohesion: 0.18
-Nodes (3): Ellipse, Symbolic ellipse.      Parameters:         center: (cx, cy)         axes: full s, TestEllipse
-
 ### Community 70 - "Community 70"
-Cohesion: 0.17
-Nodes (12): Smooth Boolean Operations via Polynomial Blending, Difference, Intersection, Symbolic difference of two shapes: left - right., Symbolic difference of two shapes: left - right., Symbolic difference of two shapes: left - right.      Note: like `Intersection`,, Symbolic union of two shapes., Symbolic intersection of two shapes. (+4 more)
-
-### Community 71 - "Community 71"
-Cohesion: 0.14
-Nodes (4): assert_gradients_finite_at(), Same as assert_gradients_finite but evaluates sdf() at a single,     possibly su, Same as assert_gradients_finite but evaluates sdf() at a single,     possibly su, TestEllipseDtypeDeviceGrad
+Cohesion: 0.20
+Nodes (13): Smooth Boolean Operations via Polynomial Blending, Difference, from_parametric(), Intersection, Symbolic difference of two shapes: left - right., Symbolic difference of two shapes: left - right., Symbolic difference of two shapes: left - right.      Note: like `Intersection`,, Symbolic union of two shapes. (+5 more)
 
 ### Community 72 - "Community 72"
 Cohesion: 0.22
@@ -303,12 +290,8 @@ Cohesion: 0.40
 Nodes (3): nn.Parameter centre of a shape must receive gradients after center_scene()., make_learnable_polygon center param grad is non-None after centering., TestGradientFlow
 
 ### Community 78 - "Community 78"
-Cohesion: 0.11
-Nodes (13): min_feature_size(), min_feature_size(), _ellipse_closest_point(), Nearest point on the boundary of an axis-aligned ellipse (semi-axes     a, b, ce, min_feature_size(), min_feature_size(), register_shape(), Direct tests of the shared helper, plus a check that Rectangle's own     sdf() a (+5 more)
-
-### Community 83 - "Community 83"
-Cohesion: 0.67
-Nodes (3): Constraint-Based Unit Cell Generation, RandomUnitCellGenerator._sample_shape, SHAPE_SAMPLER_REGISTRY
+Cohesion: 0.13
+Nodes (12): min_feature_size(), min_feature_size(), min_feature_size(), _max_corner_radius(), min_feature_size(), _quad_vertices(), _signed_area2(), register_shape() (+4 more)
 
 ### Community 84 - "Community 84"
 Cohesion: 0.40
@@ -325,22 +308,22 @@ Nodes (4): Inverse Design for Metasurfaces, SDF-based differentiable shapes conc
 ## Knowledge Gaps
 - **61 isolated node(s):** `allow`, `PreToolUse`, `code:bash (graphify query "<your question>"       # any codebase questi)`, `Overview`, `code:bash (source .venv/bin/activate)` (+56 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **30 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **28 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Shape` connect `Community 52` to `Shape Primitives Core`, `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `Conic Shape Primitives`, `Shapely Transform Tests`, `Shapely Compound Shape Tests`, `Generator Integration Tests`, `Generator Base Classes`, `Community 11`, `Shapely Adapter Modules`, `Unit Cell Tests`, `Shapely Adapter Layer`, `Lattice SDF Tests`, `Coordinate Transform Bridge`, `Periodic Unit Cell Ops`, `Lattice Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`, `Validator Rationale`, `Generator Base Rationale`, `Community 53`, `Community 55`, `Community 65`, `Community 69`, `Community 70`, `Community 74`, `Community 78`?**
+- **Why does `Shape` connect `Community 52` to `Shape Primitives Core`, `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `Shapely Transform Tests`, `Shapely Compound Shape Tests`, `Generator Integration Tests`, `Generator Base Classes`, `Community 11`, `Shapely Adapter Modules`, `Unit Cell Tests`, `Shapely Adapter Layer`, `Lattice SDF Tests`, `Coordinate Transform Bridge`, `Lattice Test Init`, `Adapters Test Init`, `Lattice Basis Rationale`, `Lattice Basis Rationale B`, `Validator Rationale`, `Community 55`, `Community 70`, `Community 78`?**
+  _High betweenness centrality (0.143) - this node is a cross-community bridge._
+- **Why does `Rectangle` connect `Adapters Test Init` to `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Shapely Adapter Modules`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `PyTorch Differentiability`, `Lattice SDF Tests`, `Boolean Shape Tests`, `Community 24`, `Community 25`, `Shape Test Init`, `Lattice Basis Rationale`, `Generator Base Rationale`, `Community 52`, `Community 53`, `Community 61`, `Community 65`, `Community 71`, `Community 74`, `Community 75`, `Community 76`, `Community 78`, `Community 80`?**
   _High betweenness centrality (0.132) - this node is a cross-community bridge._
-- **Why does `Rectangle` connect `Lattice SDF Tests` to `Random Generator & Lattice`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Shapely Adapter Modules`, `YAML & Unit Cell Serialization`, `Shapely Adapter Layer`, `PyTorch Differentiability`, `Boolean Shape Tests`, `Community 24`, `Community 25`, `Shape Test Init`, `Adapters Test Init`, `Lattice Basis Rationale`, `Community 52`, `Community 61`, `Community 65`, `Community 75`, `Community 76`, `Community 77`, `Community 78`, `Community 79`, `Community 80`?**
-  _High betweenness centrality (0.098) - this node is a cross-community bridge._
-- **Why does `UnitCell` connect `Adapters Test Init` to `Shape Primitives Core`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Community 11`, `YAML & Unit Cell Serialization`, `PyTorch Differentiability`, `Lattice SDF Tests`, `Boolean Shape Tests`, `Community 24`, `Community 25`, `Shape Test Init`, `Lattice Basis Rationale`, `Community 61`, `Community 75`, `Community 76`, `Community 79`, `Community 80`, `Community 82`?**
-  _High betweenness centrality (0.092) - this node is a cross-community bridge._
+- **Why does `UnitCell` connect `Periodic Unit Cell Ops` to `Shape Primitives Core`, `Shape Analysis & SDF Concepts`, `Unit Cell Analyzer`, `YAML Serialization Tests`, `Random Generator Logic`, `Shapely Compound Shape Tests`, `Community 11`, `YAML & Unit Cell Serialization`, `Unit Cell Tests`, `PyTorch Differentiability`, `Boolean Shape Tests`, `Community 24`, `Community 25`, `Shape Test Init`, `Adapters Test Init`, `Lattice Basis Rationale`, `Community 61`, `Community 65`, `Community 71`, `Community 74`, `Community 75`, `Community 76`, `Community 80`?**
+  _High betweenness centrality (0.110) - this node is a cross-community bridge._
 - **Are the 84 inferred relationships involving `UnitCell` (e.g. with `CellMetrics` and `UnitCellAnalyzer`) actually correct?**
   _`UnitCell` has 84 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 101 inferred relationships involving `Rectangle` (e.g. with `Shape` and `TestLeafShapes`) actually correct?**
   _`Rectangle` has 101 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 89 inferred relationships involving `Lattice` (e.g. with `CellMetrics` and `UnitCellAnalyzer`) actually correct?**
-  _`Lattice` has 89 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 86 inferred relationships involving `Lattice` (e.g. with `CellMetrics` and `UnitCellAnalyzer`) actually correct?**
+  _`Lattice` has 86 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 67 inferred relationships involving `Ellipse` (e.g. with `Shape` and `TestLeafShapes`) actually correct?**
   _`Ellipse` has 67 INFERRED edges - model-reasoned connections that need verification._

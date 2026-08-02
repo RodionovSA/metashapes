@@ -1,5 +1,5 @@
-# metashapes/generators/samplers/conics.py
-# This module defines samplers for conic shapes
+# metashapes/generators/samplers/ovals.py
+# This module defines samplers for oval shapes
 
 from __future__ import annotations
 

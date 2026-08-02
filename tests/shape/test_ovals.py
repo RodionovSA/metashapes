@@ -1,10 +1,10 @@
-# tests/shape/test_conics.py
+# tests/shape/test_ovals.py
 
 import math
 import pytest
 import torch
 from metashapes.shape import Shape
-from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
+from metashapes.shape.primitives.ovals import Ellipse, Egg, Stadium
 from .conftest import (
     assert_inside, assert_outside, assert_round_trip, assert_bounds_contain, sdf_at,
     assert_dtype_device_flow, assert_direct_call_dtype_promotion,

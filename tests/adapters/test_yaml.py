@@ -13,7 +13,7 @@ from metashapes.adapters.yaml import (
 )
 from metashapes.generators.report import GenerationBatchResult, GenerationReport
 from metashapes.shape.primitives.quads import Rectangle
-from metashapes.shape.primitives.conics import Ellipse
+from metashapes.shape.primitives.ovals import Ellipse
 from metashapes.shape.boolean import Union
 from metashapes.shape.transforms import Translate
 

@@ -539,7 +539,7 @@ class TestIsoscelesTrapezoidDtypeDeviceGrad:
         assert_direct_call_dtype_promotion(t)
 
     def test_integer_query_does_not_crash(self):
-        # No torch.finfo here (unlike conics.py) -- confirm it tolerates
+        # No torch.finfo here (unlike ovals.py) -- confirm it tolerates
         # integer input like Rectangle/ConvexQuad do.
         t = IsoscelesTrapezoid(center=[0.0, 0.0], bottom_width=0.9, top_width=0.5, height=0.7)
         out = t.sdf(torch.tensor(0), torch.tensor(0))

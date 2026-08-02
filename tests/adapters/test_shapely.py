@@ -6,7 +6,7 @@ import torch
 
 from metashapes.adapters.shapely.dispatch import shape_to_shapely
 from metashapes.shape.primitives.quads import Rectangle, ConvexQuad, IsoscelesTrapezoid
-from metashapes.shape.primitives.conics import Ellipse, Egg, Stadium
+from metashapes.shape.primitives.ovals import Ellipse, Egg, Stadium
 from metashapes.shape.primitives.polygons import RegularPolygon, Triangle, Star
 from metashapes.shape.primitives.junctions import Cross, TShape
 from metashapes.shape.primitives.stripes import Bar

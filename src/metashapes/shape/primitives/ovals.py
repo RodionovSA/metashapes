@@ -1,5 +1,5 @@
-# metashapes/shape/primitives/conics.py
-# This module defines shape primitives for conic sections like ellipses.
+# metashapes/shape/primitives/ovals.py
+# This module defines shape primitives for oval shapes like ellipses.
 
 from __future__ import annotations
 

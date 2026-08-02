@@ -7,7 +7,7 @@ import torch
 from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.primitives.quads import Rectangle
-from metashapes.shape.primitives.conics import Ellipse
+from metashapes.shape.primitives.ovals import Ellipse
 from metashapes.shape.primitives.stripes import Bar
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale

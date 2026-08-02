@@ -1,5 +1,5 @@
 from .quads import RectangleSampler, IsoscelesTrapezoidSampler, ConvexQuadSampler
-from .conics import EllipseSampler
+from .ovals import EllipseSampler
 from .stripes import BarSampler
 from .polygons import RegularPolygonSampler
 from .junctions import CrossSampler, TShapeSampler

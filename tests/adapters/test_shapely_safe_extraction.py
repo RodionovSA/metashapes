@@ -20,7 +20,7 @@ from metashapes.adapters.shapely import shape_to_shapely
 from metashapes.lattice.basis import Lattice
 from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.primitives.quads import Rectangle, IsoscelesTrapezoid
-from metashapes.shape.primitives.conics import Ellipse, Stadium
+from metashapes.shape.primitives.ovals import Ellipse, Stadium
 from metashapes.shape.primitives.polygons import RegularPolygon
 from metashapes.shape.primitives.junctions import Cross
 from metashapes.shape.primitives.stripes import Bar
