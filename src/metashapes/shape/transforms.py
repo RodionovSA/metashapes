@@ -146,9 +146,14 @@ class Scale(Shape):
         
         if torch.any(self.s <= 0):
             raise ValueError("scale factor s must be positive")
-            
-    
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap the scale factor `s` back into its valid range in place."""
+        self.s.clamp_(min=self._MIN_SIZE)
+
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         child_bounds = self.shape.bounds()
         if is_empty_bounds(child_bounds):
             return EMPTY_BOUNDS
@@ -161,12 +166,14 @@ class Scale(Shape):
 
     @property
     def min_feature_size(self) -> float | None:
+        self._project()
         child = self.shape.min_feature_size
         if child is None:
             return None
         return child * self.s.detach().item()
 
     def sdf(self, x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        self._project()
         x_local = (x - self.origin[0]) / self.s + self.origin[0]
         y_local = (y - self.origin[1]) / self.s + self.origin[1]
         return self.s * self.shape.sdf(x_local, y_local)

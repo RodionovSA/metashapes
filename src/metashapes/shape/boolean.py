@@ -25,8 +25,18 @@ class Union(Shape):
         self.right = right
         self.smooth = smooth
         register(self, "k", k)
-    
+
+        if smooth and torch.any(self.k <= 0):
+            raise ValueError("k must be positive when smooth=True")
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap the smooth-blend parameter `k` back into its valid range in
+        place."""
+        self.k.clamp_(min=self._MIN_SIZE)
+
     def sdf(self, x, y):
+        self._project()
         d1 = self.left.sdf(x, y)
         d2 = self.right.sdf(x, y)
         if not self.smooth:
@@ -34,6 +44,7 @@ class Union(Shape):
         return smooth_min_poly(d1, d2, self.k)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         (x0, y0), (x1, y1) = self.left.bounds()
         (x2, y2), (x3, y3) = self.right.bounds()
         return (min(x0, x2), min(y0, y2)), (max(x1, x3), max(y1, y3))
@@ -91,7 +102,17 @@ class Intersection(Shape):
         self.smooth = smooth
         register(self, "k", k)
 
+        if smooth and torch.any(self.k <= 0):
+            raise ValueError("k must be positive when smooth=True")
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap the smooth-blend parameter `k` back into its valid range in
+        place."""
+        self.k.clamp_(min=self._MIN_SIZE)
+
     def sdf(self, x, y):
+        self._project()
         d1 = self.left.sdf(x, y)
         d2 = self.right.sdf(x, y)
         if not self.smooth:
@@ -99,6 +120,7 @@ class Intersection(Shape):
         return smooth_max_poly(d1, d2, self.k)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         (x0, y0), (x1, y1) = self.left.bounds()
         (x2, y2), (x3, y3) = self.right.bounds()
         box = (max(x0, x2), max(y0, y2)), (min(x1, x3), min(y1, y3))
@@ -153,8 +175,18 @@ class Difference(Shape):
         self.right = right
         self.smooth = smooth
         register(self, "k", k)
-    
+
+        if smooth and torch.any(self.k <= 0):
+            raise ValueError("k must be positive when smooth=True")
+
+    @torch.no_grad()
+    def _project(self) -> None:
+        """Snap the smooth-blend parameter `k` back into its valid range in
+        place."""
+        self.k.clamp_(min=self._MIN_SIZE)
+
     def sdf(self, x, y):
+        self._project()
         d1 = self.left.sdf(x, y)
         d2 = self.right.sdf(x, y)
         if not self.smooth:
@@ -162,6 +194,7 @@ class Difference(Shape):
         return smooth_max_poly(d1, -d2, self.k)
 
     def bounds(self) -> tuple[tuple[float, float], tuple[float, float]]:
+        self._project()
         return self.left.bounds()
 
     # See Union's min_feature_size comment: subtracting `right` can leave a
