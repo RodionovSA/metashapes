@@ -321,12 +321,10 @@ class Egg(Shape):
 
     @property
     def min_feature_size(self) -> float:
-        a = self.width.detach().item() / 2.0
-        skew_val = self.skew.detach().item()
-        h_half = self.height.detach().item() / 2.0
-        b_top = h_half * (1.0 + skew_val)
-        b_bot = h_half * (1.0 - skew_val)
-        return min(a, b_top, b_bot)
+        # Full dimensions, consistent with Ellipse (min full axis) and
+        # Stadium (full width). Skew redistributes height between the two
+        # halves but doesn't change the egg's overall thickness.
+        return min(self.width.detach().item(), self.height.detach().item())
 
 
 @register_shape("Stadium")

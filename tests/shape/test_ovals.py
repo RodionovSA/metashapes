@@ -151,6 +151,15 @@ class TestEllipse:
 
 
 class TestEgg:
+    def test_min_feature_size_uses_full_dimensions(self):
+        # consistent with Ellipse: min of the full width / full height,
+        # independent of skew
+        assert Egg(center=[0.0, 0.0], width=2.0, height=1.0).min_feature_size == pytest.approx(1.0)
+        assert Egg(center=[0.0, 0.0], width=0.6, height=1.5, skew=0.5).min_feature_size == pytest.approx(0.6)
+        assert Egg(center=[0.0, 0.0], width=2.0, height=1.0, skew=-0.7).min_feature_size == pytest.approx(1.0)
+        ell = Ellipse(center=[0.0, 0.0], axes=[2.0, 1.0])
+        assert Egg(center=[0.0, 0.0], width=2.0, height=1.0).min_feature_size == pytest.approx(ell.min_feature_size)
+
     def test_center_is_inside(self):
         e = Egg(center=[0.0, 0.0], width=1.0, height=1.0)
         assert_inside(e, [(0.0, 0.0)])

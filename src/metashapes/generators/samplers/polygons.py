@@ -156,6 +156,11 @@ class TriangleSampler(ShapeSampler):
                 sin_ab + math.sin(a_rad) + math.sin(b_rad)
             )
 
+            # Triangle.min_feature_size is the inscribed-circle diameter;
+            # a long base alone doesn't stop a sliver triangle.
+            if 2.0 * inradius < min_feature:
+                continue
+
             corner_radius = resolve_param(
                 rng,
                 fixed_value=fixed['corner_radius'],
@@ -263,23 +268,44 @@ class StarSampler(ShapeSampler):
                 default_range=(0.0, 360.0 / n),
             )
 
-            ocr_max = (outer_radius - inner_radius) * 0.4
+            # Corner-radius limits -- same geometry as Star.__init__'s checks,
+            # so a sampled star is always constructible.
+            edge = math.sqrt(outer_radius ** 2 + inner_radius ** 2
+                             - 2.0 * outer_radius * inner_radius * math.cos(an))
+            tan_tip = math.tan(math.asin(inner_radius * math.sin(an) / edge))
+            tan_valley = math.tan(math.asin(min(1.0, outer_radius * math.sin(an) / edge)))
+            ocr_limit = 0.99 * edge * tan_tip
+
+            # Star.min_feature_size is the tip width, 2 * outer_corner_radius,
+            # so honouring min_feature_size means rounding the tips at least
+            # that much.
+            ocr_min = min_feature / 2.0
+            if ocr_min >= 0.8 * ocr_limit:
+                continue
+
             outer_corner_radius = resolve_param(
                 rng,
                 fixed_value=fixed['outer_corner_radius'],
                 user_range=ranges['outer_corner_radius'],
-                default_range=(0.0, ocr_max),
+                default_range=(ocr_min, 0.8 * ocr_limit),
             )
-            outer_corner_radius = min(outer_corner_radius, outer_radius - inner_radius - 1e-6)
+            outer_corner_radius = min(outer_corner_radius, ocr_limit)
+            if outer_corner_radius < ocr_min:
+                continue
 
-            icr_max = inner_radius * math.sin(an) * 0.8
+            # The two roundings share each edge: their tangent lengths
+            # ocr/tan_tip + icr/tan_valley must stay below the edge length.
+            icr_limit = 0.99 * min(
+                edge * tan_valley,
+                (edge - outer_corner_radius / tan_tip) * tan_valley,
+            )
             inner_corner_radius = resolve_param(
                 rng,
                 fixed_value=fixed['inner_corner_radius'],
                 user_range=ranges['inner_corner_radius'],
-                default_range=(0.0, icr_max),
+                default_range=(0.0, 0.8 * icr_limit),
             )
-            inner_corner_radius = min(inner_corner_radius, inner_radius * math.sin(an) - 1e-6)
+            inner_corner_radius = min(inner_corner_radius, icr_limit)
 
             cx, cy = sample_center_in_bounds(
                 rng,
