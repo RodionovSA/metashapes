@@ -1,0 +1,13 @@
+*__pycache__
+.pytest_cache
+.graphifyignore
+.claude
+.venv/
+*.egg-info
+screening_shape_lattice.md
+
+# graphify
+graphify-out/manifest.json
+graphify-out/cost.json
+graphify-out/cache/
+graphify-out/.graphify_*
