@@ -10,12 +10,12 @@ from shapely.geometry.base import BaseGeometry
 from shapely.ops import unary_union
 
 import metashapes.shape.primitives as prim
-from .helpers import as_float, as_list
+from .helpers import arc_quad_segs, as_float, as_list
 
 def _rounded_box(hx: float, hy: float, rr: float) -> BaseGeometry:
         if rr == 0:
             return box(-hx, -hy, hx, hy)
-        return box(-(hx - rr), -(hy - rr), hx - rr, hy - rr).buffer(rr, join_style=1)
+        return box(-(hx - rr), -(hy - rr), hx - rr, hy - rr).buffer(rr, quad_segs=arc_quad_segs(rr, 16), join_style=1)
 
 def cross_to_shapely(shape: prim.Cross) -> BaseGeometry:
     cx, cy = as_list(shape.center)
@@ -55,22 +55,22 @@ def cross_to_shapely(shape: prim.Cross) -> BaseGeometry:
 
         # (+,+)
         sq = box(by, by, by + ri, by + ri)
-        cc = Point(by + ri, by + ri).buffer(ri)
+        cc = Point(by + ri, by + ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
         patches.append(sq.difference(cc))
 
         # (-,+)
         sq = box(-by - ri, by, -by, by + ri)
-        cc = Point(-by - ri, by + ri).buffer(ri)
+        cc = Point(-by - ri, by + ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
         patches.append(sq.difference(cc))
 
         # (-,-)
         sq = box(-by - ri, -by - ri, -by, -by)
-        cc = Point(-by - ri, -by - ri).buffer(ri)
+        cc = Point(-by - ri, -by - ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
         patches.append(sq.difference(cc))
 
         # (+,-)
         sq = box(by, -by - ri, by + ri, -by)
-        cc = Point(by + ri, -by - ri).buffer(ri)
+        cc = Point(by + ri, -by - ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
         patches.append(sq.difference(cc))
 
         geom = unary_union([geom, *patches])
@@ -122,10 +122,10 @@ def tshape_to_shapely(shape: prim.TShape) -> BaseGeometry:
     if ri > 0:
         patches = [
             box(by, y_cut - ri, by + ri, y_cut).difference(
-                Point(by + ri, y_cut - ri).buffer(ri)
+                Point(by + ri, y_cut - ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
             ),
             box(-by - ri, y_cut - ri, -by, y_cut).difference(
-                Point(-by - ri, y_cut - ri).buffer(ri)
+                Point(-by - ri, y_cut - ri).buffer(ri, quad_segs=arc_quad_segs(ri, 16, fillet=False))
             ),
         ]
         geom = unary_union([geom, *patches])

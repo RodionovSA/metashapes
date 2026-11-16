@@ -10,7 +10,7 @@ from shapely.geometry import Polygon
 from shapely.geometry.base import BaseGeometry
 
 import metashapes.shape.primitives as prim
-from .helpers import as_float, as_list, round_corners
+from .helpers import arc_quad_segs, as_float, as_list, round_corners
 
 
 def triangle_to_shapely(shape: prim.Triangle) -> BaseGeometry:
@@ -35,6 +35,18 @@ def triangle_to_shapely(shape: prim.Triangle) -> BaseGeometry:
 
 
 def star_to_shapely(shape: prim.Star) -> BaseGeometry:
+    """Star outline built directly: straight edges plus exact fillet arcs.
+
+    Building it with buffers (opening then closing) is ill-conditioned when
+    the tip and valley roundings nearly meet on an edge: the closing then
+    intersects two almost-parallel offset curves and amplifies the
+    opening's chord error. Here every vertex lies exactly on the outline.
+
+    Tips are convex corners rounded by ``outer_corner_radius``. Valleys are
+    concave corners rounded by ``inner_corner_radius``, unless
+    ``r >= R cos(pi/n)``: then they are convex and, matching the SDF, are
+    rounded by ``outer_corner_radius`` instead.
+    """
     cx, cy = as_list(shape.center)
     R = as_float(shape.outer_radius)
     r = as_float(shape.inner_radius)
@@ -44,19 +56,59 @@ def star_to_shapely(shape: prim.Star) -> BaseGeometry:
     n = shape.n
     an = math.pi / n
 
-    pts = []
+    corners = []
     for k in range(n):
         tip_ang = math.radians(angle_deg) + math.pi / 2 + 2 * math.pi * k / n
-        pts.append((cx + R * math.cos(tip_ang), cy + R * math.sin(tip_ang)))
+        corners.append((R * math.cos(tip_ang), R * math.sin(tip_ang)))
         val_ang = tip_ang + an
-        pts.append((cx + r * math.cos(val_ang), cy + r * math.sin(val_ang)))
+        corners.append((r * math.cos(val_ang), r * math.sin(val_ang)))
+    valley_convex = r >= R * math.cos(an)
+    radii = [ocr, ocr if valley_convex else icr] * n
 
-    geom = Polygon(pts)
-    if ocr > 0:
-        geom = round_corners(geom, radius=ocr, mode="inner")   # opening: rounds convex tips
-    if icr > 0:
-        geom = round_corners(geom, radius=icr, mode="outer")   # closing: rounds concave valleys
-    return geom
+    pts = _rounded_polygon(corners, radii)
+    return Polygon([(cx + x, cy + y) for x, y in pts])
+
+
+def _rounded_polygon(corners, radii) -> list[tuple[float, float]]:
+    """Outline of a simple CCW polygon with each corner filleted by its own
+    radius (convex corners inward, reflex corners outward). Fillets must
+    not overlap along an edge (the shapes' own parameter bounds ensure it).
+    """
+    m = len(corners)
+    out: list[tuple[float, float]] = []
+    for i in range(m):
+        px, py = corners[i - 1]
+        qx, qy = corners[i]
+        nx, ny = corners[(i + 1) % m]
+        rho = radii[i]
+        if rho <= 0:
+            out.append((qx, qy))
+            continue
+        # unit directions from the corner towards its neighbours
+        ax, ay = px - qx, py - qy
+        bx, by = nx - qx, ny - qy
+        la, lb = math.hypot(ax, ay), math.hypot(bx, by)
+        ax, ay, bx, by = ax / la, ay / la, bx / lb, by / lb
+        half = 0.5 * math.acos(max(-1.0, min(1.0, ax * bx + ay * by)))  # half the corner angle
+        t = rho / math.tan(half)                      # corner -> tangent point
+        d = rho / math.sin(half)                      # corner -> arc centre
+        mx, my = ax + bx, ay + by                     # bisector, pointing into the corner's angle
+        lm = math.hypot(mx, my)
+        mx, my = mx / lm, my / lm
+        # convex (CCW turn left) -> centre inside, along the bisector;
+        # reflex -> the bisector points outside, centre is there too
+        ox, oy = qx + d * mx, qy + d * my
+        t1 = (qx + t * ax, qy + t * ay)
+        t2 = (qx + t * bx, qy + t * by)
+        a1 = math.atan2(t1[1] - oy, t1[0] - ox)
+        a2 = math.atan2(t2[1] - oy, t2[0] - ox)
+        sweep = (a2 - a1 + math.pi) % (2 * math.pi) - math.pi   # |sweep| = pi - corner angle
+        quad = arc_quad_segs(rho, 32, fillet=False)
+        k = max(1, math.ceil(abs(sweep) / (math.pi / 2 / quad)))
+        for j in range(k + 1):
+            a = a1 + sweep * j / k
+            out.append((ox + rho * math.cos(a), oy + rho * math.sin(a)))
+    return out
 
 
 def regular_polygon_to_shapely(shape: prim.RegularPolygon) -> BaseGeometry:

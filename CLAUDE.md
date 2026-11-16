@@ -87,8 +87,14 @@ src/metashapes/
     spatial.py       # GeometryHash — incremental Shapely index for generation
     analysis.py      # LayoutAnalyzer, LayoutMetrics
 
+  gds/               # GDS export via gdstk (optional extra `gds`; see docs/gds_design.md)
+    convert.py       # Units (coord_unit/unit/precision), Shapely -> gdstk polygons (holes, scaling)
+    cells.py         # shape_to_gdstk, unit_cell_to_cell, layout_to_cell (clip, dedupe, workers)
+    assembly.py      # GDSAssembly — place layouts/arrays, footprints, check(), write_gds; save_gds
+
   analysis.py        # UnitCellAnalyzer — fill factor, gap, feature size metrics
-  transform.py       # Interop: Shapely ↔ NumPy ↔ gdstk ↔ KLayout
+  transform.py       # OBSOLETE interop helpers (Shapely ↔ NumPy ↔ gdstk ↔ KLayout); kept, not used.
+                     # Don't build on it or assume it is correct/fast — GDS export lives in gds/
 
 tests/
   shape/             # Per-primitive shape tests
@@ -96,6 +102,7 @@ tests/
   adapters/          # Shapely + YAML adapter tests
   generators/        # Generator tests
   layout/            # Layout rendering, generation, analysis tests
+  gds/               # GDS conversion, cells, assembly tests (skipped without gdstk)
   test_analysis.py   # UnitCellAnalyzer tests
 ```
 
@@ -116,6 +123,7 @@ tests/
 | `shape/shapeset.py` | `ShapeSet` — atoms evaluated via spatial index; per-call `halo` (default `inf` = exact) |
 | `layout/layout.py` | `Layout` — non-periodic counterpart of `UnitCell`; renders `scene ∩ domain` |
 | `layout/generator.py` | `LayoutGenerator` — sites × sources × constraints (containment, gap, feature) |
+| `gds/assembly.py` | `GDSAssembly` — chip of placed Layouts / UnitCell arrays; overlap & spacing checks; writes GDS |
 | `shape/registry.py` | `register_shape()` — name registry for serialization |
 | `generators/registry.py` | `register_shape_sampler()` — sampler registry |
 
@@ -176,7 +184,9 @@ New shape primitives are added regularly. Follow this process every time.
 **Implementation checklist (all five are required):**
 1. SDF function → `src/sdflib/<file>.py`
 2. Shape class → `src/metashapes/shape/primitives/<file>.py` (delegates `sdf()` to step 1)
-3. Shapely adapter → `src/metashapes/adapters/shapely/<file>.py`
+3. Shapely adapter → `src/metashapes/adapters/shapely/<file>.py`. Every curve must take its
+   segment count from `arc_quad_segs(radius, default)` (helpers.py) so `shape_to_shapely(..., tolerance=)`
+   — used by GDS export — bounds the chord error; add the primitive to `tests/adapters/test_shapely_tolerance.py`.
 4. Parameter sampler → `src/metashapes/generators/samplers/<file>.py`
 5. Tests → `tests/shape/`, `tests/adapters/`, `tests/generators/`
 

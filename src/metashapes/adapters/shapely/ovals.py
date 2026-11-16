@@ -11,14 +11,14 @@ from shapely.geometry import LineString, Point, Polygon
 from shapely.geometry.base import BaseGeometry
 
 import metashapes.shape.primitives as prim
-from .helpers import as_float, as_list
+from .helpers import arc_quad_segs, as_float, as_list
 
 def ellipse_to_shapely(shape: prim.Ellipse) -> BaseGeometry:
     cx, cy = as_list(shape.center)
     a, b = as_list(shape.axes)
     angle = as_float(shape.angle)
 
-    geom = Point(0.0, 0.0).buffer(1.0, quad_segs=64 // 4)
+    geom = Point(0.0, 0.0).buffer(1.0, quad_segs=arc_quad_segs(0.5 * max(a, b), 64 // 4, fillet=False))
     geom = shp_scale(geom, xfact=a*0.5, yfact=b*0.5, origin=(0.0, 0.0))
     geom = shp_rotate(geom, angle, origin=(0.0, 0.0))
     geom = shp_translate(geom, xoff=cx, yoff=cy)
@@ -34,9 +34,11 @@ def egg_to_shapely(shape: prim.Egg) -> BaseGeometry:
     b_bot = h_half * (1.0 - skew)
     angle = as_float(shape.angle)
 
-    n = 64
-    t_upper = np.linspace(0.0, np.pi, n, endpoint=False)
-    t_lower = np.linspace(np.pi, 2.0 * np.pi, n, endpoint=False)
+    # each half is a scaled half circle: 2 quarter arcs per half
+    n_top = 2 * arc_quad_segs(max(a, b_top), 32, fillet=False)
+    n_bot = 2 * arc_quad_segs(max(a, b_bot), 32, fillet=False)
+    t_upper = np.linspace(0.0, np.pi, n_top, endpoint=False)
+    t_lower = np.linspace(np.pi, 2.0 * np.pi, n_bot, endpoint=False)
 
     xs = np.concatenate([a * np.cos(t_upper), a * np.cos(t_lower)])
     ys = np.concatenate([b_top * np.sin(t_upper), b_bot * np.sin(t_lower)])
@@ -56,9 +58,10 @@ def stadium_to_shapely(shape: prim.Stadium) -> BaseGeometry:
     angle = as_float(shape.angle)
 
     if half_span == 0.0:
-        geom = Point(0.0, 0.0).buffer(radius)
+        geom = Point(0.0, 0.0).buffer(radius, quad_segs=arc_quad_segs(radius, 16, fillet=False))
     else:
-        geom = LineString([(-half_span, 0.0), (half_span, 0.0)]).buffer(radius)
+        geom = LineString([(-half_span, 0.0), (half_span, 0.0)]).buffer(
+            radius, quad_segs=arc_quad_segs(radius, 16))
 
     geom = shp_rotate(geom, angle, origin=(0.0, 0.0))
     geom = shp_translate(geom, xoff=cx, yoff=cy)

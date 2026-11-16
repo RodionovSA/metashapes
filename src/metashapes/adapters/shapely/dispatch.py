@@ -25,14 +25,20 @@ from .booleans import (
     intersection_to_shapely,
     difference_to_shapely,
 )
+from .helpers import tolerance_scope
 from .transforms import (
     translate_to_shapely,
     rotate_to_shapely,
     scale_to_shapely,
 )
 
-def shape_to_shapely(shape: Shape) -> BaseGeometry:
+def shape_to_shapely(shape: Shape, *, tolerance: float | None = None) -> BaseGeometry:
     """Convert a Shape tree to a Shapely geometry.
+
+    ``tolerance`` is the largest allowed distance between a polygon edge
+    and the true curved outline (same units as the shape). ``None`` uses
+    the enclosing :func:`tolerance_scope` if there is one, otherwise the
+    converters' fixed segment counts.
 
     The converters read raw parameters, so the tree is projected first: an
     optimizer step can leave e.g. a size slightly negative until the next
@@ -40,7 +46,10 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
     with the SDF.
     """
     shape.project_tree()
-    return _convert(shape)
+    if tolerance is None:           # inherit an enclosing tolerance_scope, if any
+        return _convert(shape)
+    with tolerance_scope(tolerance):
+        return _convert(shape)
 
 
 def _convert(shape: Shape) -> BaseGeometry:

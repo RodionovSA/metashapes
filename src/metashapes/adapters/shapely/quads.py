@@ -10,7 +10,7 @@ from shapely.geometry.base import BaseGeometry
 from shapely.geometry.polygon import orient
 
 import metashapes.shape.primitives as prim
-from .helpers import as_float, as_list, round_corners
+from .helpers import arc_quad_segs, as_float, as_list, round_corners
 
 def convex_quad_to_shapely(shape: prim.ConvexQuad) -> BaseGeometry:
     cx, cy = as_list(shape.center)
@@ -79,7 +79,7 @@ def rectangle_to_shapely(shape: prim.Rectangle):
             cy - (h / 2 - r),
             cx + (w / 2 - r),
             cy + (h / 2 - r),
-        ).buffer(r)
+        ).buffer(r, quad_segs=arc_quad_segs(r, 16))
 
     if angle != 0:
         geom = shp_rotate(geom, angle, origin=(cx, cy))
