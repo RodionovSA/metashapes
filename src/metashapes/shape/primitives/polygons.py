@@ -357,6 +357,12 @@ class Star(Shape):
 
     @property
     def min_feature_size(self) -> float:
-        """Narrowest place the star gets: the width of a spike's tip."""
+        """Width of a spike at its base: the distance between the two
+        valleys beside it, ``2 * inner_radius * sin(π/n)``.
+
+        Corner rounding doesn't count, as for every cornered primitive
+        (a sharp Rectangle's feature is its short side, a Cross's its arm
+        width), so a sharp star is a valid shape under ``min_feature_size``.
+        """
         self._project()
-        return 2.0 * self.outer_corner_radius.detach().item()
+        return 2.0 * self.inner_radius.detach().item() * math.sin(math.pi / self.n)

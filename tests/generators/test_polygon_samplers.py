@@ -261,13 +261,21 @@ class TestStarSampler:
             assert _scalar(s.outer_corner_radius) / tan_tip \
                 + _scalar(s.inner_corner_radius) / tan_valley < L
 
-    def test_sharp_tips_rejected_under_min_feature(self):
-        # Star.min_feature_size is tip width (2 * outer_corner_radius); a
-        # fixed sharp tip can never satisfy a positive min_feature_size
+    def test_sharp_stars_allowed_under_min_feature(self):
+        # corners don't count toward min_feature_size, so fixed sharp
+        # corners still sample, with spikes at least min_feature wide
         cfg = dict(
-            min_feature_size=0.1,
-            fixed_shape_params={"Star": {"outer_corner_radius": 0.0}},
+            min_feature_size=0.05,
+            fixed_shape_params={"Star": {"outer_corner_radius": 0.0,
+                                         "inner_corner_radius": 0.0}},
         )
+        for s in _samples(StarSampler, LATTICES["square"], n=50, **cfg):
+            assert _scalar(s.outer_corner_radius) == 0.0
+            assert _scalar(s.inner_corner_radius) == 0.0
+            assert s.min_feature_size >= 0.05 - TOL
+
+    def test_fixed_inner_radius_too_small_for_min_feature(self):
+        cfg = dict(min_feature_size=0.2, fixed_shape_params={"Star": {"inner_radius": 0.05}})
         with pytest.raises(RuntimeError, match="star_too_large_for_canvas"):
             _samples(StarSampler, LATTICES["square"], n=1, **cfg)
 

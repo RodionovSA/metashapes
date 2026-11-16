@@ -251,7 +251,8 @@ class StarSampler(ShapeSampler):
             if outer_radius > max_R:
                 continue
 
-            r_min = max(min_feature, outer_radius * 0.1)
+            # Star.min_feature_size is the spike width 2 * r * sin(pi/n).
+            r_min = max(min_feature / (2.0 * math.sin(an)), outer_radius * 0.1)
             # Keep valleys concave: at r >= R*cos(pi/n) the valley vertex
             # sits outside the tip-to-tip chord and the "star" is a convex
             # 2n-gon on which inner_corner_radius has no effect.
@@ -272,6 +273,8 @@ class StarSampler(ShapeSampler):
 
             if inner_radius <= 0 or inner_radius >= outer_radius:
                 continue
+            if 2.0 * inner_radius * math.sin(an) < min_feature:
+                continue    # a fixed inner_radius too small for min_feature_size
 
             angle = resolve_param(
                 rng,
@@ -288,24 +291,15 @@ class StarSampler(ShapeSampler):
             tan_valley = math.tan(math.asin(min(1.0, outer_radius * math.sin(an) / edge)))
             ocr_limit = 0.99 * edge * tan_tip
 
-            # Star.min_feature_size is the tip width, 2 * outer_corner_radius,
-            # so honouring min_feature_size means rounding the tips at least
-            # that much.
-            ocr_min = min_feature / 2.0
-            if ocr_min >= 0.8 * ocr_limit:
-                continue
-
             outer_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['outer_corner_radius'],
                 user_range=ranges['outer_corner_radius'],
-                default_range=(ocr_min, 0.8 * ocr_limit),
+                default_range=(0.0, 0.8 * ocr_limit),
             )
             if outer_corner_radius is None:
                 continue    # user range doesn't fit this draw
             outer_corner_radius = min(outer_corner_radius, ocr_limit)
-            if outer_corner_radius < ocr_min:
-                continue
 
             # The two roundings share each edge: their tangent lengths
             # ocr/tan_tip + icr/tan_valley must stay below the edge length.

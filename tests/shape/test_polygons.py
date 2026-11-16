@@ -353,46 +353,28 @@ class TestStar:
                  outer_corner_radius=0.04, inner_corner_radius=0.03)
         assert_round_trip(s)
 
-    def test_min_feature_size_is_twice_outer_corner_radius(self):
-        # The tip is where a spike actually gets thin: it's an exact
-        # circular arc of outer_corner_radius by construction of the SDF,
-        # so its own width (through the arc's center) is exactly
-        # 2*outer_corner_radius -- not 2*inner_radius (the diameter across
-        # valleys, unrelated to the spike's own thinness).
-        s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
-                 outer_corner_radius=0.08)
-        assert s.min_feature_size == pytest.approx(0.16, abs=1e-6)
-
-    def test_min_feature_size_zero_for_sharp_tip(self):
-        # An unrounded tip is mathematically a sharp point -- zero is the
-        # correct, useful answer (an infinitely sharp feature should fail
-        # any nonzero min_feature_size manufacturability check), not
-        # 2*inner_radius (which was always large and never caught this).
+    def test_min_feature_size_is_spike_base_width(self):
+        # distance between the two valleys beside a spike
         s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4)
-        assert s.min_feature_size == pytest.approx(0.0, abs=1e-9)
+        assert s.min_feature_size == pytest.approx(2 * 0.4 * math.sin(math.pi / 5), abs=1e-6)
 
-    def test_min_feature_size_independent_of_inner_radius(self):
-        # The old formula (2*inner_radius) varied with inner_radius even
-        # though it has no bearing on how thin the tip is; the new one
-        # must not, for a fixed outer_corner_radius.
-        s1 = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.2,
-                  outer_corner_radius=0.05)
-        s2 = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.6,
-                  outer_corner_radius=0.05)
-        assert s1.min_feature_size == pytest.approx(s2.min_feature_size, abs=1e-9)
-        assert s1.min_feature_size == pytest.approx(0.10, abs=1e-6)
+    def test_min_feature_size_ignores_corner_rounding(self):
+        # like Rectangle / Cross: a sharp star is not a zero-size feature
+        sharp = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4)
+        round_ = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
+                      outer_corner_radius=0.08, inner_corner_radius=0.05)
+        assert sharp.min_feature_size > 0
+        assert sharp.min_feature_size == pytest.approx(round_.min_feature_size, abs=1e-9)
 
     def test_min_feature_size_updates_with_current_parameter_value(self):
-        # min_feature_size must be computed fresh from the current
-        # parameter value (matters if outer_corner_radius is an
-        # nn.Parameter being optimized), not cached at construction.
-        ocr = torch.nn.Parameter(torch.tensor(0.03))
-        s = Star(center=[0.0, 0.0], n=5, outer_radius=1.0, inner_radius=0.4,
-                 outer_corner_radius=ocr)
-        assert s.min_feature_size == pytest.approx(0.06, abs=1e-6)
+        # computed fresh from the current value (inner_radius may be an
+        # nn.Parameter being optimized), not cached at construction
+        r = torch.nn.Parameter(torch.tensor(0.3))
+        s = Star(center=[0.0, 0.0], n=6, outer_radius=1.0, inner_radius=r)
+        assert s.min_feature_size == pytest.approx(0.3, abs=1e-6)
         with torch.no_grad():
-            ocr.copy_(torch.tensor(0.07))
-        assert s.min_feature_size == pytest.approx(0.14, abs=1e-6)
+            r.fill_(0.5)
+        assert s.min_feature_size == pytest.approx(0.5, abs=1e-6)
 
 
 # ---------------------------------------------------------------------------
