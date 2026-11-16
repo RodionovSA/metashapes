@@ -35,6 +35,9 @@ src/metashapes/          # src-layout; imported as `metashapes`
     base.py          # Shape base class (SDF, bounds, boolean operators)
     boolean.py       # Union, Intersection, Difference
     transforms.py    # Translate, Rotate, Scale
+    shapeset.py      # ShapeSet — flat, spatially indexed union of many atoms (layout scenes)
+    spatial.py       # SpatialHash — torch-side uniform grid index used by ShapeSet
+    learnable.py     # make_learnable() — post-hoc buffer -> nn.Parameter conversion
     registry.py      # register_shape() — name registry for serialization
     utils.py         # register() param helper, _to_local_coords()
     primitives/
@@ -67,7 +70,17 @@ src/metashapes/          # src-layout; imported as `metashapes`
       booleans.py transforms.py    # recursive converters for composite nodes
       helpers.py     # as_float(), round_corners(), remove_holes()
       raster.py      # shapely_to_numpy()
-    yaml.py          # YAML serialization / deserialization
+    yaml.py          # YAML serialization / deserialization (unit cells and layouts)
+    npz.py           # Columnar .npz save/load for large layouts
+
+  layout/            # Non-periodic layouts (see docs/layout_design.md); nothing else imports it
+    layout.py        # Layout — domain + ShapeSet, rasterize/mask/tiles, checks, containment_penalty
+    sites.py         # LatticeSites, RandomSites, ExplicitSites — where candidates go
+    sources.py       # SamplerSource, ParametricSource, Regions — what atom goes there
+    config.py        # LayoutConfig
+    generator.py     # LayoutGenerator, LayoutBatchResult, LayoutValidator
+    spatial.py       # GeometryHash — incremental Shapely index for generation
+    analysis.py      # LayoutAnalyzer, LayoutMetrics
 
   analysis.py        # UnitCellAnalyzer — fill factor, gap, feature size metrics
   transform.py       # Interop: Shapely ↔ NumPy ↔ gdstk ↔ KLayout
@@ -77,6 +90,7 @@ tests/
   lattice/           # Basis and UnitCell tests
   adapters/          # Shapely + YAML adapter tests
   generators/        # Generator tests
+  layout/            # Layout rendering, generation, analysis tests
   test_analysis.py   # UnitCellAnalyzer tests
 ```
 
@@ -93,7 +107,10 @@ tests/
 | `analysis.py` | `UnitCellAnalyzer` — fill factor, min gap, min feature size via Shapely |
 | `adapters/shapely/` | Converts any `Shape` tree to `shapely.Polygon` for analysis and export |
 | `adapters/shapely/dispatch.py` | `shape_to_shapely()` — isinstance dispatch entry point every adapter question routes through |
-| `adapters/yaml.py` | Save/load lists of `UnitCell` to YAML |
+| `adapters/yaml.py` | Save/load lists of `UnitCell` / `Layout` to YAML |
+| `shape/shapeset.py` | `ShapeSet` — atoms evaluated via spatial index; per-call `halo` (default `inf` = exact) |
+| `layout/layout.py` | `Layout` — non-periodic counterpart of `UnitCell`; renders `scene ∩ domain` |
+| `layout/generator.py` | `LayoutGenerator` — sites × sources × constraints (containment, gap, feature) |
 | `shape/registry.py` | `register_shape()` — name registry for serialization |
 | `generators/registry.py` | `register_shape_sampler()` — sampler registry |
 

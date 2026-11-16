@@ -18,6 +18,7 @@ from metashapes.lattice.unit_cell import UnitCell
 from metashapes.shape.base import Shape
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale
+from metashapes.shape.shapeset import ShapeSet
 
 __all__ = ["CellMetrics", "UnitCellAnalyzer"]
 
@@ -41,6 +42,9 @@ def _leaf_shapes(shape: Shape) -> Iterator[Shape]:
     if isinstance(shape, Union):
         yield from _leaf_shapes(shape.left)
         yield from _leaf_shapes(shape.right)
+    elif isinstance(shape, ShapeSet):
+        for atom in shape.shapes:
+            yield from _leaf_shapes(atom)
     elif isinstance(shape, (Translate, Rotate, Scale)):
         # Wrap each leaf in the same transform so positions are preserved
         for leaf in _leaf_shapes(shape.shape):

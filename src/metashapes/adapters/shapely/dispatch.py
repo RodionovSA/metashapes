@@ -9,6 +9,7 @@ import metashapes.shape.primitives as prim
 from metashapes.shape.base import Shape
 from metashapes.shape.boolean import Union, Intersection, Difference
 from metashapes.shape.transforms import Translate, Rotate, Scale
+from metashapes.shape.shapeset import ShapeSet
 
 from .quads import (
     convex_quad_to_shapely,
@@ -84,5 +85,9 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
 
     if isinstance(shape, Scale):
         return scale_to_shapely(shape, shape_to_shapely)
+
+    if isinstance(shape, ShapeSet):
+        from shapely.ops import unary_union
+        return unary_union([shape_to_shapely(s) for s in shape.shapes])
 
     raise TypeError(f"Unsupported shape type: {type(shape).__name__}")

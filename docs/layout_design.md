@@ -1,6 +1,6 @@
 # Layout generator — design sketch & implementation plan
 
-Status: **draft for review** · no code written yet
+Status: **phases 1–3 implemented** · phase 4 open · see §11 for implementation notes
 
 ## 1. Goal
 
@@ -584,3 +584,42 @@ Plan impact of 5: tiled rendering (`Layout.tiles`, `bounds=`) moves into
 phase 1. Columnar `.npz` serialization moves to phase 2, because YAML for
 10⁵–10⁶ atoms is impractical. Vectorised same-type evaluation stays in
 phase 4, but its storage layout is fixed in phase 1.
+
+## 11. Implementation notes (phases 1–3)
+
+Where the code differs from, or pins down, the sketch above:
+
+| Topic | What was implemented |
+|---|---|
+| `ShapeSet(halo=...)` | Optional, default `math.inf`. A finite stored halo is only the default for `sdf(x, y)` calls without `halo=` (e.g. nested in a `Union`). `mask`/`rasterize`/penalties pass their own halo. |
+| Ring search | Implemented as an expanding-radius search: round *k* evaluates `min(sdf, r₀·2ᵏ)` only at still-unresolved points; values `< r` are exact. Once `r` covers the whole index extent the remaining points are brute-forced. Grids stamp first with `r₀ = cell_size`, then resolve leftovers this way. |
+| Candidate pairs | `SpatialHash.pairs` is fully vectorised (sort points by cell key, one `searchsorted` per atom row segment). Only the atom SDF evaluation is a per-atom Python loop (phase 4 replaces it). One `scatter_reduce(amin)` per call; `gradcheck` passes through it. |
+| Bound-SDF atoms | `Star`, `TShape`, `Difference`, … underestimate distance far away. Skipping atoms relies on "SDF ≥ distance to bbox", so `ShapeSet` can return a *larger* value than a `Union` chain there — still a lower bound on the true distance with the correct sign (tested). Hard masks are unaffected. |
+| Index staleness | Rebuild check runs only when some atom has a learnable parameter (current boxes are recomputed per query). Buffers edited in place need `rebuild_index(force=True)`. |
+| Registration | `ShapeSet` registers itself in `shape/shapeset.py` (not when `metashapes.layout` is imported, as §7 said). |
+| `Tile` | Carries `bounds` (with overlap), `core`, `nx/ny`, and `rows/cols/crop` slices for stitching; `X`/`Y`/`xs`/`ys` are lazy properties. |
+| `containment_penalty` | Needs `pixel_size` or `softness` (each defaults to the other). Border atoms are selected by bbox vs. the domain shrunk by `margin + 8·softness`; each is integrated on its own window, aligned with the domain pixel grid. |
+| `Layout.project()` | Added. The Shapely adapter reads raw parameters, so `to_shapely`/`violations`/`check`/`LayoutAnalyzer` project atoms first (an optimizer step can leave a size negative until the next `sdf()`). `ShapeSet._project` walks the whole atom tree. |
+| `min_gap=0` | Touching allowed, positive-area overlap rejected — in both the generator and `LayoutAnalyzer.check`. |
+| Sources | `AtomSource.deterministic` (true for `ParametricSource`) disables `max_tries_per_site` retries that would repeat the same atom. `Regions` without `default` leaves out-of-region sites empty. |
+| Report | `parameter_ranges = {num_shapes, fill_fraction}`; `metadata` holds per-layout stats (`n_shapes`, `fill_fraction`, `saturated`, `sites_tried`, `rejections`), aggregated `site_rejections` and the saturated count. |
+| `n_clipped_features` | An atom cut by the domain boundary whose clipped piece is fully eroded by `threshold/2` (a sliver). Threshold is the analyzer's `min_feature_size`, else the atom's own. |
+| Columnar format | `metashapes.adapters.npz.save_layouts_npz` / `load_layouts_npz`: atoms grouped by parametric structure, numeric leaves stacked per group, JSON header for domain/options. |
+| `transform.py` | Broken `Canvas` import removed (duck-typed now); `gdstk`, `pya`, `skimage` imported lazily so the module imports without them. |
+
+### Benchmark (phase 1)
+
+`python benchmarks/layout_bench.py` — 10⁴ atoms (half ellipses, half rectangles, ~50 % of
+cells occupied), 4096² raster:
+
+| | CPU | GPU |
+|---|---|---|
+| `mask()` hard (halo 1 px) | 3.4 s | 9.4 s |
+| `mask(soft=True)` (halo 8 px) | 3.9 s | 9.5 s |
+| `rasterize()` exact | 5.4 s | 9.5 s |
+| soft mask forward + backward | 12.8 s | 28.2 s |
+
+Profiling shows >90 % of the time inside the atoms' own `sdf()` calls (dominated by the
+ellipse closest-point solve), ~10⁴ small calls. On GPU that is pure kernel-launch overhead,
+hence slower than CPU. Index/bookkeeping cost is small. This is exactly what phase 4's
+grouped same-type evaluation removes (one sdflib call per type per tile).

@@ -204,6 +204,21 @@ class TestStarSampler:
             assert 0 <= icr < L * tan_valley
             assert ocr / tan_tip + icr / tan_valley < L
 
+    def test_valleys_concave(self):
+        # r >= R cos(pi/n) would make a convex 2n-gon (no real valleys)
+        for s in _samples(StarSampler, LATTICES["square"]):
+            R, r = _scalar(s.outer_radius), _scalar(s.inner_radius)
+            assert r < R * math.cos(math.pi / s.n)
+
+    def test_inner_radius_range_too_high_for_some_n_retries(self):
+        # (0.6, 0.8)*R misses the valid range for n=3 (cap ~0.495); the
+        # sampler must retry another n rather than raise.
+        cfg = dict(fixed_shape_params={"Star": {"outer_radius": 1.0}},
+                   shape_param_ranges={"Star": {"inner_radius": (0.6, 0.8)}})
+        for s in _samples(StarSampler, LATTICES["square"], n=50, **cfg):
+            assert s.n >= 4
+            assert 0.6 <= _scalar(s.inner_radius) < math.cos(math.pi / s.n)
+
     def test_default_n_range(self):
         ns = {s.n for s in _samples(StarSampler, LATTICES["square"])}
         assert ns == {3, 4, 5, 6, 7}

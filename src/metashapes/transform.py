@@ -2,20 +2,25 @@
 
 # This module provides functions to transform shapes between vector and raster formats.
 
-import numpy as np
-import gdstk
-import pya
+from __future__ import annotations
 
-from skimage.draw import polygon as sk_polygon
-from skimage import measure
-from skimage.filters import gaussian as gaussian_filter
+import numpy as np
 
 import shapely
 from shapely.geometry import Polygon, MultiPolygon, LinearRing
 from shapely.geometry.base import BaseGeometry
 
-from typing import TYPE_CHECKING, List
-from .lattice import Canvas  
+from typing import TYPE_CHECKING, Any, List
+
+# `Canvas` is not defined anywhere in the package (the old `from .lattice
+# import Canvas` broke importing this module). The functions below only
+# duck-type it: any object with H, W, dx, dy, x0, y0 and grid() works.
+# gdstk, pya (KLayout) and scikit-image are optional and imported lazily by
+# the functions that need them, so the module imports without them.
+if TYPE_CHECKING:
+    import gdstk
+    import pya
+Canvas = Any
 
 def shapely_to_numpy(geom: 'BaseGeometry', canvas: 'Canvas') -> np.ndarray:
     if geom.is_empty:
@@ -49,8 +54,11 @@ def numpy_to_shapely(img: np.ndarray,
     Returns:
         A new shapely geometry (Polygon or MultiPolygon).
     """
-    if not isinstance(canvas, Canvas):
-        raise TypeError("canvas must be an instance of Canvas.")
+    from skimage import measure
+    from skimage.filters import gaussian as gaussian_filter
+
+    if not all(hasattr(canvas, a) for a in ("H", "W", "dx", "dy", "x0", "y0")):
+        raise TypeError("canvas must provide H, W, dx, dy, x0 and y0.")
     if not isinstance(img, np.ndarray):
         raise TypeError("Input must be a numpy array.")
     if img.ndim != 2:
@@ -156,6 +164,8 @@ def shapely_to_gdstk(geom: 'BaseGeometry') -> List[gdstk.Polygon]:
     """
     Convert a shapely geometry to a gdstk polygon or a list of polygons.
     """
+    import gdstk
+
     # Handle empty geometries
     if geom.is_empty:
         return []
@@ -183,6 +193,8 @@ def gdstk_to_shapely(poly: List[gdstk.Polygon]) -> 'BaseGeometry':
     """
     Convert a gdstk polygon to a shapely geometry.
     """
+    import gdstk
+
     poly = poly if isinstance(poly, list) else [poly]
     if not poly:
         return shapely.geometry.MultiPolygon()
@@ -226,6 +238,8 @@ def shapely_to_klayout(geom: 'BaseGeometry') -> List['pya.Polygon']:
     """
     Convert a shapely geometry to a KLayout polygon or a list of polygons.
     """
+    import pya
+
     # Handle empty geometries
     if geom.is_empty:
         return []

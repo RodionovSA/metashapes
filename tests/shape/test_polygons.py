@@ -777,3 +777,36 @@ class TestStarProject:
         assert torch.isfinite(out)
         s.bounds()  # must not raise
         assert s.min_feature_size >= 0.0
+
+
+class TestStarMatchesShapely:
+    """Regression: large outer_corner_radius made the valley patch an
+    unbounded wedge, and convex 'valleys' (r >= R cos(pi/n)) got a bogus
+    fillet. The SDF sign must match the Shapely polygon everywhere."""
+
+    @pytest.mark.parametrize("params", [
+        # tip rounding pulls A_eff far inward (used to fill the background)
+        dict(n=6, outer_radius=60.01, inner_radius=50.67, outer_corner_radius=34.77,
+             inner_corner_radius=5.87, angle=7.25),
+        # nearly flat valley, huge inner_corner_radius (false outline)
+        dict(n=5, outer_radius=36.46, inner_radius=30.30, outer_corner_radius=22.63,
+             inner_corner_radius=127.15, angle=30.4),
+        # sharp valley, icr ~ 0 (infinite wedges)
+        dict(n=4, outer_radius=69.51, inner_radius=30.21, outer_corner_radius=17.99,
+             inner_corner_radius=0.24, angle=62.5),
+        # convex valley: r > R cos(pi/3)
+        dict(n=3, outer_radius=50.72, inner_radius=38.84, outer_corner_radius=19.68,
+             inner_corner_radius=7.45, angle=51.95),
+    ])
+    def test_sign_matches_shapely(self, params):
+        shapely = pytest.importorskip("shapely")
+        from metashapes.adapters.shapely.dispatch import shape_to_shapely
+
+        s = Star(center=(0.0, 0.0), **params)
+        g = shape_to_shapely(s)
+        xs = torch.linspace(-150.0, 150.0, 301)
+        X, Y = torch.meshgrid(xs, xs, indexing="xy")
+        inside = (s.sdf(X, Y) < 0).numpy()
+        ref = shapely.contains_xy(g, X.numpy(), Y.numpy())
+        away = shapely.distance(g.boundary, shapely.points(X.numpy(), Y.numpy())) > 1.0
+        assert not ((inside != ref) & away).any()

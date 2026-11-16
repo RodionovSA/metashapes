@@ -103,6 +103,10 @@ def StarSDF(n: int, R, r, r_out, r_in) -> Callable:
     r_out/tan(alpha) + r_in/tan(beta) < L, where L is the tip-valley edge
     length and alpha/beta its two corner angles. Larger values silently
     return the distance to a collapsed/self-overlapping shape.
+
+    If r >= R*cos(pi/n) the valleys are convex (the shape is a convex
+    2n-gon); r_out then rounds them too and r_in has no effect, matching
+    the opening-then-closing used by the Shapely adapter.
     """
     an = math.pi / n  # half-sector angle at the origin
 
@@ -156,8 +160,14 @@ def StarSDF(n: int, R, r, r_out, r_in) -> Callable:
         d_sector = torch.where(cross_z >= 0, -dist_seg, dist_seg) - r_out
 
         # ---- Inner valley rounding ----
-        edge_dx = Bx - A_eff_x   # NOTE: edge direction from A_eff to B
-        edge_dy = By - A_eff_y   # (matches ex, ey from d_sector computation)
+        # The fillet is tangent to the *original* edge line A -> B (tip
+        # rounding is an inset-then-dilate, so it leaves straight edges on
+        # that line). Using the inset tip A_eff here instead tilts the line
+        # and makes the half-kite below an unbounded wedge.
+        edge_dx = Bx - R
+        edge_dy = By - torch.zeros_like(shift_A)
+        wx = p_x - R
+        wy = p_y
         edge_len2 = edge_dx * edge_dx + edge_dy * edge_dy
         edge_len = torch.sqrt(edge_len2.clamp_min(torch.finfo(x.dtype).tiny))
         edge_ux = edge_dx / edge_len
@@ -188,7 +198,7 @@ def StarSDF(n: int, R, r, r_out, r_in) -> Callable:
 
         # Half-kite constraint 2: B side of the perpendicular through T1.
         # T1 is on the edge at distance (edge_len - icr_eff/tan(beta)) from
-        # A_eff. Projection of (p - A_eff) onto edge direction: proj = w . edge_unit.
+        # A. Projection of (p - A) onto edge direction: proj = w . edge_unit.
         # B side is where proj > T1_proj, i.e. (T1_proj - proj) < 0 is inside.
         proj = wx * edge_ux + wy * edge_uy
         T1_proj = edge_len - icr_eff / tan_beta
@@ -200,6 +210,10 @@ def StarSDF(n: int, R, r, r_out, r_in) -> Callable:
         # Patch: half-kite minus disk.
         d_patch = torch.maximum(d_half_kite, -d_disk)
 
-        # Union with sharp star.
-        return torch.minimum(d_sector, d_patch)
+        # Union with sharp star. When r >= R*cos(pi/n) the "valley" B lies
+        # outside the tip-to-tip chord, so it is a convex corner: the
+        # closing that rounds valleys is a no-op there (and the half-kite
+        # would be unbounded), while d_sector already rounds B by r_out.
+        concave = r < R * math.cos(an)
+        return torch.where(concave, torch.minimum(d_sector, d_patch), d_sector)
     return f

@@ -247,9 +247,16 @@ class StarSampler(ShapeSampler):
                 continue
 
             r_min = max(min_feature, outer_radius * 0.1)
-            r_max = outer_radius * 0.85
+            # Keep valleys concave: at r >= R*cos(pi/n) the valley vertex
+            # sits outside the tip-to-tip chord and the "star" is a convex
+            # 2n-gon on which inner_corner_radius has no effect.
+            r_max = outer_radius * min(0.85, 0.99 * math.cos(an))
             if r_min >= r_max:
                 continue
+            user_r = ranges['inner_radius']
+            if fixed['inner_radius'] is None and user_r is not None \
+                    and (user_r[0] >= r_max or user_r[1] <= r_min):
+                continue    # no overlap with the valid range for this n / R
 
             inner_radius = resolve_param(
                 rng,

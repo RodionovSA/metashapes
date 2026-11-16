@@ -26,6 +26,10 @@ __all__ = [
     "load_unit_cells",
     "save_batch_result",
     "load_batch_result",
+    "save_layouts",
+    "load_layouts",
+    "save_layout_batch",
+    "load_layout_batch",
 ]
 
 _VERSION = "1"
@@ -130,8 +134,85 @@ def load_batch_result(path: str | Path) -> GenerationBatchResult:
 
 
 # ---------------------------------------------------------------------------
+# Layouts (non-periodic). For 10^5+ atoms prefer the columnar .npz format in
+# metashapes.adapters.npz; YAML stays convenient for small layouts.
+# ---------------------------------------------------------------------------
+
+def save_layouts(path: str | Path, layouts) -> None:
+    """Save one or more :class:`~metashapes.layout.Layout` objects to YAML."""
+    from metashapes.layout import Layout
+    if isinstance(layouts, Layout):
+        layouts = [layouts]
+    data = {
+        "version": _VERSION,
+        "layouts": [lay.to_parametric() for lay in layouts],
+    }
+    _write(path, data)
+
+
+def load_layouts(path: str | Path) -> list:
+    """Load layouts saved by :func:`save_layouts` or :func:`save_layout_batch`."""
+    from metashapes.layout import Layout
+    raw = yaml.safe_load(Path(path).read_text())
+    _check_version(raw)
+    return [Layout.from_parametric(d) for d in raw.get("layouts") or []]
+
+
+def save_layout_batch(path: str | Path, result) -> None:
+    """Save a :class:`~metashapes.layout.LayoutBatchResult` (layouts + report)."""
+    data = {
+        "version": _VERSION,
+        "report": _report_to_dict(result.report),
+        "layouts": [lay.to_parametric() for lay in result.layouts],
+    }
+    _write(path, data)
+
+
+def load_layout_batch(path: str | Path):
+    """Load a :class:`~metashapes.layout.LayoutBatchResult` saved by
+    :func:`save_layout_batch`."""
+    from metashapes.layout import Layout, LayoutBatchResult
+    raw = yaml.safe_load(Path(path).read_text())
+    _check_version(raw)
+    report = _report_from_dict(raw["report"])
+    layouts = [Layout.from_parametric(d) for d in raw.get("layouts") or []]
+    return LayoutBatchResult(layouts=layouts, report=report)
+
+
+# ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+def _write(path: str | Path, data: dict) -> None:
+    Path(path).write_text(yaml.dump(_to_safe(data), Dumper=_Dumper,
+                                    default_flow_style=False, allow_unicode=True))
+
+
+def _report_to_dict(r: GenerationReport) -> dict:
+    return {
+        "requested": r.requested,
+        "generated": r.generated,
+        "failed": r.failed,
+        "total_attempts": r.total_attempts,
+        "failure_reasons": dict(r.failure_reasons),
+        "parameter_ranges": {k: list(v) for k, v in r.parameter_ranges.items()},
+        "metadata": r.metadata,
+    }
+
+
+def _report_from_dict(r: dict) -> GenerationReport:
+    return GenerationReport(
+        requested=r["requested"],
+        generated=r["generated"],
+        failed=r["failed"],
+        total_attempts=r["total_attempts"],
+        failure_reasons=r.get("failure_reasons") or {},
+        parameter_ranges={
+            k: tuple(v) for k, v in (r.get("parameter_ranges") or {}).items()
+        },
+        metadata=r.get("metadata") or {},
+    )
+
 
 def _to_safe(obj):
     """Recursively convert tuples → lists so yaml.dump produces clean YAML."""
