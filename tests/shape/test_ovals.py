@@ -388,16 +388,14 @@ class TestEllipseDtypeDeviceGrad:
         e = Ellipse(center=[0.0, 0.0], axes=[1.0, 0.5])
         assert_direct_call_dtype_promotion(e)
 
-    def test_integer_query_raises_typeerror(self):
-        # Ellipse (and Egg, Stadium below) use torch.finfo(x.dtype).eps,
-        # which requires a floating-point dtype -- unlike Rectangle/
-        # ConvexQuad/etc, which use only plain arithmetic and tolerate
-        # integer query points. This inconsistency across primitives is
-        # real (confirmed for all 12); pinned here as Ellipse's actual
-        # current behavior, not silently worked around.
+    def test_integer_query_matches_float(self):
+        # The sdflib functions receive local coordinates, which the
+        # rotation in _to_local_coords has already promoted to float, so
+        # integer query points work like for every other primitive.
         e = Ellipse(center=[0.0, 0.0], axes=[1.0, 0.5])
-        with pytest.raises(TypeError, match="finfo"):
-            e.sdf(torch.tensor(0), torch.tensor(0))
+        out = e.sdf(torch.tensor(1), torch.tensor(0))
+        assert out.dtype.is_floating_point
+        assert out.item() == pytest.approx(e.sdf(torch.tensor(1.0), torch.tensor(0.0)).item())
 
     def test_gradients_finite_generic_point(self):
         e = Ellipse(
@@ -408,7 +406,7 @@ class TestEllipseDtypeDeviceGrad:
         assert_gradients_finite_at(e, ["center", "axes", "angle"], 0.35, 0.15)
 
     def test_gradients_finite_dense_grid(self):
-        # A dense grid exercises _ellipse_closest_point's branches across
+        # A dense grid exercises sdflib.ovals._ellipse_closest_point's branches across
         # many (m, n) configurations, including several points near each
         # branch's own degenerate inputs.
         e = Ellipse(
@@ -429,7 +427,7 @@ class TestEllipseDtypeDeviceGrad:
         assert_gradients_finite(e, ["axes"])
 
     def test_gradients_finite_at_cube_root_degeneracy(self):
-        # This point lands _ellipse_closest_point's branch-2 solve at
+        # This point lands sdflib.ovals._ellipse_closest_point's branch-2 solve at
         # qm ~= 0, where a naive cube root has an infinite derivative;
         # confirm the gradient stays finite there.
         e = Ellipse(center=torch.tensor([0.1, -0.1]),
@@ -472,7 +470,7 @@ class TestEllipseDtypeDeviceGrad:
         assert_gradients_finite_at(e, ["axes"], 0.3, 0.03854308373662893)
 
     def test_gradients_finite_at_swap_boundary(self):
-        # _ellipse_closest_point's `swap = px > py` branch selects
+        # sdflib.ovals._ellipse_closest_point's `swap = px > py` branch selects
         # differently on either side of the px == py tie -- confirm no
         # gradient discontinuity/NaN right at it.
         e = Ellipse(center=torch.tensor([0.0, 0.0]),
@@ -480,7 +478,7 @@ class TestEllipseDtypeDeviceGrad:
         assert_gradients_finite_at(e, ["axes"], 0.3, 0.3)
 
     def test_gradients_finite_near_circular(self):
-        # a ~= b exercises _ellipse_closest_point's circle_mask branch
+        # a ~= b exercises sdflib.ovals._ellipse_closest_point's circle_mask branch
         # (radial projection), specifically chosen to avoid the general
         # cubic-solve path, which is singular as b^2 - a^2 -> 0.
         e = Ellipse(center=torch.tensor([0.0, 0.0]),
@@ -489,7 +487,7 @@ class TestEllipseDtypeDeviceGrad:
 
     def test_gradients_finite_at_degenerate_center(self):
         # Querying exactly at the ellipse's own center hits
-        # _ellipse_closest_point's degenerate_center fallback (the radial
+        # sdflib.ovals._ellipse_closest_point's degenerate_center fallback (the radial
         # direction (px,py)/r is undefined at the origin).
         e = Ellipse(center=torch.nn.Parameter(torch.tensor([0.0, 0.0])),
                    axes=torch.tensor([0.5, 0.5]))
@@ -525,10 +523,11 @@ class TestEggDtypeDeviceGrad:
         e = Egg(center=[0.0, 0.0], width=0.6, height=0.8, skew=0.2)
         assert_direct_call_dtype_promotion(e)
 
-    def test_integer_query_raises_typeerror(self):
+    def test_integer_query_matches_float(self):
         e = Egg(center=[0.0, 0.0], width=0.6, height=0.8, skew=0.2)
-        with pytest.raises(TypeError, match="finfo"):
-            e.sdf(torch.tensor(0), torch.tensor(0))
+        out = e.sdf(torch.tensor(1), torch.tensor(0))
+        assert out.dtype.is_floating_point
+        assert out.item() == pytest.approx(e.sdf(torch.tensor(1.0), torch.tensor(0.0)).item())
 
     def test_gradients_finite_generic_point(self):
         e = Egg(
@@ -541,7 +540,7 @@ class TestEggDtypeDeviceGrad:
         assert_gradients_finite_at(e, ["center", "width", "height", "skew", "angle"], 0.15, 0.3)
 
     def test_gradients_finite_dense_grid(self):
-        # Egg calls the same shared _ellipse_closest_point solver twice per
+        # Egg calls the same shared sdflib.ovals._ellipse_closest_point solver twice per
         # point (once per arc); sweep it across a dense grid.
         e = Egg(
             center=torch.nn.Parameter(torch.tensor([0.1, -0.1])),
@@ -597,10 +596,11 @@ class TestStadiumDtypeDeviceGrad:
         s = Stadium(center=[0.0, 0.0], length=1.5, width=0.6)
         assert_direct_call_dtype_promotion(s)
 
-    def test_integer_query_raises_typeerror(self):
+    def test_integer_query_matches_float(self):
         s = Stadium(center=[0.0, 0.0], length=1.5, width=0.6)
-        with pytest.raises(TypeError, match="finfo"):
-            s.sdf(torch.tensor(0), torch.tensor(0))
+        out = s.sdf(torch.tensor(1), torch.tensor(0))
+        assert out.dtype.is_floating_point
+        assert out.item() == pytest.approx(s.sdf(torch.tensor(1.0), torch.tensor(0.0)).item())
 
     def test_gradients_finite_generic_point(self):
         s = Stadium(

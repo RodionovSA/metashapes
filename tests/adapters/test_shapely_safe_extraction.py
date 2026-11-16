@@ -206,3 +206,30 @@ class TestUnitCellSafeExtraction:
         mask.sum().backward()
         assert center.grad is not None
         assert not torch.all(center.grad == 0)
+
+
+class TestProjectsBeforeConverting:
+    """An optimizer step can leave a parameter out of range until the next
+    sdf(); shape_to_shapely must project the whole tree first."""
+
+    def _drifted(self):
+        r = Rectangle(center=(0.0, 0.0), size=(1.0, 0.4))
+        r.size = nn.Parameter(r.size.clone())
+        with torch.no_grad():
+            r.size[1] = -0.1
+        return r
+
+    def test_nested_leaf_is_projected(self):
+        from metashapes.shape.boolean import Union
+        from metashapes.shape.transforms import Translate
+        r = self._drifted()
+        scene = Union(Translate(r, 0.5, 0.5), Ellipse(center=(0.2, 0.2), axes=(0.1, 0.1)))
+        geom = shape_to_shapely(scene)
+        assert r.size[1].item() > 0
+        assert geom.is_valid and geom.area > 0
+
+    def test_unit_cell_to_shapely(self):
+        r = self._drifted()
+        cell = UnitCell(Lattice.rectangular(2.0, 2.0), r)
+        assert not cell.to_shapely().is_empty
+        assert r.size[1].item() > 0

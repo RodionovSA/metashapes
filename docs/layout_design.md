@@ -599,7 +599,7 @@ Where the code differs from, or pins down, the sketch above:
 | Registration | `ShapeSet` registers itself in `shape/shapeset.py` (not when `metashapes.layout` is imported, as §7 said). |
 | `Tile` | Carries `bounds` (with overlap), `core`, `nx/ny`, and `rows/cols/crop` slices for stitching; `X`/`Y`/`xs`/`ys` are lazy properties. |
 | `containment_penalty` | Needs `pixel_size` or `softness` (each defaults to the other). Border atoms are selected by bbox vs. the domain shrunk by `margin + 8·softness`; each is integrated on its own window, aligned with the domain pixel grid. |
-| `Layout.project()` | Added. The Shapely adapter reads raw parameters, so `to_shapely`/`violations`/`check`/`LayoutAnalyzer` project atoms first (an optimizer step can leave a size negative until the next `sdf()`). `ShapeSet._project` walks the whole atom tree. |
+| `Layout.project()` | Added; calls `scene.project_tree()`. `shape_to_shapely()` itself now projects the whole tree before converting (an optimizer step can leave a size negative until the next `sdf()`), so every Shapely path — layouts, `UnitCell`, analyzers, generators — is covered. |
 | `min_gap=0` | Touching allowed, positive-area overlap rejected — in both the generator and `LayoutAnalyzer.check`. |
 | Sources | `AtomSource.deterministic` (true for `ParametricSource`) disables `max_tries_per_site` retries that would repeat the same atom. `Regions` without `default` leaves out-of-region sites empty. |
 | Report | `parameter_ranges = {num_shapes, fill_fraction}`; `metadata` holds per-layout stats (`n_shapes`, `fill_fraction`, `saturated`, `sites_tried`, `rejections`), aggregated `site_rejections` and the saturated count. |

@@ -14,6 +14,7 @@ from metashapes.generators.samplers.utils import (
     intersect_ranges,
     lattice_inner_bounds,
     resolve_param,
+    resolve_radius,
     sample_center_in_bounds,
 )
 from metashapes.shape.primitives import RegularPolygon, Triangle, Star
@@ -70,12 +71,14 @@ class RegularPolygonSampler(ShapeSampler):
             R = side_length / (2.0 * sin_an)
             apothem = R * cos_an
 
-            corner_radius = resolve_param(
+            corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['corner_radius'],
                 user_range=ranges['corner_radius'],
                 default_range=(0.0, apothem),
             )
+            if corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             if R > iw / 2 or R > ih / 2:
                 continue
@@ -161,12 +164,14 @@ class TriangleSampler(ShapeSampler):
             if 2.0 * inradius < min_feature:
                 continue
 
-            corner_radius = resolve_param(
+            corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['corner_radius'],
                 user_range=ranges['corner_radius'],
                 default_range=(0.0, inradius * 0.8),
             )
+            if corner_radius is None:
+                continue    # user range doesn't fit this draw
             corner_radius = min(corner_radius, inradius * 0.99)
 
             # Outer vertices in local centroid frame
@@ -290,12 +295,14 @@ class StarSampler(ShapeSampler):
             if ocr_min >= 0.8 * ocr_limit:
                 continue
 
-            outer_corner_radius = resolve_param(
+            outer_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['outer_corner_radius'],
                 user_range=ranges['outer_corner_radius'],
                 default_range=(ocr_min, 0.8 * ocr_limit),
             )
+            if outer_corner_radius is None:
+                continue    # user range doesn't fit this draw
             outer_corner_radius = min(outer_corner_radius, ocr_limit)
             if outer_corner_radius < ocr_min:
                 continue
@@ -306,12 +313,14 @@ class StarSampler(ShapeSampler):
                 edge * tan_valley,
                 (edge - outer_corner_radius / tan_tip) * tan_valley,
             )
-            inner_corner_radius = resolve_param(
+            inner_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['inner_corner_radius'],
                 user_range=ranges['inner_corner_radius'],
                 default_range=(0.0, 0.8 * icr_limit),
             )
+            if inner_corner_radius is None:
+                continue    # user range doesn't fit this draw
             inner_corner_radius = min(inner_corner_radius, icr_limit)
 
             cx, cy = sample_center_in_bounds(

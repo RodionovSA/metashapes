@@ -15,6 +15,7 @@ from metashapes.generators.samplers.utils import (
     intersect_ranges,
     lattice_inner_bounds,
     resolve_param,
+    resolve_radius,
     resolve_pair_param,
     sample_center_in_bounds,
 )
@@ -50,12 +51,14 @@ class RectangleSampler(ShapeSampler):
                 default_range=(0.0, 360.0),
             )
 
-            corner_radius = resolve_param(
+            corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['corner_radius'],
                 user_range=ranges['corner_radius'],
                 default_range=(0.0, min(width, height) / 2.0),
             )
+            if corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             hx = width / 2.0
             hy = height / 2.0
@@ -130,12 +133,14 @@ class IsoscelesTrapezoidSampler(ShapeSampler):
 
             # max corner radius is limited by the smallest of bottom_width, top_width, height
             max_cr = min(bottom_width, top_width, height) / 2.0
-            corner_radius = resolve_param(
+            corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['corner_radius'],
                 user_range=ranges['corner_radius'],
                 default_range=(0.0, max_cr),
             )
+            if corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # bounding box: half-width = max base / 2, half-height = height / 2
             hx = max(bottom_width, top_width) / 2.0
@@ -224,12 +229,14 @@ class ConvexQuadSampler(ShapeSampler):
             )
 
             max_cr = min(ux, abs(vy_val)) * 0.4
-            corner_radius = resolve_param(
+            corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['corner_radius'],
                 user_range=ranges['corner_radius'],
                 default_range=(0.0, max_cr),
             )
+            if corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # conservative bounding box: largest extent from center across all 4 vertices
             # vertices (before global rotation): center ± (1+|alpha|)*ux ± (1+|beta|)*vy

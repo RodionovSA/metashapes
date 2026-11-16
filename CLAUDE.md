@@ -47,6 +47,11 @@ src/metashapes/          # src-layout; imported as `metashapes`
       junctions.py   # Cross, TShape
       stripes.py     # Bar — 1D-infinite, spans the cell along one axis
 
+src/sdflib/              # ALL SDF math lives here (one file per primitives file)
+  quads.py ovals.py polygons.py junctions.py stripes.py
+                     # <Name>SDF(params) -> f(x, y), in the shape's local (unrotated, centered) frame
+
+src/metashapes/
   lattice/
     basis.py         # Lattice — 2D periodic basis vectors
     unit_cell.py     # UnitCell — lattice + shape, periodic SDF sampling
@@ -136,6 +141,11 @@ New shape primitives are added regularly. Follow this process every time.
 - Which primitives file it belongs to (e.g. `quads.py`, `ovals.py`) or whether a new file is needed.
 
 **Design constraint:**
+- **All SDF math lives in `src/sdflib/`**, never inline in a shape class. Each primitive gets a
+  `<Name>SDF(params) -> f(x, y)` factory in the matching `sdflib/<file>.py`, working in local
+  coordinates (centered, unrotated); the shape's `sdf()` only calls `_project()`, converts to local
+  coords with `_to_local_coords()`, and delegates. Shared helpers (e.g. `_ellipse_closest_point`)
+  go in sdflib too.
 - Shapes with corners **must** include a `corner_radius` parameter for optional corner smoothing.
   Exception: shapes with both convex and concave corners needing two independent radii (e.g.
   `Cross`, `TShape`, `Star`) use `outer_corner_radius`/`inner_corner_radius` instead — this is an
@@ -153,7 +163,9 @@ New shape primitives are added regularly. Follow this process every time.
 - Shape parameters are **not** re-validated after construction via a raised error — but most
   primitives now implement `_project()` (called at the top of `sdf()`/`bounds()`/
   `min_feature_size`) to clamp drifted parameters back into their valid range in place, so an
-  optimizer step doesn't need to keep them there itself. Every primitive in `quads.py`,
+  optimizer step doesn't need to keep them there itself. `shape_to_shapely()` calls
+  `Shape.project_tree()` (projects every node, skipping ones without `_project`) before
+  converting, since the converters read raw parameters. Every primitive in `quads.py`,
   `stripes.py`, `junctions.py`, and `polygons.py` has one; `ovals.py` (`Ellipse`, `Egg`,
   `Stadium`) is the current gap.
 - Dtype is **not** threaded through constructors — everything defaults to float32 at construction
@@ -161,11 +173,12 @@ New shape primitives are added regularly. Follow this process every time.
   `.to(dtype=...)` on the constructed `Shape`/`Lattice`/`UnitCell`, the same pattern already used
   for device placement.
 
-**Implementation checklist (all four are required):**
-1. Shape class → `src/metashapes/shape/primitives/<file>.py`
-2. Shapely adapter → `src/metashapes/adapters/shapely/<file>.py`
-3. Parameter sampler → `src/metashapes/generators/samplers/<file>.py`
-4. Tests → `tests/shape/`, `tests/adapters/`, `tests/generators/`
+**Implementation checklist (all five are required):**
+1. SDF function → `src/sdflib/<file>.py`
+2. Shape class → `src/metashapes/shape/primitives/<file>.py` (delegates `sdf()` to step 1)
+3. Shapely adapter → `src/metashapes/adapters/shapely/<file>.py`
+4. Parameter sampler → `src/metashapes/generators/samplers/<file>.py`
+5. Tests → `tests/shape/`, `tests/adapters/`, `tests/generators/`
 
 **Validation:** Run `pytest tests/` and confirm all new tests pass before reporting done.
 

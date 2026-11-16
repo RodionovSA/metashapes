@@ -102,6 +102,32 @@ def resolve_param(
         return fixed_value
     return rng.uniform(*intersect_ranges(default_range, user_range))
 
+def resolve_radius(
+    rng,
+    *,
+    fixed_value,
+    user_range,
+    default_range,
+):
+    """Like :func:`resolve_param`, for parameters whose valid range depends
+    on the rest of the shape (corner radii).
+
+    Returns ``None`` when ``user_range`` doesn't overlap ``default_range``
+    for this particular draw, so the sampler can redraw the shape instead
+    of raising. A malformed ``user_range`` (min > max) still raises.
+    """
+    if fixed_value is not None:
+        return fixed_value
+    if user_range is not None and user_range[0] > user_range[1]:
+        raise ValueError(f"invalid range: {user_range}")
+    lo, hi = default_range
+    if user_range is not None:
+        lo, hi = max(lo, user_range[0]), min(hi, user_range[1])
+    if lo > hi:
+        return None
+    return rng.uniform(lo, hi)
+
+
 def resolve_pair_param(
     rng,
     *,

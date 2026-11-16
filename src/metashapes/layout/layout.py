@@ -288,10 +288,7 @@ class Layout(nn.Module):
         it first, since an optimizer step may leave e.g. a size slightly
         negative until the next ``sdf()``.
         """
-        if isinstance(self.scene, ShapeSet):
-            self.scene._project()
-        else:
-            ShapeSet([self.scene])._project()
+        self.scene.project_tree()
 
     def _atom_geoms(self):
         from metashapes.adapters.shapely import shape_to_shapely

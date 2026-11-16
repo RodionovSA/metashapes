@@ -370,12 +370,12 @@ class ShapeSet(Shape):
         raw parameters without going through ``sdf()`` (e.g. the Shapely
         adapter) need this after an optimizer step.
         """
-        for m in self.shapes.modules():
-            if isinstance(m, Shape):
-                try:
-                    m._project()
-                except NotImplementedError:
-                    pass
+        for s in self.shapes:
+            s.project_tree()
+
+    # project_tree() reaches the atoms through modules() itself, so it must
+    # not also call this set's _project() (which would walk them twice).
+    _projects_subtree = True
 
     # --- serialization ------------------------------------------------
     def to_parametric(self) -> dict:

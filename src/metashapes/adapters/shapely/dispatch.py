@@ -32,6 +32,18 @@ from .transforms import (
 )
 
 def shape_to_shapely(shape: Shape) -> BaseGeometry:
+    """Convert a Shape tree to a Shapely geometry.
+
+    The converters read raw parameters, so the tree is projected first: an
+    optimizer step can leave e.g. a size slightly negative until the next
+    ``sdf()``, which would otherwise make the conversion fail or disagree
+    with the SDF.
+    """
+    shape.project_tree()
+    return _convert(shape)
+
+
+def _convert(shape: Shape) -> BaseGeometry:
     if isinstance(shape, prim.ConvexQuad):
         return convex_quad_to_shapely(shape)
 
@@ -69,25 +81,25 @@ def shape_to_shapely(shape: Shape) -> BaseGeometry:
         return bar_to_shapely(shape)
 
     if isinstance(shape, Union):
-        return union_to_shapely(shape, shape_to_shapely)
+        return union_to_shapely(shape, _convert)
 
     if isinstance(shape, Intersection):
-        return intersection_to_shapely(shape, shape_to_shapely)
+        return intersection_to_shapely(shape, _convert)
 
     if isinstance(shape, Difference):
-        return difference_to_shapely(shape, shape_to_shapely)
+        return difference_to_shapely(shape, _convert)
 
     if isinstance(shape, Translate):
-        return translate_to_shapely(shape, shape_to_shapely)
+        return translate_to_shapely(shape, _convert)
 
     if isinstance(shape, Rotate):
-        return rotate_to_shapely(shape, shape_to_shapely)
+        return rotate_to_shapely(shape, _convert)
 
     if isinstance(shape, Scale):
-        return scale_to_shapely(shape, shape_to_shapely)
+        return scale_to_shapely(shape, _convert)
 
     if isinstance(shape, ShapeSet):
         from shapely.ops import unary_union
-        return unary_union([shape_to_shapely(s) for s in shape.shapes])
+        return unary_union([_convert(s) for s in shape.shapes])
 
     raise TypeError(f"Unsupported shape type: {type(shape).__name__}")

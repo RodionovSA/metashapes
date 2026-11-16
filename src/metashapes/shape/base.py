@@ -103,6 +103,21 @@ class Shape(nn.Module):
         raise NotImplementedError(
             f"{type(self).__name__} must implement _project()")
 
+    def project_tree(self) -> None:
+        """Run ``_project()`` on this shape and every shape below it.
+
+        ``sdf()``/``bounds()`` project only what they read, so code that
+        reads raw parameters directly (e.g. the Shapely adapter) calls this
+        first to undo optimizer drift everywhere in the tree. Shapes without
+        a projection are skipped.
+        """
+        for m in self.modules():
+            if isinstance(m, Shape) and not getattr(m, "_projects_subtree", False):
+                try:
+                    m._project()
+                except NotImplementedError:
+                    pass
+
     # Boolean operators for easy shape composition
     def __or__(self, other: "Shape") -> "Shape":
         from .boolean import Union

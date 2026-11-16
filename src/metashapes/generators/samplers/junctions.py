@@ -14,6 +14,7 @@ from metashapes.generators.samplers.utils import (
     intersect_ranges,
     lattice_inner_bounds,
     resolve_param,
+    resolve_radius,
     sample_center_in_bounds,
 )
 from metashapes.shape.primitives import Cross, TShape
@@ -65,23 +66,27 @@ class CrossSampler(ShapeSampler):
             max_ocr = width / 2.0 - 1e-6
             if max_ocr <= 0:
                 continue
-            outer_corner_radius = resolve_param(
+            outer_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['outer_corner_radius'],
                 user_range=ranges['outer_corner_radius'],
                 default_range=(0.0, max_ocr),
             )
+            if outer_corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # inner_corner_radius must be <= length/2 - width/2 - outer_corner_radius
             max_icr = length / 2.0 - width / 2.0 - outer_corner_radius
             if max_icr < 0:
                 continue
-            inner_corner_radius = resolve_param(
+            inner_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['inner_corner_radius'],
                 user_range=ranges['inner_corner_radius'],
                 default_range=(0.0, max_icr),
             )
+            if inner_corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # bounding box is length x length, rotated
             half = length / 2.0
@@ -157,23 +162,27 @@ class TShapeSampler(ShapeSampler):
             max_ocr = width / 2.0 - 1e-6
             if max_ocr <= 0:
                 continue
-            outer_corner_radius = resolve_param(
+            outer_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['outer_corner_radius'],
                 user_range=ranges['outer_corner_radius'],
                 default_range=(0.0, max_ocr),
             )
+            if outer_corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # inner_corner_radius must be <= length/2 - width/2 - outer_corner_radius
             max_icr = length / 2.0 - width / 2.0 - outer_corner_radius
             if max_icr < 0:
                 continue
-            inner_corner_radius = resolve_param(
+            inner_corner_radius = resolve_radius(
                 rng,
                 fixed_value=fixed['inner_corner_radius'],
                 user_range=ranges['inner_corner_radius'],
                 default_range=(0.0, max_icr),
             )
+            if inner_corner_radius is None:
+                continue    # user range doesn't fit this draw
 
             # bounding box is length x length, rotated
             half = length / 2.0
