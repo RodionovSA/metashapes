@@ -5,6 +5,8 @@
 .venv/
 *.egg-info
 screening_shape_lattice.md
+.DS_store
+*.gds
 
 # graphify
 graphify-out/manifest.json
